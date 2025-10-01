@@ -4,6 +4,24 @@ const client = new DynamoDBClient({ region: "us-east-2" });
 
 // make class with push/update function for DB. will make coding easier
 
+class DBUser {
+    constructor(userInfo) {
+        
+        this.userId = userInfo.userId;
+        this.email = userInfo.email;
+        this.password = userInfo.password;
+
+    }
+    hashPassword()
+    {
+        
+    }
+    pushToDB()
+    {
+
+    }
+}
+
 // also make dynamodb schema here
 async function addUser(user) {
     const command = new PutItemCommand({
