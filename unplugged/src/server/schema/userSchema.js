@@ -4,7 +4,8 @@ const client = new DynamoDBClient({ region: "us-east-2" });
 
 // make class with push/update function for DB. will make coding easier
 
-// also make dynamodb schema here
+// also make dynamodb schema here 
+/*
 async function addUser(user) {
     const command = new PutItemCommand({
         TableName: "Unplugged-Users",
@@ -17,7 +18,7 @@ async function addUser(user) {
 
     await client.send(command);
 }
-
+*/
 async function test() {
     const command = new PutItemCommand({
         TableName: "Unplugged-Users",

@@ -1,7 +1,7 @@
 const express = require("express");
-const { addUser, getUser } = require("../db");
+//const { addUser, getUser } = require("../db");
 
-const router = express.Router();
+//const router = express.Router();
 
 // // POST /users
 // router.post("/", async (req, res) => {
