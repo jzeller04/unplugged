@@ -43,7 +43,10 @@ jobs:
       - name: Create PR to main when lint passes
         if: ${{ success() && github.event.pull_request.head.ref != 'main' }}
         uses: actions/github-script@v6
+        # Uses a personal access token stored in repository secrets because
+        # some orgs restrict what the default GITHUB_TOKEN may do.
         with:
+          github-token: ${{ secrets.CREATE_PR_TOKEN }}
           script: |
             const owner = context.repo.owner;
             const repo = context.repo.repo;
