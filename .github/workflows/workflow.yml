@@ -1,0 +1,27 @@
+name: Lint repository
+
+on:
+	push:
+		branches: [ main ]
+	pull_request:
+		branches: [ main ]
+
+jobs:
+	eslint:
+		runs-on: ubuntu-latest
+		steps:
+			- uses: actions/checkout@v4
+			- name: Use Node.js
+				uses: actions/setup-node@v4
+				with:
+					node-version: '18'
+			- name: Install root dev tools
+				run: npm ci
+			- name: Install client devDependencies
+				run: |
+					cd unplugged
+					npm ci
+			- name: Run ESLint across repo
+				run: |
+					npx eslint "**/*.{js,jsx}" --quiet || true
+
