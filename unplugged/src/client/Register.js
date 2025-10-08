@@ -15,7 +15,7 @@ const RegisterScreen = () => {
 
     return (
     <View style={styles.container}>
-      <Text style={styles.title}>Create Account</Text>
+      <Text style={styles.title}>Register</Text>
       <TextInput
         style={styles.input}
         placeholder="Email Address"
