@@ -41,8 +41,8 @@ const RegisterScreen = () => {
       }
       catch
       {
-          Alert.alert("Whoops, something went wrong!", error.message);
-          console.warn("Fetch error", error);
+          //Alert.alert("Whoops, something went wrong!", error.message);
+          //console.warn("Fetch error", error);
       }
     }
     
