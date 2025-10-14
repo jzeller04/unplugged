@@ -2,11 +2,16 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { API_URL } from '@env'; // do this: npm install react-native-dotenv
 // and in .env file: API_URL=http://192.168.1.100:3000 << your local ip
-const RegisterScreen = () => {
+const RegisterScreen = ({ navigation }) => {
     const [email, setEmail] = useState('');
     const [name, setName] = useState('');
     const [password, setPassword] = useState('');
 
+    navigation.reset({
+      index: 0,
+      routes: [{ name: 'Dashboard' }],
+     });
+  
     const getRegisterInfo = async () => {
       console.log("clicked!");
       try{
@@ -53,7 +58,7 @@ const RegisterScreen = () => {
     //     }
     // };
 
-    return (
+  return (
     <View style={styles.container}>
       <Text style={styles.title}>Register</Text>
       <TextInput
@@ -87,7 +92,7 @@ const RegisterScreen = () => {
   );
 };
 
-//example style sheet, replace later in separate file
+//example style sheet, replace later (here or in separate file)
 const styles = StyleSheet.create({
   container: {
     flex: 1,

@@ -1,16 +1,15 @@
 import { registerRootComponent } from 'expo';
 import React from 'react';
-import { SafeAreaView, StatusBar } from 'react-native';
-import RegisterScreen from './src/client/screens/RegisterScreen';
+import { NavigationContainer } from '@react-navigation/native';
+import StackNavigator from './src/client/navigation/StackNavigator';
 
-function App() {
+const App = () => {
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <StatusBar barStyle="dark-content" />
-      <RegisterScreen />
-    </SafeAreaView>
+    <NavigationContainer>
+      <StackNavigator />
+    </NavigationContainer>
   );
-}
+};
 
 // This tells Expo to register the app
 registerRootComponent(App);
