@@ -1,42 +1,46 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 
-const SignInScreen = () => {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+const SignInScreen = ({ navigation }) => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
-    const handleSignIn = () => {
-        if(!email || !password) {
-            Alert.alert('Error', 'Please fill out all fields');
-            return;
-        }
-    };
+  const handleSignIn = () => {
+    if (!email || !password) {
+      Alert.alert('Error', 'Please fill out all fields');
+      return;
+    }
+    navigation.reset({
+    index: 0,
+    routes: [{ name: 'Dashboard' }],
+    });
+  };
 
-    return (
-        <View style={styles.container}>
-            <Text style={styles.title}>Sign In</Text>
-            <TextInput
-                style={styles.input}
-                placeholder="Email Address"
-                placeholderTextColor="#888"
-                keyboardType="email-address"
-                autoCapitalize="none"
-                value={email}
-                onChangeText={setEmail}
-                />
-                <TextInput
-                style={styles.input}
-                placeholder="Password"
-                placeholderTextColor="#888"
-                secureTextEntry
-                value={password}
-                onChangeText={setPassword}
-                />
-                <TouchableOpacity style={styles.button} onPress={handleSignIn}>
-                    <Text style={styles.buttonText}>Sign In</Text>
-                </TouchableOpacity>
-        </View>
-    );
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title}>Sign In</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Email Address"
+        placeholderTextColor="#888"
+        keyboardType="email-address"
+        autoCapitalize="none"
+        value={email}
+        onChangeText={setEmail}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Password"
+        placeholderTextColor="#888"
+        secureTextEntry
+        value={password}
+        onChangeText={setPassword}
+      />
+      <TouchableOpacity style={styles.button} onPress={handleSignIn}>
+        <Text style={styles.buttonText}>Sign In</Text>
+      </TouchableOpacity>
+    </View>
+  );
 };
 
 //example style sheet, replace later in separate file

@@ -1,19 +1,23 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 
-const RegisterScreen = () => {
-    const [email, setEmail] = useState('');
-    const [name, setName] = useState('');
-    const [password, setPassword] = useState('');
+const RegisterScreen = ({ navigation }) => {
+  const [email, setEmail] = useState('');
+  const [name, setName] = useState('');
+  const [password, setPassword] = useState('');
 
-    const handleRegister = () => {
-        if (!email || !name || !password) {
-        Alert.alert('Error', 'Please fill out all fields');
-        return;
-        }
-    };
+  const handleRegister = () => {
+    if (!email || !name || !password) {
+      Alert.alert('Error', 'Please fill out all fields');
+      return;
+    }
+    navigation.reset({
+    index: 0,
+    routes: [{ name: 'Dashboard' }],
+    });
+  };
 
-    return (
+  return (
     <View style={styles.container}>
       <Text style={styles.title}>Register</Text>
       <TextInput
