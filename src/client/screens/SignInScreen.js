@@ -42,9 +42,6 @@ const SignInScreen = ({ navigation }) => {
       <TouchableOpacity style={styles.button2} onPress={() => navigation.navigate('Register')}>
         <Text style={styles.buttonText2}>Register</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Register')}>
-        <Text style={styles.buttonText}>Register</Text>
-      </TouchableOpacity>
     </View>
   );
 };
