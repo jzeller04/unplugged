@@ -17,7 +17,7 @@ const DashboardScreen = () => {
         <Switch
           value={isBlockingEnabled}
           onValueChange={toggleBlocking}
-          trackColor={{ false: '#ccc', true: '#007AFF' }}
+          trackColor={{ false: '#ccc', true: '#426B69' }}
           thumbColor={isBlockingEnabled ? '#fff' : '#f4f3f4'}
         />
       </View>
@@ -27,7 +27,7 @@ const DashboardScreen = () => {
         <Switch
           value={isBypassEnabled}
           onValueChange={toggleBypass}
-          trackColor={{ false: '#ccc', true: '#007AFF' }}
+          trackColor={{ false: '#ccc', true: '#426B69' }}
           thumbColor={isBypassEnabled ? '#fff' : '#f4f3f4'}
         />
       </View>
@@ -35,7 +35,7 @@ const DashboardScreen = () => {
   );
 };
 
-//example style sheet, replace later (here or in separate file)
+//temporary style sheet, replace with separate file or components later
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -44,10 +44,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   title: {
-    fontSize: 28,
+    color: '#222E50',
+    fontFamily: 'Times New Roman',
+    fontSize: 48,
     fontWeight: '600',
     marginBottom: 32,
-    textAlign: 'center',
+    textAlign: 'left',
   },
   toggleRow: {
     flexDirection: 'row',
@@ -56,8 +58,9 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   label: {
+    color: '#222E50',
+    fontFamily: 'Verdana',
     fontSize: 18,
-    fontWeight: '500',
   },
 });
 

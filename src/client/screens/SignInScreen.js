@@ -18,7 +18,7 @@ const SignInScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Sign In</Text>
+      <Text style={styles.title}>Sign in</Text>
       <TextInput
         style={styles.input}
         placeholder="Email Address"
@@ -36,8 +36,11 @@ const SignInScreen = ({ navigation }) => {
         value={password}
         onChangeText={setPassword}
       />
-      <TouchableOpacity style={styles.button} onPress={handleSignIn}>
-        <Text style={styles.buttonText}>Sign In</Text>
+      <TouchableOpacity style={styles.button1} onPress={handleSignIn}>
+        <Text style={styles.buttonText1}>Sign in</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.button2} onPress={() => navigation.navigate('Register')}>
+        <Text style={styles.buttonText2}>Register</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Register')}>
         <Text style={styles.buttonText}>Register</Text>
@@ -46,39 +49,53 @@ const SignInScreen = ({ navigation }) => {
   );
 };
 
-//example style sheet, replace later (here or in separate file)
+//temporary style sheet, replace later in separate file or with components
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    padding: 24,
-    justifyContent: 'center',
     backgroundColor: '#fff',
+    flex: 1,
+    justifyContent: 'center',
+    padding: 24,
   },
   title: {
-    fontSize: 28,
+    color: '#222E50',
+    fontFamily: 'Times New Roman',
+    fontSize: 48,
     fontWeight: '600',
-    marginBottom: 24,
+    marginBottom: 36,
     textAlign: 'center',
   },
   input: {
+    backgroundColor: '#F0F0F0',
+    fontFamily: 'Verdana',
     height: 48,
-    borderColor: '#ccc',
-    borderWidth: 1,
-    borderRadius: 8,
-    paddingHorizontal: 12,
+    borderRadius: 24,
+    paddingHorizontal: 20,
     marginBottom: 16,
   },
-  button: {
-    backgroundColor: '#007AFF',
+  button1: {
+    backgroundColor: '#426B69',
     paddingVertical: 14,
-    borderRadius: 8,
+    borderRadius: 24,
     alignItems: 'center',
-    marginTop: 8,
+    marginTop: 16,
   },
-  buttonText: {
-    color: '#fff',
+  button2: {
+    backgroundColor: '#F0F0F0',
+    paddingVertical: 14,
+    borderRadius: 24,
+    alignItems: 'center',
+    marginTop: 16,
+  },
+  buttonText1: {
+    fontFamily: 'Verdana',
+    color: '#FFFFFF',
     fontSize: 16,
-    fontWeight: '500',
+  },
+  buttonText2: {
+  fontFamily: 'Verdana',
+  color: '#426B69',
+  fontSize: 16,
   }
 });
 

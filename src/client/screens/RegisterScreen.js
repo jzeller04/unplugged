@@ -91,39 +91,41 @@ const RegisterScreen = ({ navigation }) => {
   );
 };
 
-//example style sheet, replace later (here or in separate file)
+//temporary style sheet, replace later in separate file or with components
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    padding: 24,
-    justifyContent: 'center',
     backgroundColor: '#fff',
+    flex: 1,
+    justifyContent: 'center',
+    padding: 24,
   },
   title: {
-    fontSize: 28,
+    color: '#222E50',
+    fontFamily: 'Times New Roman',
+    fontSize: 48,
     fontWeight: '600',
-    marginBottom: 24,
+    marginBottom: 36,
     textAlign: 'center',
   },
   input: {
+    backgroundColor: '#F0F0F0',
+    fontFamily: 'Verdana',
     height: 48,
-    borderColor: '#ccc',
-    borderWidth: 1,
-    borderRadius: 8,
-    paddingHorizontal: 12,
+    borderRadius: 24,
+    paddingHorizontal: 20,
     marginBottom: 16,
   },
   button: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#426B69',
     paddingVertical: 14,
-    borderRadius: 8,
+    borderRadius: 24,
     alignItems: 'center',
-    marginTop: 8,
+    marginTop: 16,
   },
   buttonText: {
-    color: '#fff',
+    fontFamily: 'Verdana',
+    color: '#FFFFFF',
     fontSize: 16,
-    fontWeight: '500',
   }
 });
 
