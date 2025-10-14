@@ -1,29 +1,31 @@
-const express = require("express");
-const { addUser, getUser } = require("../db");
+import express from "express";
+import { DBUser } from "../schema/userSchema.js";
 
 const router = express.Router();
 
 // // POST /users
-// router.post("/", async (req, res) => {
-//   try {
-//     await addUser(req.body);
-//     res.json({ success: true, user: req.body });
-//   } catch (err) {
-//     console.error("Error adding user:", err);
-//     res.status(500).json({ error: "Failed to add user" });
-//   }
-// });
+router.post("/register", async (req, res) => {
+  try {
+    console.log("Received register request:", req.body);
 
-// // GET /users/:id
-// router.get("/:id", async (req, res) => {
-//   try {
-//     const user = await getUser(req.params.id);
-//     if (!user) return res.status(404).json({ error: "User not found" });
-//     res.json(user);
-//   } catch (err) {
-//     console.error("Error fetching user:", err);
-//     res.status(500).json({ error: "Failed to fetch user" });
-//   }
-// });
+    const newUser = await DBUser.create(req.body);
+    await newUser.pushToDB();
 
-// module.exports = router;
+    // Send a success response
+    res.status(201).json({
+      success: true,
+      message: "User created successfully",
+      user: newUser
+    });
+  } catch (error) {
+    console.error("Error creating user:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server error",
+      error: error.message
+    });
+  }
+});
+
+export default router;
+

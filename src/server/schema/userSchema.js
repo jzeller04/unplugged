@@ -1,19 +1,30 @@
-import {pushUser} from "./db/dbUtil.js";
-import { hash, verify } from "argon2-browser";
+import {pushUser} from "../db/dbUtil.js";
+import argon2 from "argon2";
+import { v4 as uuidv4 } from 'uuid';
 
-// make class with push/update function for DB. will make coding easier
+// make class with push/update function for DB. will make coding easier for those looking
 
 class DBUser {
     
     static async create(userInfo) {
-        
-        if (!userInfo.userId || !userInfo.email || !userInfo.hashword) {
-            throw new Error("User object missing required fields.");
+        const user = new DBUser(); // empty instance
+        user.userId = uuidv4();
+        if (!user.userId) {
+            throw new Error("User object missing required field: userId");
         }
 
-        const hashword = await hash(userInfo.password);
-        const user = new DBUser(); // empty instance
-        user.userId = userInfo.userId;
+        if (!isValidEmail(userInfo.email)) {
+            throw new Error("User object missing or invalid field: email");
+        }
+
+        if (!userInfo.password) {
+            throw new Error("User object missing required field: password");
+        }
+
+        const hashword = await argon2.hash(userInfo.password);
+
+
+        user.name = userInfo.name;
         user.email = userInfo.email;
         user.hashword = hashword;
         return user;
@@ -23,10 +34,25 @@ class DBUser {
         await pushUser(this);
     }
 
+    async update()
+    {
+        // TDL
+    }
+
     // need to add update function
 }
 
+function isValidEmail(email)
+{
+    if(typeof email === "string")
+    {
+        // Simple regex for email validation (thank you GPT!!!)
+        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return regex.test(email);
+    }
+}
 
+export {DBUser};
 // async function test() {
 //     const command = new PutItemCommand({
 //         TableName: "Unplugged-Users",

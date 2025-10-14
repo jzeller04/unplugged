@@ -1,0 +1,77 @@
+name: Lint PR to dev and open PR to main
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches: [dev]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  lint-and-open-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+
+      - name: Install dependencies (root)
+        run: |
+          if [ -f package-lock.json ] || [ -f package.json ]; then
+            npm ci
+          fi
+
+      - name: Ensure ESLint is available
+        run: |
+          if ! command -v eslint >/dev/null 2>&1; then
+            npm install --no-audit --no-fund --silent --save-dev eslint eslint-plugin-react eslint-plugin-react-hooks eslint-plugin-jsx-a11y
+          fi
+
+      - name: Run ESLint
+        id: lint
+        run: |
+          npx eslint "**/*.{js,jsx}" --max-warnings=0
+
+      - name: Create PR to main when lint passes
+        if: ${{ success() && github.event.pull_request.head.ref != 'main' }}
+        uses: actions/github-script@v6
+
+        with:
+          github-token: ${{ secrets.CREATE_PR_TOKEN || github.token }}
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const headRef = context.payload.pull_request.head.ref;
+            const prNumber = context.payload.pull_request.number;
+            // For forks, headRepoOwner will be the fork owner; for same-repo PRs it's the repo owner
+            const headRepoOwner = context.payload.pull_request.head.repo.owner.login;
+            const headParam = `${headRepoOwner}:${headRef}`;
+            const baseRef = 'main';
+
+            // Check for existing PR from this head to main
+            const { data: pulls } = await github.rest.pulls.list({ owner, repo, state: 'open', head: headParam, base: baseRef });
+            let targetPrUrl = null;
+            if (pulls.length > 0) {
+              targetPrUrl = pulls[0].html_url;
+              core.info(`PR already exists from ${headParam} to ${baseRef}: ${targetPrUrl}`);
+            } else {
+              const title = `Merge ${headRef} into ${baseRef} (lint passed)`;
+              const body = `Automated PR opened after lint passed on PR #${prNumber} to dev.`;
+              const { data: newPr } = await github.rest.pulls.create({ owner, repo, head: headParam, base: baseRef, title, body });
+              targetPrUrl = newPr.html_url;
+              core.info(`Created PR: ${targetPrUrl}`);
+            }
+
+            // Comment on the original PR with the new PR link
+            await github.rest.issues.createComment({ owner, repo, issue_number: prNumber, body: `Lint passed — opened PR to main: ${targetPrUrl}. This dev PR will be closed.` });
+
+            // Close the original PR that targeted dev
+            await github.rest.pulls.update({ owner, repo, pull_number: prNumber, state: 'closed' });

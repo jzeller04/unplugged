@@ -7,6 +7,7 @@ async function pushUser(user) {
         TableName: "Unplugged-Users",
         Item: {
             userId: { S: user.userId },
+            name: { S: user.name },
             email: { S: user.email },
             hashedPassword: { S: user.hashword }
         }

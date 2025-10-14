@@ -17,9 +17,7 @@ jobs:
           node-version: "18"
       - name: Install dependencies
         run: |
-          cd unplugged
           npm ci
       - name: Run ESLint
         run: |
-          cd unplugged
           npx eslint "src/**/*.{js,jsx}"
