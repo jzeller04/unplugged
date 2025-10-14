@@ -6,11 +6,6 @@ const RegisterScreen = ({ navigation }) => {
     const [email, setEmail] = useState('');
     const [name, setName] = useState('');
     const [password, setPassword] = useState('');
-
-    navigation.reset({
-      index: 0,
-      routes: [{ name: 'Dashboard' }],
-     });
   
     const getRegisterInfo = async () => {
       console.log("clicked!");
@@ -56,6 +51,10 @@ const RegisterScreen = ({ navigation }) => {
     //     Alert.alert('Error', 'Please fill out all fields');
     //     return;
     //     }
+    //    navigation.reset({
+    //    index: 0,
+    //    routes: [{ name: 'Dashboard' }],
+    // });
     // };
 
   return (
