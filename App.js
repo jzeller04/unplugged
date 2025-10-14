@@ -1,7 +1,7 @@
 import { registerRootComponent } from 'expo';
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import StackNavigator from './navigation/StackNavigator';
+import StackNavigator from './src/client/navigation/StackNavigator';
 
 const App = () => {
   return (
