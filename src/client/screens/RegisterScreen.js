@@ -51,7 +51,7 @@ const RegisterScreen = ({ navigation }) => {
   );
 };
 
-//example style sheet, replace later in separate file
+//example style sheet, replace later (here or in separate file)
 const styles = StyleSheet.create({
   container: {
     flex: 1,
