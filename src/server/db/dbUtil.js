@@ -1,5 +1,4 @@
 import { DynamoDB, DynamoDBClient, GetItemCommand, PutItemCommand, ScanCommand  } from "@aws-sdk/client-dynamodb";
-import argon2 from "argon2";
 
 const client = new DynamoDBClient({ region: "us-east-2" });
 

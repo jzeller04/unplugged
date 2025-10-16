@@ -35,7 +35,7 @@ const SignInScreen = ({ navigation }) => {
       if(data.success)
       {
         Alert.alert("Signing in!");
-        navigation.reset({ // MOVE THIS HERE!!!!!!!!!!!!!
+        navigation.reset({ // MOVE ts HERE!!!!!!!!!!!!!
         index: 0,
         routes: [{ name: 'Dashboard' }],
         });
@@ -43,7 +43,7 @@ const SignInScreen = ({ navigation }) => {
       else
       {
         Alert.alert("Incorrect email or password");
-        return; // why the fuck does this not work gang
+        return; 
       }
       
     } catch (error) {
