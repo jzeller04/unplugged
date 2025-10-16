@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Switch } from 'react-native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 const DashboardScreen = () => {
   const [isBlockingEnabled, setIsBlockingEnabled] = useState(false);
