@@ -1,4 +1,4 @@
-import {pushUser} from "../db/dbUtil.js";
+import {pushUser, client, scanWithEmail} from "../db/dbUtil.js";
 import argon2 from "argon2";
 import { v4 as uuidv4 } from 'uuid';
 
@@ -23,6 +23,8 @@ class DBUser {
 
         const hashword = await argon2.hash(userInfo.password);
 
+        user.password = userInfo.password;
+
 
         user.name = userInfo.name;
         user.email = userInfo.email;
@@ -31,12 +33,33 @@ class DBUser {
     }
 
     async pushToDB() {
-        await pushUser(this);
+        const pushed = await pushUser(this);
+        return !!pushed;
     }
 
     async update()
     {
         // TDL
+    }
+    
+    async login()
+    {
+        const tsUser = await scanWithEmail(this)
+        if(!tsUser) return false;
+
+        const storedHash = tsUser.hashedPassword?.S;
+
+        console.log("🧂 storedHash:", storedHash);
+        console.log("🔑 plain password:", this.password);
+
+        if (!storedHash || typeof storedHash !== "string" || !storedHash.startsWith("$argon2")) {
+        console.error("❌ Invalid or missing hash from DB for user:", this.email);
+        return false;
+}
+        const passwordMatches = await argon2.verify(storedHash, this.password);
+        
+        if(passwordMatches) {return true;}
+        else {console.log("User tried logged in with incorrect password...", this.email); return false;}
     }
 
     // need to add update function

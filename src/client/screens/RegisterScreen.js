@@ -8,7 +8,6 @@ const RegisterScreen = ({ navigation }) => {
     const [password, setPassword] = useState('');
   
     const getRegisterInfo = async () => {
-      console.log("clicked!");
       try{
         
         
@@ -39,9 +38,9 @@ const RegisterScreen = ({ navigation }) => {
           Alert.alert("Whoops, something went wrong!");
         }
       }
-      catch
+      catch(err)
       {
-          //Alert.alert("Whoops, something went wrong!", error.message);
+          Alert.alert("Whoops, something went wrong!", err);
           //console.warn("Fetch error", error);
       }
     }
