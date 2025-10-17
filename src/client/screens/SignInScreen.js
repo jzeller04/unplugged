@@ -1,19 +1,55 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import { API_URL } from '@env'; // do this: npm install react-native-dotenv
 
 const SignInScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleSignIn = () => {
-    if (!email || !password) {
+  const handleSignIn = async () => {
+
+      if (!email || !password) {
       Alert.alert('Error', 'Please fill out all fields');
       return;
     }
-    navigation.reset({
-    index: 0,
-    routes: [{ name: 'Dashboard' }],
-    });
+    
+
+    try {
+    console.log('hello2');
+      const signingInUser = {
+          email: email,
+          password: password
+      };
+
+      console.log("about to fetch:", `${API_URL}/users/signin`);
+      setTimeout(() => console.log("⏳ still waiting on fetch..."), 5000);
+      const response = await fetch(`${API_URL}/users/signin`, { // the stuff in orange is the post request. this is the exact same thing as html for context
+        method: "POST",
+        headers:{"Content-Type": "application/json"},
+        body: JSON.stringify(signingInUser),
+      });
+      const data = await response.json(); // check for response from server
+      console.log("Server responded! ✅", data);
+
+      // a lil sum sum
+      if(data.success)
+      {
+        Alert.alert("Signing in!");
+        navigation.reset({ // MOVE ts HERE!!!!!!!!!!!!!
+        index: 0,
+        routes: [{ name: 'Dashboard' }],
+        });
+      }
+      else
+      {
+        Alert.alert("Incorrect email or password");
+        return; 
+      }
+      
+    } catch (error) {
+       console.log(error);
+       Alert.alert("Whoops, something went wrong!", error);
+    }
   };
 
   return (
