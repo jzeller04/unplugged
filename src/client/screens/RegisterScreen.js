@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { API_URL } from '@env'; // do this: npm install react-native-dotenv
 // and in .env file: API_URL=http://192.168.1.100:3000 << your local ip
-const RegisterScreen = ({ navigation }) => {
+const RegisterScreen = ({ /*navigation*/ }) => { // the navigation var not used. linting will cry about it
     const [email, setEmail] = useState('');
     const [name, setName] = useState('');
     const [password, setPassword] = useState('');

@@ -1,4 +1,4 @@
-import {pushUser, client, scanWithEmail} from "../db/dbUtil.js";
+import {pushUser, scanWithEmail} from "../db/dbUtil.js";
 import argon2 from "argon2";
 import { v4 as uuidv4 } from 'uuid';
 
