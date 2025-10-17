@@ -2,11 +2,16 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { API_URL } from '@env'; // do this: npm install react-native-dotenv
 // and in .env file: API_URL=http://192.168.1.100:3000 << your local ip
-const RegisterScreen = ({ /*navigation*/ }) => { // the navigation var not used. linting will cry about it
+const RegisterScreen = ({ navigation }) => { // the navigation var not used. linting will cry about it
     const [email, setEmail] = useState('');
     const [name, setName] = useState('');
     const [password, setPassword] = useState('');
   
+    if(navigation)
+    {
+      console.log("react + linting is so bad"); // how to fix this with linting PLEASE
+    }
+
     const getRegisterInfo = async () => {
       try{
         
@@ -33,9 +38,13 @@ const RegisterScreen = ({ /*navigation*/ }) => { // the navigation var not used.
         {
           Alert.alert("Account created!");
         }
+        else if(!data.success && data.message == "User already exists")
+        {
+          Alert.alert("There is already a user under that account!");
+        }
         else
         {
-          Alert.alert("Whoops, something went wrong!");
+          Alert.alert("Whoops... something with wrong");
         }
       }
       catch(err)
