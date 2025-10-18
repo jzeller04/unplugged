@@ -26,17 +26,6 @@ const styles = StyleSheet.create({
     marginBottom: 32,
     textAlign: 'left',
   },
-  toggleRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 24,
-  },
-  label: {
-    color: '#222E50',
-    fontFamily: 'Verdana',
-    fontSize: 18,
-  },
 });
 
 export default DetoxScreen;
