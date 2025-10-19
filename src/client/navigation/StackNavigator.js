@@ -19,14 +19,14 @@ const StackNavigator = () => {
         name="Register"
         component={RegisterScreen}
         options={{
-          headerShown: false,
+          headerTitle: '',
           headerBackTitle: 'Back'
         }}
       />
       <Stack.Screen
         name="Dashboard"
         component={DashboardScreen}
-        options={{ headerShown: false }}
+        options={{ headerTitle: '' }}
       />
     </Stack.Navigator>
   );
