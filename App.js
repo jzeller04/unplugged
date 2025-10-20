@@ -1,13 +1,11 @@
 import { registerRootComponent } from 'expo';
 import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import StackNavigator from './src/client/navigation/StackNavigator';
+// import { NavigationContainer } from '@react-navigation/native';
+import RootNavigator from './src/client/navigation/RootNavigator.js';
 
 const App = () => {
   return (
-    <NavigationContainer>
-      <StackNavigator />
-    </NavigationContainer>
+    <RootNavigator />
   );
 };
 

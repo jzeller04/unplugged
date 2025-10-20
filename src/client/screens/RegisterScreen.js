@@ -38,8 +38,8 @@ const RegisterScreen = ({ navigation }) => { // the navigation var not used. lin
         {
           Alert.alert("Account created!");
           navigation.reset({
-            index: 0,
-            routes: [{ name: 'Dashboard' }],
+          index: 0,
+          routes: [{ name: 'MainApp' }],
           });
         }
         else if(!data.success && data.message == "User already exists")
