@@ -37,6 +37,10 @@ const RegisterScreen = ({ navigation }) => { // the navigation var not used. lin
         if(data.success)
         {
           Alert.alert("Account created!");
+          navigation.reset({
+            index: 0,
+            routes: [{ name: 'Dashboard' }],
+          });
         }
         else if(!data.success && data.message == "User already exists")
         {
