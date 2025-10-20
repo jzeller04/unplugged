@@ -33,6 +33,10 @@ const RegisterScreen = ({ navigation }) => {
         if(data.success)
         {
           Alert.alert("Account created!");
+          navigation.reset({
+            index: 0,
+            routes: [{ name: 'Dashboard' }],
+          });
         }
         else
         {
