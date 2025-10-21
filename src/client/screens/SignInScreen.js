@@ -35,9 +35,9 @@ const SignInScreen = ({ navigation }) => {
       if(data.success)
       {
         Alert.alert("Signing in!");
-        navigation.reset({ // MOVE ts HERE!!!!!!!!!!!!!
+        navigation.reset({
         index: 0,
-        routes: [{ name: 'Dashboard' }],
+        routes: [{ name: 'MainApp' }],
         });
       }
       else
