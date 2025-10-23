@@ -22,7 +22,6 @@ const SignInScreen = ({ navigation }) => {
       };
 
       console.log("about to fetch:", `${API_URL}/users/signin`);
-      setTimeout(() => console.log("⏳ still waiting on fetch..."), 5000);
       const response = await fetch(`${API_URL}/users/signin`, { // the stuff in orange is the post request. this is the exact same thing as html for context
         method: "POST",
         headers:{"Content-Type": "application/json"},
