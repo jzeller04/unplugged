@@ -1,4 +1,4 @@
-import {pushUser, scanWithEmail} from "../db/dbUtil.js";
+import {deleteUser, pushUser, scanWithEmail} from "../db/dbUtil.js";
 import argon2 from "argon2";
 import { v4 as uuidv4 } from 'uuid';
 
@@ -37,6 +37,20 @@ class DBUser {
         return !!pushed;
     }
 
+    async deleteFromDB()
+    {
+        const userDeleted = await deleteUser(this);
+        if(userDeleted)
+        {
+            console.log("User: ", this.email, "Deleted succesfully from DB");
+            return true;
+        } else
+        {
+            console.log("User not deleted...something went wrong. Either user doesn't exist, or error.");
+            return false;
+        }
+    }
+
     async update()
     {
         // TDL
@@ -49,11 +63,8 @@ class DBUser {
 
         const storedHash = tsUser.hashedPassword?.S;
 
-        console.log("🧂 storedHash:", storedHash);
-        console.log("🔑 plain password:", this.password);
-
         if (!storedHash || typeof storedHash !== "string" || !storedHash.startsWith("$argon2")) {
-        console.error("❌ Invalid or missing hash from DB for user:", this.email);
+            console.error("Invalid or missing hash from DB for user:", this.email);
         return false;
 }
         const passwordMatches = await argon2.verify(storedHash, this.password);

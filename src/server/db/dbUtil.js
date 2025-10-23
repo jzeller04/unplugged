@@ -1,4 +1,4 @@
-import {  DynamoDBClient,  PutItemCommand, ScanCommand  } from "@aws-sdk/client-dynamodb";
+import {  DeleteItemCommand, DynamoDBClient,  GetItemCommand,  PutItemCommand, ScanCommand  } from "@aws-sdk/client-dynamodb";
 
 const client = new DynamoDBClient({ region: "us-east-2" });
 
@@ -89,5 +89,34 @@ async function scanWithEmail(user)
             }
     }
 
+async function deleteUser(user) {
 
-export { client, pushUser, userExists, scanWithEmail };
+
+    try {
+        const data = await scanWithEmail(user); // check if user exists
+        if(data)
+        {
+            // console.log(data);
+            const deleteParams = (
+            {
+                TableName: "Unplugged-Users",
+                Key: {
+                    userId: {S: data.userId.S}
+                }
+            });
+            await client.send(new DeleteItemCommand(deleteParams)); // delete user from db if found
+            console.log("Delete Successful!");
+            return true;
+        }
+    } catch (error) {
+        console.log(error);
+        return false; // false if didnt work
+    }
+    
+    
+
+
+}
+
+
+export { client, pushUser, userExists, scanWithEmail, deleteUser };
