@@ -1,7 +1,7 @@
 name: Build and push Docker image to Docker Hub
 
 on:
-  pull_request:
+  push:
     branches: [main]
   workflow_dispatch:
 
@@ -28,6 +28,7 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: .
+          file: DOCKERFILE
           push: true
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/unplugged:latest
