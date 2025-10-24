@@ -5,16 +5,16 @@ import { scanWithEmail } from "../src/server/db/dbUtil.js";
 // Make sure you are using DynamoDBClient (v3)
 const client = new DynamoDBClient({ region: "us-east-2" });
 
-async function test() {
+/*async function test() {
   const command = new ListTablesCommand({});
   const data = await client.send(command);  // send() exists here
   console.log("Tables:", data.TableNames);
-}
+}*/
 
 async function testCreateAndDeleteUser() {
-  const testUser = await DBUser.create({email: "test@unplugged.com", password: "password", name: "Dev"}, (data) => {
+  /*const testUser = await DBUser.create({email: "test@unplugged.com", password: "password", name: "Dev"}, (data) => {
     // console.log(data);
-  });
+  });*/
   const pushed = await testUser.pushToDB();
   
   try {
