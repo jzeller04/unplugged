@@ -40,6 +40,28 @@ jobs:
         run: |
           npx eslint "**/*.{js,jsx}" --max-warnings=0
 
+      
+  test-code:
+    name: run all tests
+    runs-on: ubuntu-latest
+    needs: lint-code
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm test
+
       - name: Create PR to main when lint passes
         if: ${{ success() && github.event.pull_request.head.ref != 'main' }}
         uses: actions/github-script@v6
@@ -75,10 +97,3 @@ jobs:
 
             // Close the original PR that targeted dev
             await github.rest.pulls.update({ owner, repo, pull_number: prNumber, state: 'closed' });
-  #test-code:
-   # name: run all tests
-    #runs-on: ubuntu-latest
-    #needs: lint-code
-    #steps:
-     # - name: run all tests
-      #  run: npm test

@@ -1,4 +1,4 @@
-import {  DeleteItemCommand, DynamoDBClient,  GetItemCommand,  PutItemCommand, ScanCommand  } from "@aws-sdk/client-dynamodb";
+import {  DeleteItemCommand, DynamoDBClient,  /*GetItemCommand,*/  PutItemCommand, ScanCommand  } from "@aws-sdk/client-dynamodb";
 
 const client = new DynamoDBClient({ region: "us-east-2" });
 
