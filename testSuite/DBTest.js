@@ -1,5 +1,5 @@
 //import { DynamoDBClient/*, ListTablesCommand*/ } from "@aws-sdk/client-dynamodb";
-//import { DBUser } from "../src/server/schema/userSchema.js";
+import { DBUser } from "../src/server/schema/userSchema.js";
 import { scanWithEmail } from "../src/server/db/dbUtil.js";
 
 // Make sure you are using DynamoDBClient (v3)
