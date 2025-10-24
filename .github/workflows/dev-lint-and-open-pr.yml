@@ -10,7 +10,7 @@ permissions:
   pull-requests: write
 
 jobs:
-  lint-and-open-pr:
+  lint-code:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -75,3 +75,10 @@ jobs:
 
             // Close the original PR that targeted dev
             await github.rest.pulls.update({ owner, repo, pull_number: prNumber, state: 'closed' });
+  test-code:
+    name: run all tests
+    runs-on: ubuntu-latest
+    needs: lint-code
+    steps:
+      - name: run all tests
+        run: npm test
