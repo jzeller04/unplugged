@@ -1,9 +1,9 @@
-import { DynamoDBClient, ListTablesCommand } from "@aws-sdk/client-dynamodb";
-import { DBUser } from "../src/server/schema/userSchema.js";
+import { DynamoDBClient/*, ListTablesCommand*/ } from "@aws-sdk/client-dynamodb";
+//import { DBUser } from "../src/server/schema/userSchema.js";
 import { scanWithEmail } from "../src/server/db/dbUtil.js";
 
 // Make sure you are using DynamoDBClient (v3)
-const client = new DynamoDBClient({ region: "us-east-2" });
+//const client = new DynamoDBClient({ region: "us-east-2" });
 
 /*async function test() {
   const command = new ListTablesCommand({});
@@ -12,9 +12,9 @@ const client = new DynamoDBClient({ region: "us-east-2" });
 }*/
 
 async function testCreateAndDeleteUser() {
-  /*const testUser = await DBUser.create({email: "test@unplugged.com", password: "password", name: "Dev"}, (data) => {
+  const testUser = await DBUser.create({email: "test@unplugged.com", password: "password", name: "Dev"}, (data) => {
     // console.log(data);
-  });*/
+  });
   const pushed = await testUser.pushToDB();
   
   try {
