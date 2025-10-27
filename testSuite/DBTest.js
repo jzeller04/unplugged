@@ -20,7 +20,7 @@ async function testCreateAndDeleteUser() {
   try {
     if(pushed)
     {
-      console.log("Push user to DB passed 🤑🤑🤑");
+      console.log("Push user to DB passed");
     } else
     {
       console.log("Push user failed...");
@@ -28,7 +28,7 @@ async function testCreateAndDeleteUser() {
     const loggedIn = await testUser.login();
     if(loggedIn)
     {
-      console.log("Login user to DB passed 🤑🤑🤑");
+      console.log("Login user to DB passed");
     } else
     {
       console.log("Login user failed...");
@@ -36,7 +36,7 @@ async function testCreateAndDeleteUser() {
     const foundUser = await scanWithEmail(testUser);
     if(foundUser)
     {
-    console.log("Found user in DB passed 🤑🤑🤑");
+    console.log("Found user in DB passed");
     } else
     {
       console.log("Found user failed...");
@@ -44,7 +44,7 @@ async function testCreateAndDeleteUser() {
     const removedUser = await testUser.deleteFromDB();
     if(removedUser)
     {
-      console.log("Delete user to DB passed 🤑🤑🤑");
+      console.log("Delete user to DB passed");
     } else
     {
       console.log("Delete user failed...");
