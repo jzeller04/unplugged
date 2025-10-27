@@ -1,4 +1,4 @@
-import {  DeleteItemCommand, DynamoDBClient,  /*GetItemCommand,*/  PutItemCommand, ScanCommand  } from "@aws-sdk/client-dynamodb";
+import {  DeleteItemCommand, DynamoDBClient,  PutItemCommand, ScanCommand, UpdateItemCommand  } from "@aws-sdk/client-dynamodb";
 
 const client = new DynamoDBClient({ region: "us-east-2" });
 
@@ -7,7 +7,7 @@ async function pushUser(user) {
 
     
 
-    
+    const today = new Date().toISOString().split('T')[0];
     
     const exists = await userExists(user.email);
     if(exists)
@@ -23,13 +23,15 @@ async function pushUser(user) {
             userId: { S: user.userId },
             name: { S: user.name },
             email: { S: user.email },
-            hashedPassword: { S: user.hashword }
+            streakCount: { N: "0" },
+            hashedPassword: { S: user.hashword },
+            lastLogin: { S: today }
         }
     });
 
     await client.send(command);
 
-    console.log(`User [${user.userId}] added ✅`);
+    console.log(`User [${user.userId}] added`);
 
     return true;
         
@@ -105,7 +107,7 @@ async function deleteUser(user) {
                 }
             });
             await client.send(new DeleteItemCommand(deleteParams)); // delete user from db if found
-            console.log("Delete Successful!");
+            //console.log("Delete Successful!");
             return true;
         }
     } catch (error) {
@@ -118,5 +120,47 @@ async function deleteUser(user) {
 
 }
 
+async function updateUser(user, newDate, newStreak) {
+    const userToUpdate = await scanWithEmail(user);
+    //console.log(newDate);
+    if(!userToUpdate)
+    {
+        console.log("Error finding user with email");
+        return false;
+    }
+    //console.log("Found user with email: ", userToUpdate.email.S);
+    const params = {
+        TableName: "Unplugged-Users",
+        Key: {
+            userId: { S: userToUpdate.userId.S }
+        },
+            UpdateExpression: "SET lastLoginDate = :date, streakCount = :count",
+            ExpressionAttributeValues: {
+            ":date": { S: newDate },
+            ":count": { N: newStreak?.toString() }
+        },
+        ReturnValues: "ALL_NEW"
+        };
 
-export { client, pushUser, userExists, scanWithEmail, deleteUser };
+    try {
+        const result = await client.send(new UpdateItemCommand(params));
+        // console.log("User updated successfully. New values:");
+        // console.log(result.Attributes);
+
+        return true;
+    } catch (err) {
+        console.error("Error updating user:", err);
+        return false;
+    }
+    
+}
+
+function isNextDay(prev, curr) {
+  const prevDate = new Date(prev);
+  const currDate = new Date(curr);
+  const diff = (currDate - prevDate) / (1000 * 60 * 60 * 24);
+  return diff === 1;
+}
+
+
+export { client, pushUser, userExists, scanWithEmail, deleteUser, isNextDay, updateUser };
