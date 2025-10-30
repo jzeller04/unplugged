@@ -1,23 +1,75 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Modal, TextInput } from 'react-native';
-
-const handleDeleteAccount = () => {
-  //justin implement backend logic
-  //if password is correct
-    //Alert.alert('Account deleted');
-    //navigation.reset({
-      //index: 0,
-      //routes: [{ name: 'Sign In' }],
-    //});
-  //else
-    //Alert.alert('Incorrect password');
-    setModalVisible(false);
-    setPassword('');
-};
+import { View, Text, StyleSheet, TouchableOpacity, Modal, TextInput, Alert } from 'react-native';
+import { API_URL } from '@env'
+import { getUser } from '../helper/userStorage.js';
 
 const SettingsScreen = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [password, setPassword] = useState('');
+
+  const handleDeleteAccount = async () => {
+    //justin implement backend logic
+    //if password is correct
+      //Alert.alert('Account deleted');
+      //navigation.reset({
+        //index: 0,
+        //routes: [{ name: 'Sign In' }],
+      //});
+    //else
+      //Alert.alert('Incorrect password');
+
+    try {
+    
+      console.log("happening");
+        const userInfo = await getUser();
+        
+        const infoToSend = {
+          email: userInfo.email,
+          password: userInfo.password
+        }
+
+        if(password == infoToSend.password) // may want to change this into a backend req... considering - tdl justin
+        {
+        const response = await fetch(`${API_URL}/users/delete`, { // we need to find a way to store user info on ts
+          method: "POST",
+          headers:{"Content-Type": "application/json"},
+          body: JSON.stringify(infoToSend)
+          });
+          const data = await response.json(); // check for response from server
+          console.log("Server responded!", data);
+    
+          // a lil sum sum
+          if(data.success)
+          {
+            Alert.alert("Profile deleted");
+            // clear local storage here prob
+            navigation.reset({
+            index: 0,
+            routes: [{ name: 'MainApp' }], // tf do i route it to ikiag
+            });
+          }
+          else
+          {
+            Alert.alert("Invalid token");
+            return; 
+          }
+        
+        } 
+      }
+      catch(error)
+      {
+        console.error("Error");
+        Alert.alert("Something went wrong!");
+      }
+    
+        
+
+          //console.log("about to fetch:", `${API_URL}/users/signin`);
+          
+    setModalVisible(false);
+    setPassword('');
+};
+
 
   return (
     <View style={styles.container}>

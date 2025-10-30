@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { API_URL } from '@env'; // do this: npm install react-native-dotenv
-
+// import { getUser, saveUser } from '../helper/userStorage.js';
 const SignInScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -21,14 +21,14 @@ const SignInScreen = ({ navigation }) => {
           password: password
       };
 
-      console.log("about to fetch:", `${API_URL}/users/signin`);
+      //console.log("about to fetch:", `${API_URL}/users/signin`);
       const response = await fetch(`${API_URL}/users/signin`, { // the stuff in orange is the post request. this is the exact same thing as html for context
         method: "POST",
         headers:{"Content-Type": "application/json"},
         body: JSON.stringify(signingInUser),
       });
       const data = await response.json(); // check for response from server
-      console.log("Server responded! ✅", data);
+      console.log("Server responded!", data);
 
       // a lil sum sum
       if(data.success)
@@ -36,8 +36,9 @@ const SignInScreen = ({ navigation }) => {
         Alert.alert("Signing in!");
         navigation.reset({
         index: 0,
-        routes: [{ name: 'MainApp' }],
+        routes: [{ name: 'MainApp' }], 
         });
+        // need to add logic for multiple accounts and user storage
       }
       else
       {

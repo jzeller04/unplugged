@@ -120,7 +120,7 @@ async function deleteUser(user) {
 
 }
 
-async function updateUser(user, newDate, newStreak) {
+async function updateUser(user, newDate, newStreak) { // find where to put this...when session in app is started?
     const userToUpdate = await scanWithEmail(user);
     //console.log(newDate);
     if(!userToUpdate)
