@@ -8,11 +8,14 @@ const DashboardScreen = () => {
   const toggleBlocking = () => setIsBlockingEnabled(prev => !prev);
   const toggleBypass = () => setIsBypassEnabled(prev => !prev);
 
+  // add int variable for user streak then replace !placeholder! with {variable name} in line 18
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Dashboard</Text>
 
       <View style={styles.toggleRow}>
+        <Text style={styles.label}>!placeholder! day streak of detox!</Text>
         <Text style={styles.label}>App Blocking</Text>
         <Switch
           value={isBlockingEnabled}
