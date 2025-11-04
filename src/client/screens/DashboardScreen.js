@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Switch, Alert } from 'react-native';
-import { saveUser, getUser } from '../helper/userStorage.js';
+import { getUser } from '../helper/userStorage.js';
 
 const DashboardScreen = () => {
   const [isBlockingEnabled, setIsBlockingEnabled] = useState(false);
