@@ -22,3 +22,31 @@ export const getUser = async () => {
     console.error('Error reading user data from client', error);
   }
 };
+
+export const deleteUser = async () => {
+  try {
+    await AsyncStorage.removeItem('user');
+  } catch (error) {
+    
+  }
+}
+
+export const updateUserStreak = async (user) =>
+{
+  try {
+    const oldObj = await AsyncStorage.getItem('user');
+    if(oldObj !== null)
+    {
+      const oldObjS = JSON.parse(oldObj);
+      const newUser = {...user, ...oldObjS};
+
+      
+
+      await AsyncStorage.setItem('user', JSON.stringify(newUser));
+    }
+    
+        
+  } catch (error) {
+    
+  }
+};

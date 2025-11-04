@@ -20,12 +20,13 @@ const RegisterScreen = ({ navigation }) => { // the navigation var not used. lin
         const registerInfo = { // send ts all as an object, this is how it is handled on backend. If you'd like i (justin) can create an abstracted version of this to reuse.
           email: email,
           name: name,
-          password: password
+          password: password,
+          streakCount: 0
         }
 
         // make post req to send to backend
         console.log("about to fetch:", `${API_URL}/users/register`);
-        setTimeout(() => console.log("⏳ still waiting on fetch..."), 5000);
+        //setTimeout(() => console.log("⏳ still waiting on fetch..."), 5000);
         const response = await fetch(`${API_URL}/users/register`, { // the stuff in orange is the post request. this is the exact same thing as html for context
           method: "POST",
           headers:{"Content-Type": "application/json"},

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Modal, TextInput, Alert } from 'react-native';
 import { API_URL } from '@env'
-import { getUser } from '../helper/userStorage.js';
+import { getUser, deleteUser } from '../helper/userStorage.js';
 
 const SettingsScreen = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -43,9 +43,10 @@ const SettingsScreen = ({ navigation }) => {
           {
             Alert.alert("Profile deleted");
             // clear local storage here prob
+            await deleteUser();
             navigation.reset({
             index: 0,
-            routes: [{ name: 'MainApp' }], // tf do i route it to ikiag
+            routes: [{ name: 'Authentication' }], // tf do i route it to ikiag
             });
           }
           else

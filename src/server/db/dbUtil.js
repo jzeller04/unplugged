@@ -68,6 +68,7 @@ async function userExists(userEmail) {
 
 async function scanWithEmail(user)
     {
+        console.log(user.email);
         const params = (
                 {
                     TableName: "Unplugged-Users",
@@ -96,6 +97,7 @@ async function deleteUser(user) {
 
     try {
         const data = await scanWithEmail(user); // check if user exists
+        console.log(data);
         if(data)
         {
             // console.log(data);
