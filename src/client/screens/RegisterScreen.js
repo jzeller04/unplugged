@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { API_URL } from '@env'; // do this: npm install react-native-dotenv
+import { saveUser } from '../helper/userStorage.js';
 // and in .env file: API_URL=http://192.168.1.100:3000 << your local ip
 const RegisterScreen = ({ navigation }) => { // the navigation var not used. linting will cry about it
     const [email, setEmail] = useState('');
@@ -19,12 +20,13 @@ const RegisterScreen = ({ navigation }) => { // the navigation var not used. lin
         const registerInfo = { // send ts all as an object, this is how it is handled on backend. If you'd like i (justin) can create an abstracted version of this to reuse.
           email: email,
           name: name,
-          password: password
+          password: password,
+          streakCount: 0
         }
 
         // make post req to send to backend
         console.log("about to fetch:", `${API_URL}/users/register`);
-        setTimeout(() => console.log("⏳ still waiting on fetch..."), 5000);
+        //setTimeout(() => console.log("⏳ still waiting on fetch..."), 5000);
         const response = await fetch(`${API_URL}/users/register`, { // the stuff in orange is the post request. this is the exact same thing as html for context
           method: "POST",
           headers:{"Content-Type": "application/json"},
@@ -41,6 +43,7 @@ const RegisterScreen = ({ navigation }) => { // the navigation var not used. lin
           index: 0,
           routes: [{ name: 'MainApp' }],
           });
+          await saveUser(registerInfo);
         }
         else if(!data.success && data.message == "User already exists")
         {

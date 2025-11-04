@@ -20,37 +20,45 @@ async function testCreateAndDeleteUser() {
   try {
     if(pushed)
     {
-      console.log("Push user to DB passed 🤑🤑🤑");
+      console.log(console.log("\x1b[32mPushing user passed\x1b[0m"));
     } else
     {
-      console.log("Push user failed...");
+      console.error("\x1b[31mError pushing user to DB\x1b[0m");
     }
     const loggedIn = await testUser.login();
     if(loggedIn)
     {
-      console.log("Login user to DB passed 🤑🤑🤑");
+      console.log("\x1b[32mLog in of user passed\x1b[0m");
     } else
     {
-      console.log("Login user failed...");
+      console.error("\x1b[31mELogging in user failed\x1b[0m");
     }
     const foundUser = await scanWithEmail(testUser);
     if(foundUser)
     {
-    console.log("Found user in DB passed 🤑🤑🤑");
+      console.log("\x1b[32mFind user in DB passed\x1b[0m");
     } else
     {
-      console.log("Found user failed...");
+      console.error("\x1b[31mFinding user failed\x1b[0m");
+    }
+    const updatedStreak = await testUser.calculateStreaksAndUpdate();
+    if(updatedStreak)
+    {
+      console.log("\x1b[32mUpdate user streaks in DB passed\x1b[0m");
+    } else
+    {
+      console.error("\x1b[31mUpdating user streaks failed\x1b[0m");
     }
     const removedUser = await testUser.deleteFromDB();
     if(removedUser)
     {
-      console.log("Delete user to DB passed 🤑🤑🤑");
+      console.log("\x1b[32mDelete user in DB passed\x1b[0m");
     } else
     {
-      console.log("Delete user failed...");
+      console.error("\x1b[31mDeleting user failed\x1b[0m");
     }
   } catch (error) {
-    console.log("Something fucked up");
+    console.error("Something messed up");
   }
   
   
