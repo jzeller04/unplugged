@@ -10,7 +10,7 @@ import { scanWithEmail } from "../src/server/db/dbUtil.js";
   const data = await client.send(command);  // send() exists here
   console.log("Tables:", data.TableNames);
 }*/
-
+// test incorrect cases
 async function testCreateAndDeleteUser() {
   const testUser = await DBUser.create({email: "test@unplugged.com", password: "password", name: "Dev"}, (data) => {
     console.log(data);
