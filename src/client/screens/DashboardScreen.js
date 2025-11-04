@@ -30,8 +30,9 @@ const DashboardScreen = () => {
     <View style={styles.container}>
       <Text style={styles.title}>Dashboard</Text>
 
+      <Text style={styles.label}>{streakCount} day streak of detox!</Text>
+      
       <View style={styles.toggleRow}>
-        <Text style={styles.label}>{streakCount} day streak of detox!</Text>
         <Text style={styles.label}>App Blocking</Text>
         <Switch
           value={isBlockingEnabled}
