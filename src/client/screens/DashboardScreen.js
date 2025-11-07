@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Switch, Alert } from 'react-native';
+import { View, Text, StyleSheet, Switch, Alert, ScrollView } from 'react-native';
 import { getUser } from '../helper/userStorage.js';
 
 const DashboardScreen = () => {
@@ -27,7 +27,7 @@ const DashboardScreen = () => {
 
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <Text style={styles.title}>Dashboard</Text>
 
       <View style={styles.toggleRow}>
@@ -50,7 +50,7 @@ const DashboardScreen = () => {
           thumbColor={isBypassEnabled ? '#fff' : '#f4f3f4'}
         />
       </View>
-    </View>
+    </ScrollView>
   );
 };
 

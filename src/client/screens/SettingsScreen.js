@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Modal, TextInput, Alert } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Modal, TextInput, Alert, ScrollView } from 'react-native';
 import { API_URL } from '@env'
 import { getUser, deleteUser } from '../helper/userStorage.js';
 
@@ -67,7 +67,7 @@ const SettingsScreen = ({ navigation }) => {
 
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <Text style={styles.title}>Settings</Text>
       <TouchableOpacity style={styles.button} onPress={() => setModalVisible(true)}>
         <Text style={styles.buttonText}>Delete account</Text>
@@ -94,7 +94,7 @@ const SettingsScreen = ({ navigation }) => {
           </View>
         </View>
       </Modal>
-    </View>
+    </ScrollView>
   );
 };
 

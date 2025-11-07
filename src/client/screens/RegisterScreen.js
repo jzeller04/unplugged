@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import { Text, TextInput, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { API_URL } from '@env'; // do this: npm install react-native-dotenv
 import { saveUser } from '../helper/userStorage.js';
 // and in .env file: API_URL=http://192.168.1.100:3000 << your local ip
@@ -60,20 +60,9 @@ const RegisterScreen = ({ navigation }) => { // the navigation var not used. lin
           //console.warn("Fetch error", error);
       }
     }
-    
-    // const handleRegister = () => { // may be easier to check valid info here actually... can still do it in backend tho
-    //     if (!email || !name || !password) {
-    //     Alert.alert('Error', 'Please fill out all fields');
-    //     return;
-    //     }
-    //    navigation.reset({
-    //    index: 0,
-    //    routes: [{ name: 'Dashboard' }],
-    // });
-    // };
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <Text style={styles.title}>Register</Text>
       <TextInput
         style={styles.input}
@@ -102,7 +91,7 @@ const RegisterScreen = ({ navigation }) => { // the navigation var not used. lin
       <TouchableOpacity style={styles.button} onPress={getRegisterInfo}>
         <Text style={styles.buttonText}>Register</Text>
       </TouchableOpacity>
-    </View>
+    </ScrollView>
   );
 };
 

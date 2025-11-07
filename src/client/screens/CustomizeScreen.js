@@ -1,11 +1,11 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { Text, StyleSheet, ScrollView } from 'react-native';
 
 const CustomizeScreen = () => {
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <Text style={styles.title}>Customize</Text>
-    </View>
+    </ScrollView>
   );
 };
 

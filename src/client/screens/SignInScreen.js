@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import { ScrollView, Text, TextInput, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { API_URL } from '@env'; // do this: npm install react-native-dotenv
 // import { getUser, saveUser } from '../helper/userStorage.js';
 const SignInScreen = ({ navigation }) => {
@@ -53,7 +53,7 @@ const SignInScreen = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <Text style={styles.title}>Sign in</Text>
       <TextInput
         style={styles.input}
@@ -78,7 +78,7 @@ const SignInScreen = ({ navigation }) => {
       <TouchableOpacity style={styles.button2} onPress={() => navigation.navigate('Register')}>
         <Text style={styles.buttonText2}>Register</Text>
       </TouchableOpacity>
-    </View>
+    </ScrollView>
   );
 };
 
