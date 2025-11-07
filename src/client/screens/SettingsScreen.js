@@ -1,13 +1,10 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Modal, TextInput, Alert, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Switch, Modal, TextInput, Alert, ScrollView } from 'react-native';
 import { API_URL } from '@env'
 import { getUser, deleteUser } from '../helper/userStorage.js';
 
-var setModalVisible;
-
-var setPassword;
-
 const SettingsScreen = ({ navigation }) => {
+  const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
   const [password, setPassword] = useState('');
 
@@ -66,34 +63,67 @@ const SettingsScreen = ({ navigation }) => {
 };
 
 
+//add navigation and external links later when implemented
   return (
     <ScrollView style={styles.container}>
       <Text style={styles.title}>Settings</Text>
-      <TouchableOpacity style={styles.button} onPress={() => setModalVisible(true)}>
-        <Text style={styles.buttonText}>Delete account</Text>
-      </TouchableOpacity>
-      <Modal visible={modalVisible} transparent>
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Confirm password to delete account</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Enter your password"
-              secureTextEntry
-              value={password}
-              onChangeText={setPassword}
+
+      <Text style={styles.subtitle}>Notification Settings</Text>
+      <View style={styles.section}>
+        <View style={styles.row}>
+            <Text style={styles.rowText}>Notifications</Text>
+            <Switch
+              value={notificationsEnabled}
+              onPress={setNotificationsEnabled}
             />
-            <View style={styles.buttonRow}>
-              <TouchableOpacity style={styles.cancelButton} onPress={() => setModalVisible(false)}>
-                <Text style={styles.cancelText}>Cancel</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.confirmButton} onPress={handleDeleteAccount}>
-                <Text style={styles.confirmText}>Confirm</Text>
-              </TouchableOpacity>
+          </View>
+      </View>
+
+      <Text style={styles.subtitle}>About</Text>
+      <View style={styles.section}>
+        <Text style={styles.sectionText}>Terms of Service</Text>
+        <Text style={styles.sectionText}>Privacy policy</Text>
+      </View>
+
+      <Text style={styles.subtitle}>Feedback & Support</Text>
+      <View style={styles.section}>
+        <Text style={styles.sectionText}>Rate our app</Text>
+        <Text style={styles.sectionText}>FAQs</Text>
+      </View>
+
+      <Text style={styles.subtitle}>Account management</Text>
+      <View style={styles.section}>
+        <Text style={styles.sectionText}>Account information</Text>
+        <TouchableOpacity style={styles.button} onPress={() => setModalVisible(true)}>
+          <Text style={styles.buttonText}>Delete account</Text>
+        </TouchableOpacity>
+        <Modal visible={modalVisible} transparent>
+          <View style={styles.modalOverlay}>
+            <View style={styles.modalContent}>
+              <Text style={styles.modalTitle}>Confirm password to delete account</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="Enter your password"
+                secureTextEntry
+                value={password}
+                onChangeText={setPassword}
+              />
+              <View style={styles.buttonRow}>
+                <TouchableOpacity style={styles.cancelButton} onPress={() => setModalVisible(false)}>
+                  <Text style={styles.cancelText}>Cancel</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.confirmButton} onPress={handleDeleteAccount}>
+                  <Text style={styles.confirmText}>Confirm</Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
-        </View>
-      </Modal>
+        </Modal>
+      </View>
+
+      <View style={styles.section}>
+        <Text style={styles.logoutText}>Log out</Text>
+      </View>
     </ScrollView>
   );
 };
@@ -113,6 +143,24 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     marginBottom: 32,
     textAlign: 'left'
+  },
+  subtitle: {
+
+  },
+  section: {
+
+  },
+  row: {
+
+  },
+  rowText: {
+
+  },
+  sectionText: {
+
+  },
+  logoutText: {
+
   },
   button: {
     backgroundColor: '#F0F0F0',

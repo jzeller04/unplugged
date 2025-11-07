@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Text, StyleSheet, ScrollView } from 'react-native';
+import Icon from 'react-native-vector-icons/Feather';
 
 const CustomizeScreen = () => {
   const [detoxModes, setDetoxModes] = useState([]);
