@@ -31,7 +31,6 @@ const SignInScreen = ({ navigation }) => {
       // a lil sum sum
       if(data.success)
       {
-        Alert.alert("Signing in!");
         navigation.reset({
         index: 0,
         routes: [{ name: 'MainApp' }], 
