@@ -3,21 +3,15 @@ import { View, Text, StyleSheet, TouchableOpacity, Modal, TextInput, Alert } fro
 import { API_URL } from '@env'
 import { getUser, deleteUser } from '../helper/userStorage.js';
 
+var setModalVisible;
+
+var setPassword;
+
 const SettingsScreen = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [password, setPassword] = useState('');
 
   const handleDeleteAccount = async () => {
-    //justin implement backend logic
-    //if password is correct
-      //Alert.alert('Account deleted');
-      //navigation.reset({
-        //index: 0,
-        //routes: [{ name: 'Sign In' }],
-      //});
-    //else
-      //Alert.alert('Incorrect password');
-
     try {
     
       console.log("happening");
@@ -41,7 +35,7 @@ const SettingsScreen = ({ navigation }) => {
           // a lil sum sum
           if(data.success)
           {
-            Alert.alert("Profile deleted");
+            Alert.alert('Account deleted');
             // clear local storage here prob
             await deleteUser();
             navigation.reset({
