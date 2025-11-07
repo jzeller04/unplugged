@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Modal, TextInput } from 'react-native';
 
+var setModalVisible;
+
+var setPassword;
+
 const handleDeleteAccount = () => {
   //justin implement backend logic
   //if password is correct
@@ -15,7 +19,7 @@ const handleDeleteAccount = () => {
     setPassword('');
 };
 
-const SettingsScreen = ({ navigation }) => {
+const SettingsScreen = ({ }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [password, setPassword] = useState('');
 
