@@ -76,6 +76,17 @@ router.post("/signin", async (req, res) => {
   }
 });
 
+router.post("/delete", async (req, res) => {
+  // should add some try in here, tdl lowkey!!!!!
+    const userToDelete = await DBUser.create(req.body);
+    //console.log("Deleting user...", userToDelete.email);
+    userToDelete.deleteFromDB();
+    res.status(201).json({
+      success: true,
+      message: "User deleted"
+    });
+});
+
 
 
 export default router;
