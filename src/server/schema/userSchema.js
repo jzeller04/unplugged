@@ -66,9 +66,19 @@ class DBUser {
             return null;
         }
         const item = unmarshall(ts);
+        console.log("yerr", item);
 
-        return item;
-        
+        return {
+
+            email: item.email,
+            name: item.name,
+            streakCount: item.streakCount,
+            streakGoal: item.streakGoal,
+            lastLogin: item.lastLogin
+
+
+
+        };
         
     }
     
@@ -82,7 +92,7 @@ class DBUser {
         if (!storedHash || typeof storedHash !== "string" || !storedHash.startsWith("$argon2")) {
             console.error("Invalid or missing hash from DB for user:", this.email);
         return false;
-}
+    }
         const passwordMatches = await argon2.verify(storedHash, this.password);
         
         if(passwordMatches) {return true;}

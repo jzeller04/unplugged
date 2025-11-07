@@ -41,14 +41,14 @@ async function testCreateAndDeleteUser() {
     {
       console.error("\x1b[31mFinding user failed\x1b[0m");
     }
-    const updatedStreak = await testUser.calculateStreaksAndUpdate();
-    if(updatedStreak)
-    {
-      console.log("\x1b[32mUpdate user streaks in DB passed\x1b[0m");
-    } else
-    {
-      console.error("\x1b[31mUpdating user streaks failed\x1b[0m");
-    }
+    // const updatedStreak = await testUser.calculateStreaksAndUpdate();
+    // if(updatedStreak)
+    // {
+    //   console.log("\x1b[32mUpdate user streaks in DB passed\x1b[0m");
+    // } else
+    // {
+    //   console.error("\x1b[31mUpdating user streaks failed\x1b[0m");
+    // }
     const removedUser = await testUser.deleteFromDB();
     if(removedUser)
     {

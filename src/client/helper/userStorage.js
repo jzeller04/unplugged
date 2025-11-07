@@ -50,14 +50,23 @@ export async function calculateStreaksAndUpdate() {
     const today = new Date().toISOString().split('T')[0];
     const last = user.lastLogin;
 
+  console.log("Stored user raw:", storedUser);
     if (today === last) {
       console.log('Already logged in today');
     } else if (last && isNextDay(last, today)) {
-      user.streakCount = (user.streakCount || 0) + 1;
+      user.streakCount = user.streakCount + 1;
       console.log('Streak increased!');
     } else {
       user.streakCount = 1;
       console.log('Streak reset.');
+    }
+
+    if(user.streakGoal == "week" && user.streakCount >= 7)
+    {
+      user.streakGoal = "month";
+    } else
+    {
+      user.streakGoal = "week";
     }
 
     user.lastLogin = today;

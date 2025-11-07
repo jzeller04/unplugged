@@ -35,15 +35,11 @@ const SignInScreen = ({ navigation }) => {
       {
         const user = data.user;
         //console.log(user);
-        const testUser = await getUser();
-        if(testUser === null)
-        {
+        console.log(data);
+        
             saveUser(user);
-        }
-        else
-        {
-          console.log("User exists already in storage, doing nothing");
-        }
+        
+
         Alert.alert("Signing in!");
         navigation.reset({
         index: 0,

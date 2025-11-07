@@ -24,8 +24,7 @@ const DashboardScreen = () => {
     try {
       const user = await getUser('user');
       calculateStreaksAndUpdate();
-      console.log(user);
-      console.log(streakCount);
+      setStreakCount(user.streakCount);
       if(user.streakGoal == "week")
       {
         setStreakGoal(7);
@@ -33,7 +32,6 @@ const DashboardScreen = () => {
       {
         setStreakGoal(30);
       }
-      return user.streakCount;
     } catch (error) {
         Alert.alert("Something went wrong...");
     }

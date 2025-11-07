@@ -5,7 +5,7 @@ import { getUser, deleteUser } from '../helper/userStorage.js';
 
 const SettingsScreen = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
-  const [password, setPassword] = useState('');
+  const [userPassword, setPassword] = useState('');
 
   const handleDeleteAccount = async () => {
     //justin implement backend logic
@@ -20,15 +20,15 @@ const SettingsScreen = ({ navigation }) => {
 
     try {
     
-      console.log("happening");
+      //console.log("happening");
         const userInfo = await getUser();
-        
+        //console.log(userInfo);
         const infoToSend = {
           email: userInfo.email,
-          password: userInfo.password
+          password: userPassword
         }
 
-        if(password == infoToSend.password) // may want to change this into a backend req... considering - tdl justin
+        if(userPassword.length !== 0) // may want to change this into a backend req... considering - tdl justin
         {
         const response = await fetch(`${API_URL}/users/delete`, { // we need to find a way to store user info on ts
           method: "POST",
@@ -51,15 +51,19 @@ const SettingsScreen = ({ navigation }) => {
           }
           else
           {
-            Alert.alert("Invalid token");
             return; 
           }
         
         } 
+        else
+          {
+            Alert.alert("Please fill all fields");
+            return; 
+          }
       }
       catch(error)
       {
-        console.error("Error");
+        console.error("Error", error);
         Alert.alert("Something went wrong!");
       }
     
@@ -86,7 +90,7 @@ const SettingsScreen = ({ navigation }) => {
               style={styles.input}
               placeholder="Enter your password"
               secureTextEntry
-              value={password}
+              value={userPassword}
               onChangeText={setPassword}
             />
             <View style={styles.buttonRow}>
