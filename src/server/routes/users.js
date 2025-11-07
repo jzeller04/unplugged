@@ -55,7 +55,7 @@ router.post("/signin", async (req, res) => {
       res.status(201).json({
       success: true,
       message: "User signed in",
-      user: newUser
+      user: newUser.getJSON()
       });
     } else
     {

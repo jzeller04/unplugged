@@ -1,6 +1,7 @@
 import {deleteUser, pushUser, scanWithEmail, isNextDay, updateUser} from "../db/dbUtil.js";
 import argon2 from "argon2";
 import { v4 as uuidv4 } from 'uuid';
+import { unmarshall } from "@aws-sdk/util-dynamodb";
 
 // make class with push/update function for DB. will make coding easier for those looking
 
@@ -57,43 +58,23 @@ class DBUser {
         // return !!updated;
     }
 
-    async calculateStreaksAndUpdate() {
-        try {
-            const userToGrab = await scanWithEmail(this);
-            //console.log(userToGrab);
-            const today = new Date().toISOString().split('T')[0];
-            const last = userToGrab.lastLogin; 
-
-            if(today === last)
-            {
-
-            }
-            else if (isNextDay(last, today)) {
-                userToGrab.streakCount += 1;
-                //console.log("Streak increased!");
-            } else {
-                userToGrab.streakCount = 1;
-                //console.log("Streak reset.");
-            }
-
-            userToGrab.streakCount = 10;
-
-
-            const updated = await updateUser(this, today, userToGrab.streakCount);
-            //console.log("type",updated); // why is this line not being reached
-            return !!updated;
-
-            
-
-        } catch (error) {
-            console.log("error", error);
-            return false;
+    async getJSON()
+    {
+        const ts = await scanWithEmail(this);
+        if(!ts)
+        {
+            return null;
         }
+        const item = unmarshall(ts);
+
+        return item;
+        
+        
     }
     
     async login()
     {
-        const tsUser = await scanWithEmail(this)
+        const tsUser = await scanWithEmail(this);
         if(!tsUser) return false;
 
         const storedHash = tsUser.hashedPassword?.S;
