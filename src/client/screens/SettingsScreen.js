@@ -19,7 +19,7 @@ const handleDeleteAccount = () => {
     setPassword('');
 };
 
-const SettingsScreen = ({ }) => {
+const SettingsScreen = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [password, setPassword] = useState('');
 
