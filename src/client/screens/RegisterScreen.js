@@ -4,34 +4,32 @@ import { API_URL } from '@env'; // do this: npm install react-native-dotenv
 import { saveUser } from '../helper/userStorage.js';
 // and in .env file: API_URL=http://192.168.1.100:3000 << your local ip
 const RegisterScreen = ({ navigation }) => { // the navigation var not used. linting will cry about it
-    const [email, setEmail] = useState('');
-    const [name, setName] = useState('');
-    const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('');
+  const [name, setName] = useState('');
+  const [password, setPassword] = useState('');
   
-    if(navigation)
-    {
-      console.log("react + linting is so bad"); // how to fix this with linting PLEASE
-    }
+  if(navigation)
+  {
+    console.log("react + linting is so bad"); // how to fix this with linting PLEASE
+  }
 
-    const getRegisterInfo = async () => {
-      try{
-        
-        
-        const registerInfo = { // send ts all as an object, this is how it is handled on backend. If you'd like i (justin) can create an abstracted version of this to reuse.
-          email: email,
-          name: name,
-          password: password,
-          streakCount: 0
-        }
+  const getRegisterInfo = async () => {
+    try{
+      const registerInfo = { // send ts all as an object, this is how it is handled on backend. If you'd like i (justin) can create an abstracted version of this to reuse.
+        email: email,
+        name: name,
+        password: password,
+        streakCount: 0
+      }
 
-        // make post req to send to backend
-        console.log("about to fetch:", `${API_URL}/users/register`);
-        //setTimeout(() => console.log("⏳ still waiting on fetch..."), 5000);
-        const response = await fetch(`${API_URL}/users/register`, { // the stuff in orange is the post request. this is the exact same thing as html for context
-          method: "POST",
-          headers:{"Content-Type": "application/json"},
-          body: JSON.stringify(registerInfo),
-        });
+      // make post req to send to backend
+      console.log("about to fetch:", `${API_URL}/users/register`);
+      //setTimeout(() => console.log("⏳ still waiting on fetch..."), 5000);
+      const response = await fetch(`${API_URL}/users/register`, { // the stuff in orange is the post request. this is the exact same thing as html for context
+        method: "POST",
+        headers:{"Content-Type": "application/json"},
+        body: JSON.stringify(registerInfo),
+      });
         const data = await response.json(); // check for response from server
         console.log("Server responded! ✅", data);
 
@@ -54,12 +52,12 @@ const RegisterScreen = ({ navigation }) => { // the navigation var not used. lin
           Alert.alert("Whoops... something with wrong");
         }
       }
-      catch(err)
-      {
-          Alert.alert("Whoops, something went wrong!", err);
-          //console.warn("Fetch error", error);
-      }
+    catch(err)
+    {
+        Alert.alert("Whoops, something went wrong!", err);
+        //console.warn("Fetch error", error);
     }
+  }
 
   return (
     <ScrollView style={styles.container}>
@@ -134,4 +132,3 @@ const styles = StyleSheet.create({
 });
 
 export default RegisterScreen;
-

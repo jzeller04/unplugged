@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, ScrollView, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
+//add navigation for modes later
 const DetoxScreen = () => {
   return (
     <ScrollView style={styles.container}>

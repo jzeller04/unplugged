@@ -57,7 +57,7 @@ const Section = ({ title, items }) => (
 );
 
 const styles = StyleSheet.create({
-  screenContainer: {
+  container: {
     flex: 1,
     padding: 24,
     justifyContent: 'flex-start',

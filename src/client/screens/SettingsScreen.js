@@ -10,7 +10,6 @@ const SettingsScreen = ({ navigation }) => {
 
   const handleDeleteAccount = async () => {
     try {
-    
       console.log("happening");
         const userInfo = await getUser();
         
@@ -21,7 +20,7 @@ const SettingsScreen = ({ navigation }) => {
 
         if(password == infoToSend.password) // may want to change this into a backend req... considering - tdl justin
         {
-        const response = await fetch(`${API_URL}/users/delete`, { // we need to find a way to store user info on ts
+          const response = await fetch(`${API_URL}/users/delete`, { // we need to find a way to store user info on ts
           method: "POST",
           headers:{"Content-Type": "application/json"},
           body: JSON.stringify(infoToSend)
@@ -47,23 +46,18 @@ const SettingsScreen = ({ navigation }) => {
           }
         
         } 
-      }
-      catch(error)
-      {
-        console.error("Error");
-        Alert.alert("Something went wrong!");
-      }
-    
-        
-
+    }
+    catch(error)
+    {
+      console.error("Error");
+      Alert.alert("Something went wrong!");
+    }
           //console.log("about to fetch:", `${API_URL}/users/signin`);
-          
     setModalVisible(false);
     setPassword('');
-};
+  };
 
-
-//add navigation and external links later when implemented
+  //add navigation and external links later when implemented
   return (
     <ScrollView style={styles.container}>
       <Text style={styles.title}>Settings</Text>

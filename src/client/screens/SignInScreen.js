@@ -7,18 +7,16 @@ const SignInScreen = ({ navigation }) => {
   const [password, setPassword] = useState('');
 
   const handleSignIn = async () => {
-
-      if (!email || !password) {
+    if (!email || !password) {
       Alert.alert('Error', 'Please fill out all fields');
       return;
     }
-    
 
     try {
-    console.log('hello2');
+      console.log('hello2');
       const signingInUser = {
-          email: email,
-          password: password
+        email: email,
+        password: password
       };
 
       //console.log("about to fetch:", `${API_URL}/users/signin`);
