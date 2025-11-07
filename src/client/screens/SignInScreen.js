@@ -72,10 +72,11 @@ const SignInScreen = ({ navigation }) => {
         value={password}
         onChangeText={setPassword}
       />
-      <TouchableOpacity style={styles.button1} onPress={handleSignIn}>
-        <Text style={styles.buttonText1}>Sign in</Text>
+      <Text style={styles.forgotPassword}>Forgot password?</Text>
+      <TouchableOpacity style={styles.signInButton} onPress={handleSignIn}>
+        <Text style={styles.signInButtonText}>Sign in</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.button2} onPress={() => navigation.navigate('Register')}>
+      <TouchableOpacity style={styles.registerButton} onPress={() => navigation.navigate('Register')}>
         <Text style={styles.buttonText2}>Register</Text>
       </TouchableOpacity>
     </ScrollView>
@@ -106,30 +107,33 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     marginBottom: 16,
   },
-  button1: {
+  signInButton: {
     backgroundColor: '#426B69',
     paddingVertical: 14,
     borderRadius: 24,
     alignItems: 'center',
     marginTop: 16,
   },
-  button2: {
+  registerButton: {
     backgroundColor: '#F0F0F0',
     paddingVertical: 14,
     borderRadius: 24,
     alignItems: 'center',
     marginTop: 16,
   },
-  buttonText1: {
+  signInButtonText: {
     fontFamily: 'Verdana',
     color: '#FFFFFF',
     fontSize: 16,
   },
-  buttonText2: {
+  registerButtonText: {
   fontFamily: 'Verdana',
   color: '#426B69',
   fontSize: 16,
-  }
+  },
+  forgotPassword: {
+
+  },
 });
 
 export default SignInScreen;
