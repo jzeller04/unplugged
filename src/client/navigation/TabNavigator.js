@@ -9,10 +9,26 @@ const Tab = createBottomTabNavigator();
 function TabNavigator() {
   return (
     <Tab.Navigator screenOptions={styles}>
-      <Tab.Screen name="Dashboard" component={DashboardScreen} />
-      <Tab.Screen name="Customize" component={CustomizeScreen} />
-      <Tab.Screen name="Detox" component={DetoxScreen} />
-      <Tab.Screen name="Settings" component={SettingsScreen} />
+      <Tab.Screen
+        name="Dashboard"
+        component={DashboardScreen}
+        options={{ headerShown: false }}
+      />
+      <Tab.Screen
+        name="Customize"
+        component={CustomizeScreen}
+        options={{ headerShown: false }}
+      />
+      <Tab.Screen
+        name="Detox"
+        component={DetoxScreen}
+        options={{ headerShown: false }}
+      />
+      <Tab.Screen
+        name="Settings"
+        component={SettingsScreen}
+        options={{ headerShown: false }}
+      />
     </Tab.Navigator>
   );
 }
