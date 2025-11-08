@@ -4,9 +4,11 @@ import { API_URL } from '@env'
 import { getUser, deleteUser } from '../helper/userStorage.js';
 
 const SettingsScreen = ({ navigation }) => {
-  const [notificationsEnabled, setNotificationsEnabled] = useState(true);
+  const [notificationsEnabled, setNotificationsEnabled] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [password, setPassword] = useState('');
+
+  const toggleBlocking = () => setNotificationsEnabled(prev => !prev);
 
   const handleDeleteAccount = async () => {
     try {
@@ -68,7 +70,7 @@ const SettingsScreen = ({ navigation }) => {
             <Text style={styles.rowText}>Notifications</Text>
             <Switch
               value={notificationsEnabled}
-              onPress={setNotificationsEnabled}
+              onValueChange={toggleBlocking}
               trackColor={{ false: '#ccc', true: '#426B69' }}
             />
           </View>
