@@ -26,7 +26,7 @@ const DashboardScreen = () => {
         <Text style={styles.reportBody}>This is where you will see weekly report information!</Text>
       </View>
 
-      <View style={challengesContainer}>
+      <View style={styles.challengesContainer}>
         <Text style={styles.challengesTitle}>Weekly Challenges</Text>
         <Text style={styles.challengesBody}>This is where you will see weekly challenges information!</Text>
       </View>

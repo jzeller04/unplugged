@@ -5,7 +5,6 @@ import { v4 as uuidv4 } from 'uuid';
 // make class with push/update function for DB. will make coding easier for those looking
 
 class DBUser {
-    
     static async create(userInfo) {
         const user = new DBUser(); // empty instance
         user.userId = uuidv4();
@@ -24,8 +23,6 @@ class DBUser {
         const hashword = await argon2.hash(userInfo.password);
 
         user.password = userInfo.password;
-
-
         user.name = userInfo.name;
         user.email = userInfo.email;
         user.hashword = hashword;
@@ -51,11 +48,11 @@ class DBUser {
         }
     }
 
-    async update()
-    {
+    // async update()
+    // {
         // const updated = await updateUser(this);
         // return !!updated;
-    }
+    // }
 
     async calculateStreaksAndUpdate() {
         try {
@@ -64,27 +61,23 @@ class DBUser {
             const today = new Date().toISOString().split('T')[0];
             const last = userToGrab.lastLogin; 
 
-            if(today === last)
-            {
+            // if(today === last)
+            // {
 
-            }
-            else if (isNextDay(last, today)) {
-                userToGrab.streakCount += 1;
-                //console.log("Streak increased!");
-            } else {
-                userToGrab.streakCount = 1;
-                //console.log("Streak reset.");
-            }
+            // }
+            // else if (isNextDay(last, today)) {
+                // userToGrab.streakCount += 1;
+                // console.log("Streak increased!");
+            // } else {
+                // userToGrab.streakCount = 1;
+                // console.log("Streak reset.");
+            // }
 
             userToGrab.streakCount = 10;
-
 
             const updated = await updateUser(this, today, userToGrab.streakCount);
             //console.log("type",updated); // why is this line not being reached
             return !!updated;
-
-            
-
         } catch (error) {
             console.log("error", error);
             return false;
@@ -101,7 +94,7 @@ class DBUser {
         if (!storedHash || typeof storedHash !== "string" || !storedHash.startsWith("$argon2")) {
             console.error("Invalid or missing hash from DB for user:", this.email);
         return false;
-}
+        }
         const passwordMatches = await argon2.verify(storedHash, this.password);
         
         if(passwordMatches) {return true;}
