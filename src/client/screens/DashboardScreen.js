@@ -1,36 +1,39 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Alert, ScrollView } from 'react-native';
-import { calculateStreaksAndUpdate, getUser } from '../helper/userStorage.js';
+import React, { useState } from 'react';
+//add useEffect, back in after function is fixed
+import { View, Text, StyleSheet, ScrollView } from 'react-native';
+//add Alert back in after function is fixed
+// add import { calculateStreaksAndUpdate, getUser } from '../helper/userStorage.js'; once function is fixed
 
 const DashboardScreen = () => {
-  const [streakCount, setStreakCount] = useState(0);
-  const [streakGoal, setStreakGoal] = useState(0);
+  //const [streakCount, setStreakCount] = useState(0);
+  //const [streakGoal, setStreakGoal] = useState(0);
 
-  const loadUser = async () => {
-    try {
-      const user = await getUser('user');
-      calculateStreaksAndUpdate();
-      setStreakCount(user.streakCount);
-      if(user.streakGoal == "week")
-      {
-        setStreakGoal(7);
-      } else if(user.streakGoal == "month")
-      {
-        setStreakGoal(30);
-      }
-    } catch (error) {
-        Alert.alert("Something went wrong...");
-    }
-  }
+  //temp commented out, getting big errors on using setState synchronously
+  //const loadUser = async () => {
+    //try {
+      //const user = await getUser('user');
+      //calculateStreaksAndUpdate();
+      //setStreakCount(user.streakCount);
+      //if(user.streakGoal == "week")
+      //{
+        //setStreakGoal(7);
+      //} else if(user.streakGoal == "month")
+      //{
+        //setStreakGoal(30);
+      //}
+    //} catch (error) {
+        //Alert.alert("Something went wrong...");
+    //}
+  //}
 
-  useEffect(() => {
-    loadUser();
-  }, []);
+  //useEffect(() => {
+    //loadUser();
+  //}, []);
 
   return (
     <ScrollView style={styles.container}>
       <Text style={styles.title}>Dashboard</Text>
-      <Text style={styles.streak}>{streakCount} / {streakGoal} day streak of detox!</Text>
+      <Text style={styles.streak}>'streakCount' / 'streakGoal' day streak of detox!</Text>
 
       <View style={styles.reportContainer}>
         <Text style={styles.reportTitle}>Weekly Report</Text>
