@@ -10,7 +10,7 @@ const CustomizeScreen = () => {
   return (
     <ScrollView style={styles.container}>
       <Text style={styles.screenTitle}>Customize</Text>
-      <Text style={styles.description}>Set modes, apps blocked, and automatic blocking in certain hours or locations</Text>
+      <Text style={styles.description}>Set custom app-blocking settings</Text>
 
       <Section
         title="Detox Modes"
@@ -68,17 +68,30 @@ const styles = StyleSheet.create({
     fontFamily: 'Times New Roman',
     fontSize: 48,
     fontWeight: '600',
-    marginBottom: 32,
+    marginBottom: 12,
     textAlign: 'left',
+    marginTop: 50,
   },
   description: {
-
+    color: '#222E50',
+    fontFamily: 'Verdana',
+    fontSize: 18,
+    marginBottom: 18,
   },
   section: {
-
+    flex: 1,
+    backgroundColor: '#F0F0F0',
+    marginBottom: 20,
+    minHeight:200,
+    borderRadius: 30,
+    padding:16,
   },
   sectionTitle: {
-
+    color: '#222E50',
+    fontFamily: 'Times New Roman',
+    fontSize: 24,
+    fontWeight: '600',
+    flex: 1,
   },
   itemRow: {
 
