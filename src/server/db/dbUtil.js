@@ -1,4 +1,5 @@
-import {  DeleteItemCommand, DynamoDBClient,  PutItemCommand, ScanCommand, UpdateItemCommand  } from "@aws-sdk/client-dynamodb";
+import {  DeleteItemCommand, DynamoDBClient,  PutItemCommand, ScanCommand } from "@aws-sdk/client-dynamodb";
+//add UpdateItemCommand to import once used in code
 
 const client = new DynamoDBClient({ region: "us-east-2" });
 
@@ -118,23 +119,26 @@ async function updateUser(user, newDate, newStreak) { // find where to put this.
         return false;
     }
     //console.log("Found user with email: ", userToUpdate.email.S);
-    const params = {
-        TableName: "Unplugged-Users",
-        Key: {
-            userId: { S: userToUpdate.userId.S }
-        },
-            UpdateExpression: "SET lastLoginDate = :date, streakCount = :count",
-            ExpressionAttributeValues: {
-            ":date": { S: newDate },
-            ":count": { N: newStreak?.toString() }
-        },
-        ReturnValues: "ALL_NEW"
-    };
+
+    //temp commented out while const params is not used in this scope
+    //const params = {
+        //TableName: "Unplugged-Users",
+        //Key: {
+            //userId: { S: userToUpdate.userId.S }
+        //},
+            //UpdateExpression: "SET lastLoginDate = :date, streakCount = :count",
+            //ExpressionAttributeValues: {
+            //":date": { S: newDate },
+            //":count": { N: newStreak?.toString() }
+        //},
+        //ReturnValues: "ALL_NEW"
+    //};
 
     try {
-        // temp commented out line 136 due to linting error
+        // temp commented out following line due to linting error
         // const result = await client.send(new UpdateItemCommand(params));
-        // console.log("User updated successfully. New values:");
+        
+        console.log("User updated successfully. New values:");
         // console.log(result.Attributes);
 
         return true;

@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import { Text, StyleSheet, ScrollView } from 'react-native';
+import React from 'react';
+import { Text, StyleSheet, ScrollView, View } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 
 const CustomizeScreen = () => {
-  const [detoxModes, setDetoxModes] = useState([]);
-  const [blockedLocations, setBlockedLocations] = useState([]);
-  const [scheduledDowntimes, setScheduledDowntimes] = useState([]);
+  //const [detoxModes, setDetoxModes] = useState([]);
+  //const [blockedLocations, setBlockedLocations] = useState([]);
+  //const [scheduledDowntimes, setScheduledDowntimes] = useState([]);
 
   return (
     <ScrollView style={styles.container}>
@@ -14,7 +14,8 @@ const CustomizeScreen = () => {
 
       <Section
         title="Detox Modes"
-        items={detoxModes}
+        items={''}
+        //items={detoxModes}
         
         //add functionality later
         //addLabel="Add new mode"
@@ -23,7 +24,8 @@ const CustomizeScreen = () => {
 
       <Section
         title="Blocked Locations"
-        items={blockedLocations}
+        items={''}
+        //items={blockedLocations}
 
         //add functionality later
         //addLabel="Add new location"
@@ -32,7 +34,8 @@ const CustomizeScreen = () => {
 
       <Section
         title="Scheduled Downtime"
-        items={scheduledDowntimes}
+        items={''}
+        //items={scheduledDowntimes}
 
         //add functionality later
         //addLabel="Add new downtime"

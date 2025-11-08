@@ -1,4 +1,5 @@
-import {deleteUser, pushUser, scanWithEmail, isNextDay, updateUser} from "../db/dbUtil.js";
+import {deleteUser, pushUser, scanWithEmail, updateUser} from "../db/dbUtil.js";
+//add isNextDay to previous import once used in code
 import argon2 from "argon2";
 import { v4 as uuidv4 } from 'uuid';
 
@@ -59,7 +60,10 @@ class DBUser {
             const userToGrab = await scanWithEmail(this);
             //console.log(userToGrab);
             const today = new Date().toISOString().split('T')[0];
-            const last = userToGrab.lastLogin; 
+
+            // temp commented out while the code below is commented out
+            // all temp commented out due to empty code block
+            // const last = userToGrab.lastLogin; 
 
             // if(today === last)
             // {

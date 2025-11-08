@@ -6,10 +6,6 @@ const DashboardScreen = () => {
   const [streakCount, setStreakCount] = useState(0);
   const [streakGoal, setStreakGoal] = useState(0);
 
-  useEffect(() => {
-    loadUser();
-  }, []);
-
   const loadUser = async () => {
     try {
       const user = await getUser('user');
@@ -26,6 +22,10 @@ const DashboardScreen = () => {
         Alert.alert("Something went wrong...");
     }
   }
+
+  useEffect(() => {
+    loadUser();
+  }, []);
 
   return (
     <ScrollView style={styles.container}>
