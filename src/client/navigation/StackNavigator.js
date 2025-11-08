@@ -3,7 +3,6 @@ import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import SignInScreen from '../screens/SignInScreen.js';
 import RegisterScreen from '../screens/RegisterScreen.js';
-import DashboardScreen from '../screens/DashboardScreen.js';
 
 const Stack = createNativeStackNavigator();
 
@@ -19,7 +18,7 @@ const StackNavigator = () => {
         name="Register"
         component={RegisterScreen}
         options={{
-          headerShown: false,
+          headerTitle: 'false',
           headerBackTitle: 'Back'
         }}
       />

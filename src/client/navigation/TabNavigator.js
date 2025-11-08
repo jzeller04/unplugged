@@ -8,26 +8,26 @@ const Tab = createBottomTabNavigator();
 
 function TabNavigator() {
   return (
-    <Tab.Navigator screenOptions={styles}>
+        <Tab.Navigator screenOptions={styles}>
       <Tab.Screen
         name="Dashboard"
         component={DashboardScreen}
-        options={{ headerShown: false }}
+        options={{ header: () => null }}
       />
       <Tab.Screen
         name="Customize"
         component={CustomizeScreen}
-        options={{ headerShown: false }}
+        options={{ header: () => null }}
       />
       <Tab.Screen
         name="Detox"
         component={DetoxScreen}
-        options={{ headerShown: false }}
+        options={{ header: () => null }}
       />
       <Tab.Screen
         name="Settings"
         component={SettingsScreen}
-        options={{ headerShown: false }}
+        options={{ header: () => null }}
       />
     </Tab.Navigator>
   );
