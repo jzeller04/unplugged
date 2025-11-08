@@ -107,6 +107,7 @@ const styles = StyleSheet.create({
     fontSize: 48,
     fontWeight: '600',
     marginBottom: 36,
+    marginTop: -100,
     textAlign: 'center',
   },
   input: {
