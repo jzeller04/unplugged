@@ -46,31 +46,58 @@ const styles = StyleSheet.create({
     fontFamily: 'Times New Roman',
     fontSize: 48,
     fontWeight: '600',
-    marginBottom: 32,
+    marginBottom: 12,
     textAlign: 'left',
+    marginTop: 50,
   },
   streak: {
     color: '#222E50',
     fontFamily: 'Verdana',
     fontSize: 18,
+    marginBottom: 18,
   },
   reportContainer: {
-
+    flex: 1,
+    backgroundColor: '#F0F0F0',
+    marginBottom: 20,
+    minHeight:250,
+    borderRadius: 30,
+    padding:16,
   },
   reportTitle: {
-
+    color: '#222E50',
+    fontFamily: 'Times New Roman',
+    fontSize: 24,
+    fontWeight: '600',
+    flex: 1,
   },
   reportBody: {
-
+    color: '#222E50',
+    fontFamily: 'Verdana',
+    fontSize: 16,
+    flex: 1,
+    justifyContent: 'center',
   },
   challengesContainer: {
-
+    flex: 1,
+    backgroundColor: '#B5CA8D',
+    minHeight:250,
+    borderRadius: 30,
+    padding: 16,
   },
   challengesTitle: {
-
+    color: '#222E50',
+    fontFamily: 'Times New Roman',
+    fontSize: 24,
+    fontWeight: '600',
+    flex: 1,
   },
   challengesBody: {
-
+    color: '#222E50',
+    fontFamily: 'Verdana',
+    fontSize: 16,
+    flex: 1,
+    justifyContent: 'center',
   },
 });
 
