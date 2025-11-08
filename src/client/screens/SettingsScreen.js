@@ -69,6 +69,7 @@ const SettingsScreen = ({ navigation }) => {
             <Switch
               value={notificationsEnabled}
               onPress={setNotificationsEnabled}
+              trackColor={{ false: '#ccc', true: '#426B69' }}
             />
           </View>
       </View>
@@ -76,18 +77,21 @@ const SettingsScreen = ({ navigation }) => {
       <Text style={styles.subtitle}>About</Text>
       <View style={styles.section}>
         <Text style={styles.sectionText}>Terms of Service</Text>
+        <View style={styles.divider}/>
         <Text style={styles.sectionText}>Privacy policy</Text>
       </View>
 
       <Text style={styles.subtitle}>Feedback & Support</Text>
       <View style={styles.section}>
         <Text style={styles.sectionText}>Rate our app</Text>
+        <View style={styles.divider}/>
         <Text style={styles.sectionText}>FAQs</Text>
       </View>
 
       <Text style={styles.subtitle}>Account management</Text>
       <View style={styles.section}>
         <Text style={styles.sectionText}>Account information</Text>
+        <View style={styles.divider}/>
         <TouchableOpacity style={styles.button} onPress={() => setModalVisible(true)}>
           <Text style={styles.buttonText}>Delete account</Text>
         </TouchableOpacity>
@@ -115,7 +119,7 @@ const SettingsScreen = ({ navigation }) => {
         </Modal>
       </View>
 
-      <View style={styles.section}>
+      <View style={styles.logoutButton}>
         <Text style={styles.logoutText}>Log out</Text>
       </View>
     </ScrollView>
@@ -135,33 +139,59 @@ const styles = StyleSheet.create({
     fontFamily: 'Times New Roman',
     fontSize: 48,
     fontWeight: '600',
-    marginBottom: 32,
-    textAlign: 'left'
+    marginBottom: 12,
+    textAlign: 'left',
+    marginTop: 50,
   },
   subtitle: {
-
+    color: '#222E50',
+    fontFamily: 'Verdana',
+    fontSize: 18,
+    marginBottom: 16,
   },
   section: {
-
+    flex: 1,
+    flexDirection: 'column',
+    gap: 12,
+    backgroundColor: '#F0F0F0',
+    marginBottom: 25,
+    borderRadius: 24,
+    padding:16,
+  },
+  divider: {
+    height: 1,
+    backgroundColor: '#CCCCCC',
   },
   row: {
-
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   rowText: {
-
+    color: '#222E50',
+    fontFamily: 'Verdana',
+    fontSize: 16,
   },
   sectionText: {
-
+    flex: 1,
+    color: '#222E50',
+    fontFamily: 'Verdana',
+    fontSize: 16,
   },
-  logoutText: {
-
-  },
-  button: {
-    backgroundColor: '#F0F0F0',
+  logoutButton: {
+    backgroundColor: '#426B69',
     paddingVertical: 14,
     borderRadius: 24,
     alignItems: 'center',
-    marginTop: 16
+    marginTop: 16,
+  },
+  logoutText: {
+    color: '#FFFFFF',
+    fontFamily: 'Verdana',
+    fontSize: 16,
+  },
+  button: {
+    
   },
   buttonText: {
     fontFamily: 'Verdana',
@@ -229,7 +259,7 @@ const styles = StyleSheet.create({
   confirmText: {
     color: '#FFFFFF',
     fontFamily: 'Verdana'
-  }
+  },
 });
 
 export default SettingsScreen;
