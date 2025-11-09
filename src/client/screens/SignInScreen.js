@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { ScrollView, Text, TextInput, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { API_URL } from '@env'; // do this: npm install react-native-dotenv
-// import { getUser, saveUser } from '../helper/userStorage.js';
+import { getUser, saveUser, up } from '../helper/userStorage.js';
 const SignInScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -13,7 +13,7 @@ const SignInScreen = ({ navigation }) => {
     }
 
     try {
-      console.log('hello2');
+    //console.log('hello2');
       const signingInUser = {
         email: email,
         password: password
@@ -31,6 +31,13 @@ const SignInScreen = ({ navigation }) => {
       // a lil sum sum
       if(data.success)
       {
+        const user = data.user;
+        //console.log(user);
+        console.log(data);
+        
+            saveUser(user);
+        
+
         navigation.reset({
         index: 0,
         routes: [{ name: 'MainApp' }], 
@@ -73,14 +80,14 @@ const SignInScreen = ({ navigation }) => {
       <TouchableOpacity style={styles.signInButton} onPress={handleSignIn}>
         <Text style={styles.signInButtonText}>Sign in</Text>
       </TouchableOpacity>
+      <Text style={styles.haveAccount}>Don't have an account?</Text>
       <TouchableOpacity style={styles.registerButton} onPress={() => navigation.navigate('Register')}>
-        <Text style={styles.buttonText2}>Register</Text>
+        <Text style={styles.registerButtonText}>Register</Text>
       </TouchableOpacity>
     </ScrollView>
   );
 };
 
-//temporary style sheet, replace later in separate file or with components
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#fff',
@@ -110,6 +117,7 @@ const styles = StyleSheet.create({
     borderRadius: 24,
     alignItems: 'center',
     marginTop: 16,
+    marginBottom: 50,
   },
   registerButton: {
     backgroundColor: '#F0F0F0',
@@ -129,8 +137,17 @@ const styles = StyleSheet.create({
   fontSize: 16,
   },
   forgotPassword: {
-
+    fontFamily: 'Verdana',
+    color: '#426B69',
+    marginLeft: 16,
+    textDecorationLine: 'underline',
   },
+  haveAccount: {
+    fontFamily: 'Verdana',
+    color: '#222E50',
+    fontSize: 16,
+    textAlign: 'center',
+  }
 });
 
 export default SignInScreen;

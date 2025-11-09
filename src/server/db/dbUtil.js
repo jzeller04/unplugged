@@ -21,6 +21,7 @@ async function pushUser(user) {
             name: { S: user.name },
             email: { S: user.email },
             streakCount: { N: "0" },
+            streakGoal: {S: "week"},
             hashedPassword: { S: user.hashword },
             lastLogin: { S: today }
         }
@@ -89,7 +90,7 @@ async function scanWithEmail(user) {
 async function deleteUser(user) {
     try {
         const data = await scanWithEmail(user); // check if user exists
-        console.log(data);
+        //console.log(data);
         if(data)
         {
             // console.log(data);

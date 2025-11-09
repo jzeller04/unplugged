@@ -13,14 +13,16 @@ const RegisterScreen = ({ navigation }) => { // the navigation var not used. lin
     console.log("react + linting is so bad"); // how to fix this with linting PLEASE
   }
 
-  const getRegisterInfo = async () => {
-    try{
-      const registerInfo = { // send ts all as an object, this is how it is handled on backend. If you'd like i (justin) can create an abstracted version of this to reuse.
-        email: email,
-        name: name,
-        password: password,
-        streakCount: 0
-      }
+    const getRegisterInfo = async () => {
+      try{
+        const registerInfo = { // send ts all as an object, this is how it is handled on backend. If you'd like i (justin) can create an abstracted version of this to reuse.
+          email: email,
+          name: name,
+          password: password,
+          streakCount: 0,
+          streakGoal: "week",
+          lastLogin: new Date().toISOString().split('T')[0]
+        }
 
       // make post req to send to backend
       console.log("about to fetch:", `${API_URL}/users/register`);

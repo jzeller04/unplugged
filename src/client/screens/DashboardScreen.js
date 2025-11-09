@@ -1,34 +1,31 @@
-import React from 'react';
-//add { useEffect, useState } back in after function is fixed
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
-//add Alert back in after function is fixed
-// add import { calculateStreaksAndUpdate, getUser } from '../helper/userStorage.js'; once function is fixed
+import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, ScrollView, Alert } from 'react-native';
+import { calculateStreaksAndUpdate, getUser } from '../helper/userStorage.js';
 
 const DashboardScreen = () => {
-  //const [streakCount, setStreakCount] = useState(0);
-  //const [streakGoal, setStreakGoal] = useState(0);
+  const [streakCount, setStreakCount] = useState(0);
+  const [streakGoal, setStreakGoal] = useState(0);
 
-  //temp commented out, getting big errors on using setState synchronously
-  //const loadUser = async () => {
-    //try {
-      //const user = await getUser('user');
-      //calculateStreaksAndUpdate();
-      //setStreakCount(user.streakCount);
-      //if(user.streakGoal == "week")
-      //{
-        //setStreakGoal(7);
-      //} else if(user.streakGoal == "month")
-      //{
-        //setStreakGoal(30);
-      //}
-    //} catch (error) {
-        //Alert.alert("Something went wrong...");
-    //}
-  //}
+  const loadUser = async () => {
+    try {
+      const user = await getUser('user');
+      calculateStreaksAndUpdate();
+      setStreakCount(user.streakCount);
+      if(user.streakGoal == "week")
+      {
+        setStreakGoal(7);
+      } else if(user.streakGoal == "month")
+      {
+        setStreakGoal(30);
+      }
+    } catch (error) {
+        Alert.alert("Something went wrong...");
+    }
+  }
 
-  //useEffect(() => {
-    //loadUser();
-  //}, []);
+    useEffect(() => {
+    loadUser();
+  }, []);
 
   return (
     <ScrollView style={styles.container}>
