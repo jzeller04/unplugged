@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { API_URL } from '@env'; // do this: npm install react-native-dotenv
-// import { getUser, saveUser } from '../helper/userStorage.js';
+import { getUser, saveUser, up } from '../helper/userStorage.js';
 const SignInScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -15,7 +15,7 @@ const SignInScreen = ({ navigation }) => {
     
 
     try {
-    console.log('hello2');
+    //console.log('hello2');
       const signingInUser = {
           email: email,
           password: password
@@ -33,6 +33,13 @@ const SignInScreen = ({ navigation }) => {
       // a lil sum sum
       if(data.success)
       {
+        const user = data.user;
+        //console.log(user);
+        console.log(data);
+        
+            saveUser(user);
+        
+
         Alert.alert("Signing in!");
         navigation.reset({
         index: 0,

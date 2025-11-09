@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Switch, Alert } from 'react-native';
-import { getUser } from '../helper/userStorage.js';
+import { calculateStreaksAndUpdate, getUser } from '../helper/userStorage.js';
 
 const DashboardScreen = () => {
   const [isBlockingEnabled, setIsBlockingEnabled] = useState(false);
@@ -11,18 +11,33 @@ const DashboardScreen = () => {
 
   // add int variable for user streak then replace !placeholder! with {variable name} in line 18
   const [streakCount, setStreakCount] = useState(0);
+  const [streakGoal, setStreakGoal] = useState(0);
+  
+
+
+
+  useEffect(() => {
+    loadUser();
+  }, []);
 
   const loadUser = async () => {
     try {
       const user = await getUser('user');
-      console.log(user);
-      console.log(streakCount);
-      return user.streakCount;
+      calculateStreaksAndUpdate();
+      setStreakCount(user.streakCount);
+      if(user.streakGoal == "week")
+      {
+        setStreakGoal(7);
+      } else if(user.streakGoal == "month")
+      {
+        setStreakGoal(30);
+      }
     } catch (error) {
         Alert.alert("Something went wrong...");
     }
   }
 
+  
   
 
 
@@ -30,8 +45,9 @@ const DashboardScreen = () => {
     <View style={styles.container}>
       <Text style={styles.title}>Dashboard</Text>
 
+      <Text style={styles.label}>{streakCount} / {streakGoal} day streak of detox!</Text>
+      
       <View style={styles.toggleRow}>
-        <Text style={styles.label}>{streakCount} day streak of detox!</Text>
         <Text style={styles.label}>App Blocking</Text>
         <Switch
           value={isBlockingEnabled}

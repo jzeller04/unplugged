@@ -44,7 +44,7 @@ router.post("/signin", async (req, res) => {
     console.log("Received sign in request:", req.body);
 
     const newUser = await DBUser.create(req.body);
-    console.log("newUser:", newUser);
+    //console.log("newUser:", newUser);
     const success = await newUser.login();
 
 
@@ -52,10 +52,15 @@ router.post("/signin", async (req, res) => {
     // Send a success response
     if(success)
     {
+
+      const userData = await newUser.getJSON();
+
+      console.log(userData);
+
       res.status(201).json({
       success: true,
       message: "User signed in",
-      user: newUser
+      user: userData
       });
     } else
     {
@@ -80,7 +85,9 @@ router.post("/delete", async (req, res) => {
   // should add some try in here, tdl lowkey!!!!!
     const userToDelete = await DBUser.create(req.body);
     //console.log("Deleting user...", userToDelete.email);
-    userToDelete.deleteFromDB();
+    const loggedIn = await userToDelete.login();
+    if(loggedIn)
+      userToDelete.deleteFromDB();
     res.status(201).json({
       success: true,
       message: "User deleted"
