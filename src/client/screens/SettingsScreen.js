@@ -45,6 +45,7 @@ const SettingsScreen = ({ navigation }) => {
           }
           else
           {
+            Alert.alert('Incorrect Password');
             return; 
           }
         

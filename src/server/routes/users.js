@@ -96,7 +96,7 @@ router.post("/delete", async (req, res) => {
     }
     else
     {
-      req.status(201).json({
+      res.status(201).json({
         success: false,
         message: "Incorrect password"
       });
