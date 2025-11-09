@@ -8,13 +8,13 @@ const CustomizeScreen = () => {
   //const [scheduledDowntimes, setScheduledDowntimes] = useState([]);
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView style={styles.container} contentContainerStyle={{ justifyContent: 'flex-start' }}>
       <Text style={styles.screenTitle}>Customize</Text>
       <Text style={styles.description}>Set custom app-blocking settings</Text>
 
       <Section
         title="Detox Modes"
-        items={''}
+        items={[]}
         //items={detoxModes}
         
         //add functionality later
@@ -63,7 +63,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 24,
-    justifyContent: 'flex-start',
     backgroundColor: '#fff',
   },
   screenTitle: {

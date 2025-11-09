@@ -66,7 +66,7 @@ const SettingsScreen = ({ navigation }) => {
 
   //add navigation and external links later when implemented
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView style={styles.container} contentContainerStylele={{ justifyContent: 'flex-start' }}>
       <Text style={styles.title}>Settings</Text>
 
       <Text style={styles.subtitle}>Notification Settings</Text>
@@ -138,7 +138,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 24,
-    justifyContent: 'flex-start',
     backgroundColor: '#FFFFFF'
   },
   title: {

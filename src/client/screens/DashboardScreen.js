@@ -28,7 +28,7 @@ const DashboardScreen = () => {
   }, []);
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView style={styles.container} contentContainerStylele={{ justifyContent: 'flex-start' }}>
       <Text style={styles.title}>Dashboard</Text>
       <Text style={styles.streak}>streakCount / streakGoal day streak of detox!</Text>
 
@@ -49,7 +49,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 24,
-    justifyContent: 'flex-start',
     backgroundColor: '#fff',
   },
   title: {

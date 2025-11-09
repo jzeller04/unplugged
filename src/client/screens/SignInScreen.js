@@ -57,7 +57,7 @@ const SignInScreen = ({ navigation }) => {
   };
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView style={styles.container} contentContainerStylele={{ justifyContent: 'flex-start' }}>
       <Text style={styles.title}>Sign in</Text>
       <TextInput
         style={styles.input}
@@ -92,7 +92,6 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: '#fff',
     flex: 1,
-    justifyContent: 'center',
     padding: 24,
   },
   title: {

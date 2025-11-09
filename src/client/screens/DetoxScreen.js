@@ -4,7 +4,7 @@ import { View, ScrollView, Text, StyleSheet, TouchableOpacity } from 'react-nati
 //add navigation for modes later
 const DetoxScreen = () => {
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView style={styles.container} contentContainerStylele={{ justifyContent: 'flex-start' }}>
       <Text style={styles.title}>Detox</Text>
       <Text style={styles.description}>View stats and start working</Text>
 
@@ -34,7 +34,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 24,
-    justifyContent: 'flex-start',
     backgroundColor: '#fff',
   },
   title: {
