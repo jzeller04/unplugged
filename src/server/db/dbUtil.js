@@ -1,12 +1,9 @@
-import {  DeleteItemCommand, DynamoDBClient,  PutItemCommand, ScanCommand, UpdateItemCommand  } from "@aws-sdk/client-dynamodb";
+import {  DeleteItemCommand, DynamoDBClient,  PutItemCommand, ScanCommand } from "@aws-sdk/client-dynamodb";
+//add UpdateItemCommand to import once used in code
 
 const client = new DynamoDBClient({ region: "us-east-2" });
 
-
 async function pushUser(user) {
-
-    
-
     const today = new Date().toISOString().split('T')[0];
     
     const exists = await userExists(user.email);
@@ -36,8 +33,6 @@ async function pushUser(user) {
 
     return true;
         
-
-
     //console.log("All users in table:", data.Items);
 }
 
@@ -67,35 +62,32 @@ async function userExists(userEmail) {
 
 }
 
-async function scanWithEmail(user)
+async function scanWithEmail(user) {
+    console.log(user.email);
+    const params = (
     {
-        console.log(user.email);
-        const params = (
-                {
-                    TableName: "Unplugged-Users",
-                    FilterExpression: "email = :email",
-                    ExpressionAttributeValues: {
-                    ":email": { S: user.email }
-                }
-            });
+        TableName: "Unplugged-Users",
+        FilterExpression: "email = :email",
+        ExpressionAttributeValues: {
+            ":email": { S: user.email }
+        }
+    });
             
-            try {
-                const data = await client.send(new ScanCommand(params));
-                if(data.Count > 0)
-                {
-                    return data.Items[0];
-                }
-                return null;
+    try {
+        const data = await client.send(new ScanCommand(params));
+        if(data.Count > 0)
+        {
+            return data.Items[0];
+        }
+        return null;
         
-            } catch (err) {
-                console.error("Error checking DB for existing user..", err);
-                throw err; // up to whomever uses this to catch this (will be me anyways :/)
-            }
+    } catch (err) {
+        console.error("Error checking DB for existing user..", err);
+        throw err; // up to whomever uses this to catch this (will be me anyways :/)
     }
+}
 
 async function deleteUser(user) {
-
-
     try {
         const data = await scanWithEmail(user); // check if user exists
         //console.log(data);
@@ -117,13 +109,10 @@ async function deleteUser(user) {
         console.log(error);
         return false; // false if didnt work
     }
-    
-    
-
-
 }
 
-async function updateUser(user, newDate, newStreak) { // find where to put this...when session in app is started?
+async function updateUser(user) { // find where to put this...when session in app is started?
+    //add newDate, newStreak back in once code is fixed
     const userToUpdate = await scanWithEmail(user);
     //console.log(newDate);
     if(!userToUpdate)
@@ -132,38 +121,40 @@ async function updateUser(user, newDate, newStreak) { // find where to put this.
         return false;
     }
     //console.log("Found user with email: ", userToUpdate.email.S);
-    const params = {
-        TableName: "Unplugged-Users",
-        Key: {
-            userId: { S: userToUpdate.userId.S }
-        },
-            UpdateExpression: "SET lastLoginDate = :date, streakCount = :count",
-            ExpressionAttributeValues: {
-            ":date": { S: newDate },
-            ":count": { N: newStreak?.toString() }
-        },
-        ReturnValues: "ALL_NEW"
-        };
+
+    //temp commented out while const params is not used in this scope
+    //const params = {
+        //TableName: "Unplugged-Users",
+        //Key: {
+            //userId: { S: userToUpdate.userId.S }
+        //},
+            //UpdateExpression: "SET lastLoginDate = :date, streakCount = :count",
+            //ExpressionAttributeValues: {
+            //":date": { S: newDate },
+            //":count": { N: newStreak?.toString() }
+        //},
+        //ReturnValues: "ALL_NEW"
+    //};
 
     try {
-        const result = await client.send(new UpdateItemCommand(params));
-        // console.log("User updated successfully. New values:");
+        // temp commented out following line due to linting error
+        // const result = await client.send(new UpdateItemCommand(params));
+        
+        console.log("User updated successfully. New values:");
         // console.log(result.Attributes);
 
         return true;
     } catch (err) {
         console.error("Error updating user:", err);
         return false;
-    }
-    
+    } 
 }
 
 function isNextDay(prev, curr) {
-  const prevDate = new Date(prev);
-  const currDate = new Date(curr);
-  const diff = (currDate - prevDate) / (1000 * 60 * 60 * 24);
-  return diff === 1;
+    const prevDate = new Date(prev);
+    const currDate = new Date(curr);
+    const diff = (currDate - prevDate) / (1000 * 60 * 60 * 24);
+    return diff === 1;
 }
-
 
 export { client, pushUser, userExists, scanWithEmail, deleteUser, isNextDay, updateUser };

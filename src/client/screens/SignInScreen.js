@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import { ScrollView, Text, TextInput, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { API_URL } from '@env'; // do this: npm install react-native-dotenv
 import { getUser, saveUser, up } from '../helper/userStorage.js';
 const SignInScreen = ({ navigation }) => {
@@ -7,18 +7,16 @@ const SignInScreen = ({ navigation }) => {
   const [password, setPassword] = useState('');
 
   const handleSignIn = async () => {
-
-      if (!email || !password) {
+    if (!email || !password) {
       Alert.alert('Error', 'Please fill out all fields');
       return;
     }
-    
 
     try {
     //console.log('hello2');
       const signingInUser = {
-          email: email,
-          password: password
+        email: email,
+        password: password
       };
 
       //console.log("about to fetch:", `${API_URL}/users/signin`);
@@ -40,7 +38,6 @@ const SignInScreen = ({ navigation }) => {
             saveUser(user);
         
 
-        Alert.alert("Signing in!");
         navigation.reset({
         index: 0,
         routes: [{ name: 'MainApp' }], 
@@ -60,7 +57,7 @@ const SignInScreen = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <Text style={styles.title}>Sign in</Text>
       <TextInput
         style={styles.input}
@@ -79,14 +76,15 @@ const SignInScreen = ({ navigation }) => {
         value={password}
         onChangeText={setPassword}
       />
-      <TouchableOpacity style={styles.button1} onPress={handleSignIn}>
-        <Text style={styles.buttonText1}>Sign in</Text>
+      <Text style={styles.forgotPassword}>Forgot password?</Text>
+      <TouchableOpacity style={styles.signInButton} onPress={handleSignIn}>
+        <Text style={styles.signInButtonText}>Sign in</Text>
       </TouchableOpacity>
       <Text style={styles.haveAccount}>Don't have an account?</Text>
-      <TouchableOpacity style={styles.button2} onPress={() => navigation.navigate('Register')}>
-        <Text style={styles.buttonText2}>Register</Text>
+      <TouchableOpacity style={styles.registerButton} onPress={() => navigation.navigate('Register')}>
+        <Text style={styles.registerButtonText}>Register</Text>
       </TouchableOpacity>
-    </View>
+    </ScrollView>
   );
 };
 

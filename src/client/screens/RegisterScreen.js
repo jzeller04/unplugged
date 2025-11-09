@@ -1,22 +1,20 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import { Text, TextInput, StyleSheet, TouchableOpacity, Alert, ScrollView } from 'react-native';
 import { API_URL } from '@env'; // do this: npm install react-native-dotenv
 import { saveUser } from '../helper/userStorage.js';
 // and in .env file: API_URL=http://192.168.1.100:3000 << your local ip
 const RegisterScreen = ({ navigation }) => { // the navigation var not used. linting will cry about it
-    const [email, setEmail] = useState('');
-    const [name, setName] = useState('');
-    const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('');
+  const [name, setName] = useState('');
+  const [password, setPassword] = useState('');
   
-    if(navigation)
-    {
-      console.log("react + linting is so bad"); // how to fix this with linting PLEASE
-    }
+  if(navigation)
+  {
+    console.log("react + linting is so bad"); // how to fix this with linting PLEASE
+  }
 
     const getRegisterInfo = async () => {
       try{
-        
-        
         const registerInfo = { // send ts all as an object, this is how it is handled on backend. If you'd like i (justin) can create an abstracted version of this to reuse.
           email: email,
           name: name,
@@ -26,14 +24,14 @@ const RegisterScreen = ({ navigation }) => { // the navigation var not used. lin
           lastLogin: new Date().toISOString().split('T')[0]
         }
 
-        // make post req to send to backend
-        console.log("about to fetch:", `${API_URL}/users/register`);
-        //setTimeout(() => console.log("⏳ still waiting on fetch..."), 5000);
-        const response = await fetch(`${API_URL}/users/register`, { // the stuff in orange is the post request. this is the exact same thing as html for context
-          method: "POST",
-          headers:{"Content-Type": "application/json"},
-          body: JSON.stringify(registerInfo),
-        });
+      // make post req to send to backend
+      console.log("about to fetch:", `${API_URL}/users/register`);
+      //setTimeout(() => console.log("⏳ still waiting on fetch..."), 5000);
+      const response = await fetch(`${API_URL}/users/register`, { // the stuff in orange is the post request. this is the exact same thing as html for context
+        method: "POST",
+        headers:{"Content-Type": "application/json"},
+        body: JSON.stringify(registerInfo),
+      });
         const data = await response.json(); // check for response from server
         console.log("Server responded! ✅", data);
 
@@ -56,26 +54,15 @@ const RegisterScreen = ({ navigation }) => { // the navigation var not used. lin
           Alert.alert("Whoops... something with wrong");
         }
       }
-      catch(err)
-      {
-          Alert.alert("Whoops, something went wrong!", err);
-          //console.warn("Fetch error", error);
-      }
+    catch(err)
+    {
+        Alert.alert("Whoops, something went wrong!", err);
+        //console.warn("Fetch error", error);
     }
-    
-    // const handleRegister = () => { // may be easier to check valid info here actually... can still do it in backend tho
-    //     if (!email || !name || !password) {
-    //     Alert.alert('Error', 'Please fill out all fields');
-    //     return;
-    //     }
-    //    navigation.reset({
-    //    index: 0,
-    //    routes: [{ name: 'Dashboard' }],
-    // });
-    // };
+  }
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <Text style={styles.title}>Register</Text>
       <TextInput
         style={styles.input}
@@ -104,7 +91,7 @@ const RegisterScreen = ({ navigation }) => { // the navigation var not used. lin
       <TouchableOpacity style={styles.button} onPress={getRegisterInfo}>
         <Text style={styles.buttonText}>Register</Text>
       </TouchableOpacity>
-    </View>
+    </ScrollView>
   );
 };
 
@@ -122,6 +109,7 @@ const styles = StyleSheet.create({
     fontSize: 48,
     fontWeight: '600',
     marginBottom: 36,
+    marginTop: -100,
     textAlign: 'center',
   },
   input: {
@@ -147,4 +135,3 @@ const styles = StyleSheet.create({
 });
 
 export default RegisterScreen;
-

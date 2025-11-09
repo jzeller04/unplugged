@@ -1,24 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Switch, Alert } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Alert } from 'react-native';
 import { calculateStreaksAndUpdate, getUser } from '../helper/userStorage.js';
 
 const DashboardScreen = () => {
-  const [isBlockingEnabled, setIsBlockingEnabled] = useState(false);
-  const [isBypassEnabled, setIsBypassEnabled] = useState(false);
-
-  const toggleBlocking = () => setIsBlockingEnabled(prev => !prev);
-  const toggleBypass = () => setIsBypassEnabled(prev => !prev);
-
-  // add int variable for user streak then replace !placeholder! with {variable name} in line 18
   const [streakCount, setStreakCount] = useState(0);
   const [streakGoal, setStreakGoal] = useState(0);
-  
-
-
-
-  useEffect(() => {
-    loadUser();
-  }, []);
 
   const loadUser = async () => {
     try {
@@ -37,40 +23,28 @@ const DashboardScreen = () => {
     }
   }
 
-  
-  
-
+    useEffect(() => {
+    loadUser();
+  }, []);
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <Text style={styles.title}>Dashboard</Text>
+      <Text style={styles.streak}>streakCount / streakGoal day streak of detox!</Text>
 
-      <Text style={styles.label}>{streakCount} / {streakGoal} day streak of detox!</Text>
-      
-      <View style={styles.toggleRow}>
-        <Text style={styles.label}>App Blocking</Text>
-        <Switch
-          value={isBlockingEnabled}
-          onValueChange={toggleBlocking}
-          trackColor={{ false: '#ccc', true: '#426B69' }}
-          thumbColor={isBlockingEnabled ? '#fff' : '#f4f3f4'}
-        />
+      <View style={styles.reportContainer}>
+        <Text style={styles.reportTitle}>Weekly Report</Text>
+        <Text style={styles.reportBody}>This is where you will see weekly report information!</Text>
       </View>
 
-      <View style={styles.toggleRow}>
-        <Text style={styles.label}>Emergency Bypass</Text>
-        <Switch
-          value={isBypassEnabled}
-          onValueChange={toggleBypass}
-          trackColor={{ false: '#ccc', true: '#426B69' }}
-          thumbColor={isBypassEnabled ? '#fff' : '#f4f3f4'}
-        />
+      <View style={styles.challengesContainer}>
+        <Text style={styles.challengesTitle}>Weekly Challenges</Text>
+        <Text style={styles.challengesBody}>This is where you will see weekly challenges information!</Text>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
-//temporary style sheet, replace with separate file or components later
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -83,19 +57,58 @@ const styles = StyleSheet.create({
     fontFamily: 'Times New Roman',
     fontSize: 48,
     fontWeight: '600',
-    marginBottom: 32,
+    marginBottom: 12,
     textAlign: 'left',
+    marginTop: 50,
   },
-  toggleRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 24,
-  },
-  label: {
+  streak: {
     color: '#222E50',
     fontFamily: 'Verdana',
     fontSize: 18,
+    marginBottom: 18,
+  },
+  reportContainer: {
+    flex: 1,
+    backgroundColor: '#F0F0F0',
+    marginBottom: 20,
+    minHeight:250,
+    borderRadius: 30,
+    padding:16,
+  },
+  reportTitle: {
+    color: '#222E50',
+    fontFamily: 'Times New Roman',
+    fontSize: 24,
+    fontWeight: '600',
+    flex: 1,
+  },
+  reportBody: {
+    color: '#222E50',
+    fontFamily: 'Verdana',
+    fontSize: 16,
+    flex: 1,
+    justifyContent: 'center',
+  },
+  challengesContainer: {
+    flex: 1,
+    backgroundColor: '#B5CA8D',
+    minHeight:250,
+    borderRadius: 30,
+    padding: 16,
+  },
+  challengesTitle: {
+    color: '#222E50',
+    fontFamily: 'Times New Roman',
+    fontSize: 24,
+    fontWeight: '600',
+    flex: 1,
+  },
+  challengesBody: {
+    color: '#222E50',
+    fontFamily: 'Verdana',
+    fontSize: 16,
+    flex: 1,
+    justifyContent: 'center',
   },
 });
 

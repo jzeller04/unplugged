@@ -1,4 +1,5 @@
-import {deleteUser, pushUser, scanWithEmail, isNextDay, updateUser} from "../db/dbUtil.js";
+import {deleteUser, pushUser, scanWithEmail, updateUser} from "../db/dbUtil.js";
+//add isNextDay to previous import once used in code
 import argon2 from "argon2";
 import { v4 as uuidv4 } from 'uuid';
 import { unmarshall } from "@aws-sdk/util-dynamodb";
@@ -6,7 +7,6 @@ import { unmarshall } from "@aws-sdk/util-dynamodb";
 // make class with push/update function for DB. will make coding easier for those looking
 
 class DBUser {
-    
     static async create(userInfo) {
         const user = new DBUser(); // empty instance
         user.userId = uuidv4();
@@ -25,8 +25,6 @@ class DBUser {
         const hashword = await argon2.hash(userInfo.password);
 
         user.password = userInfo.password;
-
-
         user.name = userInfo.name;
         user.email = userInfo.email;
         user.hashword = hashword;
@@ -52,11 +50,11 @@ class DBUser {
         }
     }
 
-    async update()
-    {
+    // async update()
+    // {
         // const updated = await updateUser(this);
         // return !!updated;
-    }
+    // }
 
     async getJSON()
     {
