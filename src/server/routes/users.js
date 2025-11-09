@@ -87,11 +87,22 @@ router.post("/delete", async (req, res) => {
     //console.log("Deleting user...", userToDelete.email);
     const loggedIn = await userToDelete.login();
     if(loggedIn)
+    {
       userToDelete.deleteFromDB();
-    res.status(201).json({
+        res.status(201).json({
       success: true,
       message: "User deleted"
-    });
+      });
+    }
+    else
+    {
+      req.status(201).json({
+        success: false,
+        message: "Incorrect password"
+      });
+    }
+      
+
 });
 
 
