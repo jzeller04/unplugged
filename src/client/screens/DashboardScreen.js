@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-//add useEffect, back in after function is fixed
+import React from 'react';
+//add { useEffect, useState } back in after function is fixed
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 //add Alert back in after function is fixed
 // add import { calculateStreaksAndUpdate, getUser } from '../helper/userStorage.js'; once function is fixed
@@ -33,7 +33,7 @@ const DashboardScreen = () => {
   return (
     <ScrollView style={styles.container}>
       <Text style={styles.title}>Dashboard</Text>
-      <Text style={styles.streak}>'streakCount' / 'streakGoal' day streak of detox!</Text>
+      <Text style={styles.streak}>streakCount / streakGoal day streak of detox!</Text>
 
       <View style={styles.reportContainer}>
         <Text style={styles.reportTitle}>Weekly Report</Text>
