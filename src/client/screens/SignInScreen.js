@@ -19,6 +19,16 @@ const SignInScreen = ({ navigation }) => {
         password: password
       };
 
+      const userOnDevice = await getUser();
+      if(userOnDevice)
+      {
+        signingInUser.email = userOnDevice.email;
+        signingInUser.password = userOnDevice.password;
+      }
+
+
+
+
       //console.log("about to fetch:", `${API_URL}/users/signin`);
       const response = await fetch(`${API_URL}/users/signin`, { // the stuff in orange is the post request. this is the exact same thing as html for context
         method: "POST",

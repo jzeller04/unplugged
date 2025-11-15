@@ -64,7 +64,6 @@ class DBUser {
             return null;
         }
         const item = unmarshall(ts);
-        console.log("yerr", item);
 
         return {
 

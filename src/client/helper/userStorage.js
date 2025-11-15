@@ -18,6 +18,10 @@ export const getUser = async () => {
     if (value !== null) {
       return JSON.parse(value); // parse ONCE
     }
+    else
+    {
+      return false;
+    }
   } catch (error) {
     console.error('Error reading user data from client', error);
   }
