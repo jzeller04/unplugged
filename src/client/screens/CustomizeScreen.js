@@ -20,27 +20,27 @@ const CustomizeScreen = () => {
         //add functionality later
         //addLabel="Add new mode"
         //on press, navigate to new page to customize mode and add to array of modes
-        />
+      />
 
       <Section
         title="Blocked Locations"
-        items={''}
+        items={[]}
         //items={blockedLocations}
 
         //add functionality later
         //addLabel="Add new location"
         //on press, navigate to new page to customize location and add to array of locations
-        />
+      />
 
       <Section
         title="Scheduled Downtime"
-        items={''}
+        items={[]}
         //items={scheduledDowntimes}
 
         //add functionality later
         //addLabel="Add new downtime"
         //on press, navigate to new page to customize downtime and add to array of downtimes
-        />
+      />
     </ScrollView>
   );
 };

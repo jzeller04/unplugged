@@ -23,14 +23,14 @@ const DashboardScreen = () => {
     }
   }
 
-    useEffect(() => {
+  useEffect(() => {
     loadUser();
   }, []);
 
   return (
-    <ScrollView style={styles.container} contentContainerStylele={{ justifyContent: 'flex-start' }}>
+    <ScrollView style={styles.container} contentContainerStyle={{ justifyContent: 'flex-start' }}>
       <Text style={styles.title}>Dashboard</Text>
-      <Text style={styles.streak}>streakCount / streakGoal day streak of detox!</Text>
+      <Text style={styles.streak}>{streakCount} / {streakGoal} day streak of detox!</Text>
 
       <View style={styles.reportContainer}>
         <Text style={styles.reportTitle}>Weekly Report</Text>
