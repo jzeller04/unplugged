@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { ScrollView, Text, TextInput, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { API_URL } from '@env'; // do this: npm install react-native-dotenv
-import { getUser, saveUser, up } from '../helper/userStorage.js';
+import { saveUser} from '../helper/userStorage.js';
 const SignInScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -11,6 +11,7 @@ const SignInScreen = ({ navigation }) => {
       Alert.alert('Error', 'Please fill out all fields');
       return;
     }
+
 
     try {
     //console.log('hello2');
@@ -52,7 +53,7 @@ const SignInScreen = ({ navigation }) => {
       
     } catch (error) {
        console.log(error);
-       Alert.alert("Whoops, something went wrong!", error);
+       Alert.alert("Whoops, something went wrong!");
     }
   };
 

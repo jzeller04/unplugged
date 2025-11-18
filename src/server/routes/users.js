@@ -83,6 +83,10 @@ router.post("/signin", async (req, res) => {
 
 router.post("/delete", async (req, res) => {
   // should add some try in here, tdl lowkey!!!!!
+    if(!req.body.password)
+    {
+      return res.status(400).json({ success: false, message: "Password required" });
+    }
     const userToDelete = await DBUser.create(req.body);
     //console.log("Deleting user...", userToDelete.email);
     const loggedIn = await userToDelete.login();

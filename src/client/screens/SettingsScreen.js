@@ -1,20 +1,19 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Switch, Modal, TextInput, Alert, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Modal, TextInput, Alert } from 'react-native';
 import { API_URL } from '@env'
 import { getUser, deleteUser } from '../helper/userStorage.js';
 
 const SettingsScreen = ({ navigation }) => {
-  const [notificationsEnabled, setNotificationsEnabled] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [userPassword, setPassword] = useState('');
 
-  const toggleBlocking = () => setNotificationsEnabled(prev => !prev);
-
   const handleDeleteAccount = async () => {
-    try {    
-      //console.log("happening");
+
+    try {
+
+
+      console.log('userPassword:', userPassword, typeof userPassword);
         const userInfo = await getUser();
-        //console.log(userInfo);
         const infoToSend = {
           email: userInfo.email,
           password: userPassword
@@ -22,7 +21,7 @@ const SettingsScreen = ({ navigation }) => {
 
         if(userPassword.length !== 0) // may want to change this into a backend req... considering - tdl justin
         {
-          const response = await fetch(`${API_URL}/users/delete`, { // we need to find a way to store user info on ts
+        const response = await fetch(`${API_URL}/users/delete`, { // we need to find a way to store user info on ts
           method: "POST",
           headers:{"Content-Type": "application/json"},
           body: JSON.stringify(infoToSend)
@@ -33,7 +32,7 @@ const SettingsScreen = ({ navigation }) => {
           // a lil sum sum
           if(data.success)
           {
-            Alert.alert('Account deleted');
+            Alert.alert("Profile deleted");
             // clear local storage here prob
             await deleteUser();
             navigation.reset({
@@ -43,7 +42,6 @@ const SettingsScreen = ({ navigation }) => {
           }
           else
           {
-            Alert.alert('Incorrect Password');
             return; 
           }
         
@@ -59,77 +57,42 @@ const SettingsScreen = ({ navigation }) => {
         console.error("Error", error);
         Alert.alert("Something went wrong!");
       }
-      //console.log("about to fetch:", `${API_URL}/users/signin`);
+    
+          
     setModalVisible(false);
     setPassword('');
-  };
+};
 
-  //add navigation and external links later when implemented
+
   return (
-    <ScrollView style={styles.container} contentContainerStylele={{ justifyContent: 'flex-start' }}>
+    <View style={styles.container}>
       <Text style={styles.title}>Settings</Text>
-
-      <Text style={styles.subtitle}>Notification Settings</Text>
-      <View style={styles.section}>
-        <View style={styles.row}>
-            <Text style={styles.rowText}>Notifications</Text>
-            <Switch
-              value={notificationsEnabled}
-              onValueChange={toggleBlocking}
-              trackColor={{ false: '#ccc', true: '#426B69' }}
+      <TouchableOpacity style={styles.button} onPress={() => setModalVisible(true)}>
+        <Text style={styles.buttonText}>Delete account</Text>
+      </TouchableOpacity>
+      <Modal visible={modalVisible} transparent>
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Confirm password to delete account</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Enter your password"
+              secureTextEntry
+              value={userPassword}
+              onChangeText={setPassword}
             />
-          </View>
-      </View>
-
-      <Text style={styles.subtitle}>About</Text>
-      <View style={styles.section}>
-        <Text style={styles.sectionText}>Terms of Service</Text>
-        <View style={styles.divider}/>
-        <Text style={styles.sectionText}>Privacy policy</Text>
-      </View>
-
-      <Text style={styles.subtitle}>Feedback & Support</Text>
-      <View style={styles.section}>
-        <Text style={styles.sectionText}>Rate our app</Text>
-        <View style={styles.divider}/>
-        <Text style={styles.sectionText}>FAQs</Text>
-      </View>
-
-      <Text style={styles.subtitle}>Account management</Text>
-      <View style={styles.section}>
-        <Text style={styles.sectionText}>Account information</Text>
-        <View style={styles.divider}/>
-        <TouchableOpacity style={styles.button} onPress={() => setModalVisible(true)}>
-          <Text style={styles.buttonText}>Delete account</Text>
-        </TouchableOpacity>
-        <Modal visible={modalVisible} transparent>
-          <View style={styles.modalOverlay}>
-            <View style={styles.modalContent}>
-              <Text style={styles.modalTitle}>Confirm password to delete account</Text>
-              <TextInput
-                style={styles.input}
-                placeholder="Enter your password"
-                secureTextEntry
-                value={password}
-                onChangeText={setPassword}
-              />
-              <View style={styles.buttonRow}>
-                <TouchableOpacity style={styles.cancelButton} onPress={() => setModalVisible(false)}>
-                  <Text style={styles.cancelText}>Cancel</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.confirmButton} onPress={handleDeleteAccount}>
-                  <Text style={styles.confirmText}>Confirm</Text>
-                </TouchableOpacity>
-              </View>
+            <View style={styles.buttonRow}>
+              <TouchableOpacity style={styles.cancelButton} onPress={() => setModalVisible(false)}>
+                <Text style={styles.cancelText}>Cancel</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.confirmButton} onPress={handleDeleteAccount}>
+                <Text style={styles.confirmText}>Confirm</Text>
+              </TouchableOpacity>
             </View>
           </View>
-        </Modal>
-      </View>
-
-      <View style={styles.logoutButton}>
-        <Text style={styles.logoutText}>Log out</Text>
-      </View>
-    </ScrollView>
+        </View>
+      </Modal>
+    </View>
   );
 };
 
@@ -138,6 +101,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 24,
+    justifyContent: 'flex-start',
     backgroundColor: '#FFFFFF'
   },
   title: {
@@ -145,59 +109,15 @@ const styles = StyleSheet.create({
     fontFamily: 'Times New Roman',
     fontSize: 48,
     fontWeight: '600',
-    marginBottom: 12,
-    textAlign: 'left',
-    marginTop: 50,
+    marginBottom: 32,
+    textAlign: 'left'
   },
-  subtitle: {
-    color: '#222E50',
-    fontFamily: 'Verdana',
-    fontSize: 18,
-    marginBottom: 16,
-  },
-  section: {
-    flex: 1,
-    flexDirection: 'column',
-    gap: 12,
+  button: {
     backgroundColor: '#F0F0F0',
-    marginBottom: 25,
-    borderRadius: 24,
-    padding:16,
-  },
-  divider: {
-    height: 1,
-    backgroundColor: '#CCCCCC',
-  },
-  row: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  rowText: {
-    color: '#222E50',
-    fontFamily: 'Verdana',
-    fontSize: 16,
-  },
-  sectionText: {
-    flex: 1,
-    color: '#222E50',
-    fontFamily: 'Verdana',
-    fontSize: 16,
-  },
-  logoutButton: {
-    backgroundColor: '#426B69',
     paddingVertical: 14,
     borderRadius: 24,
     alignItems: 'center',
-    marginTop: 16,
-  },
-  logoutText: {
-    color: '#FFFFFF',
-    fontFamily: 'Verdana',
-    fontSize: 16,
-  },
-  button: {
-    
+    marginTop: 16
   },
   buttonText: {
     fontFamily: 'Verdana',
@@ -265,7 +185,7 @@ const styles = StyleSheet.create({
   confirmText: {
     color: '#FFFFFF',
     fontFamily: 'Verdana'
-  },
+  }
 });
 
 export default SettingsScreen;
