@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { ScrollView, Text, TextInput, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { API_URL } from '@env'; // do this: npm install react-native-dotenv
-import { saveUser} from '../helper/userStorage.js';
+import { saveUser } from '../helper/userStorage.js';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 const SignInScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -11,7 +13,6 @@ const SignInScreen = ({ navigation }) => {
       Alert.alert('Error', 'Please fill out all fields');
       return;
     }
-
 
     try {
     //console.log('hello2');
@@ -35,13 +36,11 @@ const SignInScreen = ({ navigation }) => {
         const user = data.user;
         //console.log(user);
         console.log(data);
-        
-            saveUser(user);
-        
-
+        saveUser(user);
+        await AsyncStorage.setItem('isLoggedIn', 'true');
         navigation.reset({
-        index: 0,
-        routes: [{ name: 'MainApp' }], 
+          index: 0,
+          routes: [{ name: 'MainApp' }], 
         });
         // need to add logic for multiple accounts and user storage
       }

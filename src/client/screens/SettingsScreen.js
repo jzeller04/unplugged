@@ -2,16 +2,14 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Modal, TextInput, Alert } from 'react-native';
 import { API_URL } from '@env'
 import { getUser, deleteUser } from '../helper/userStorage.js';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const SettingsScreen = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [userPassword, setPassword] = useState('');
 
   const handleDeleteAccount = async () => {
-
     try {
-
-
       console.log('userPassword:', userPassword, typeof userPassword);
         const userInfo = await getUser();
         const infoToSend = {
@@ -35,9 +33,10 @@ const SettingsScreen = ({ navigation }) => {
             Alert.alert("Profile deleted");
             // clear local storage here prob
             await deleteUser();
+            await AsyncStorage.setItem('isLoggedIn', 'false');
             navigation.reset({
-            index: 0,
-            routes: [{ name: 'Authentication' }], // tf do i route it to ikiag
+              index: 0,
+              routes: [{ name: 'Authentication' }], // tf do i route it to ikiag
             });
           }
           else
