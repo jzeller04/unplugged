@@ -4,29 +4,34 @@ import { NavigationContainer } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import StackNavigator from './StackNavigator';
 import TabNavigation from './TabNavigator';
-import { ActivityIndicator, View } from 'react-native';
+import LoadingScreen from './LoadingScreen';
 
 const Stack = createNativeStackNavigator();
 
 function RootNavigator() {
   const [initialRoute, setInitialRoute] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const checkLoginStatus = async () => {
+    const MIN_LOADING_TIME = 2000; // 2 seconds minimum for example
+    const start = Date.now();
+
+    //add any other API calls or checks of any sort
+
+    const init = async () => {
       const isLoggedIn = await AsyncStorage.getItem('isLoggedIn');
       setInitialRoute(isLoggedIn === 'true' ? 'MainApp' : 'Authentication');
+
+      const elapsed = Date.now() - start;
+      const remaining = MIN_LOADING_TIME - elapsed;
+      setTimeout(() => setLoading(false), remaining > 0 ? remaining : 0);
     };
 
-    checkLoginStatus();
+    init();
   }, []);
 
-  // loading if needed while checking login status
-  if (!initialRoute) {
-    return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <ActivityIndicator size="large" />
-      </View>
-    );
+  if (loading || !initialRoute) {
+    return <LoadingScreen />;
   }
 
   return (
