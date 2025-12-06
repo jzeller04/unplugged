@@ -72,7 +72,8 @@ class DBUser {
             name: item.name,
             streakCount: item.streakCount,
             streakGoal: item.streakGoal,
-            lastLogin: item.lastLogin
+            lastLogin: item.lastLogin,
+            detox: item.detox
 
 
 
