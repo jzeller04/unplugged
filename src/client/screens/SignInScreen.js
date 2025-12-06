@@ -5,7 +5,8 @@ import {
   TextInput,
   StyleSheet,
   TouchableOpacity,
-  Alert
+  Alert,
+  Platform
 } from 'react-native';
 import { API_URL } from '@env'; // do this: npm install react-native-dotenv
 import { saveUser } from '../helper/userStorage.js';

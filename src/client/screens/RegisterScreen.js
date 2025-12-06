@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Text, TextInput, StyleSheet, TouchableOpacity, Alert, KeyboardAvoidingView } from 'react-native';
+import { Text, TextInput, StyleSheet, TouchableOpacity, Alert, KeyboardAvoidingView, Platform } from 'react-native';
 import { API_URL } from '@env'; // do this: npm install react-native-dotenv
 import { saveUser } from '../helper/userStorage.js';
 // and in .env file: API_URL=http://192.168.1.100:3000 << your local ip
