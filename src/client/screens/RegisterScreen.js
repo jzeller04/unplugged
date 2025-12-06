@@ -22,7 +22,8 @@ const RegisterScreen = ({ navigation }) => { // the navigation var not used. lin
           password: password,
           streakCount: 0,
           streakGoal: "week",
-          lastLogin: new Date().toISOString().split('T')[0]
+          lastLogin: new Date().toISOString().split('T')[0],
+          detox: "on"
         }
 
       // make post req to send to backend
