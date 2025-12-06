@@ -1,5 +1,12 @@
 import React, { useState } from 'react';
-import { ScrollView, Text, TextInput, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import { 
+  KeyboardAvoidingView,
+  Text,
+  TextInput,
+  StyleSheet,
+  TouchableOpacity,
+  Alert
+} from 'react-native';
 import { API_URL } from '@env'; // do this: npm install react-native-dotenv
 import { saveUser } from '../helper/userStorage.js';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -57,7 +64,7 @@ const SignInScreen = ({ navigation }) => {
   };
 
   return (
-    <ScrollView style={styles.container} contentContainerStylele={{ justifyContent: 'flex-start' }}>
+    <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'android' ? 'height' : 'padding'}>
       <Text style={styles.title}>Sign in</Text>
       <TextInput
         style={styles.input}
@@ -84,7 +91,7 @@ const SignInScreen = ({ navigation }) => {
       <TouchableOpacity style={styles.registerButton} onPress={() => navigation.navigate('Register')}>
         <Text style={styles.registerButtonText}>Register</Text>
       </TouchableOpacity>
-    </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
