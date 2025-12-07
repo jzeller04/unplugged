@@ -13,7 +13,7 @@ function RootNavigator() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const MIN_LOADING_TIME = 4000; // 2 seconds minimum for example
+    const MIN_LOADING_TIME = 4000; 
     const start = Date.now();
 
     //add any other API calls or checks of any sort

@@ -1,20 +1,21 @@
 import { registerRootComponent } from 'expo';
-import React, { useEffect } from 'react';
-// import { NavigationContainer } from '@react-navigation/native';
+import React from 'react';
 import RootNavigator from './src/client/navigation/RootNavigator.js';
-import * as Font from 'expo-font';
+import { useFonts } from 'expo-font';
 
 const App = () => {
-  useEffect(() => {
-    Font.loadAsync({
-      'Verdana': require('./src/client/assets/fonts/Verdana.ttf'),
-      'Times New Roman': require('./src/client/assets/fonts/TIMESBD.ttf'),
-    });
-  }, []);
-  return (
-    <RootNavigator />
-  );
+  const [fontsLoaded] = useFonts({
+    Verdana: require('./src/client/assets/fonts/Verdana.ttf'),
+    'Times New Roman': require('./src/client/assets/fonts/TIMESBD.ttf'),
+    Shrikhand: require('./src/client/assets/fonts/Shrikhand.ttf'),
+  });
+
+  if (!fontsLoaded) {
+    // Don’t render until fonts are ready
+    return null;
+  }
+
+  return <RootNavigator />;
 };
 
-// This tells Expo to register the app
 registerRootComponent(App);
