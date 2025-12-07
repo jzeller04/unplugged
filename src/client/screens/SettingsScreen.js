@@ -109,7 +109,8 @@ const styles = StyleSheet.create({
     fontSize: 48,
     fontWeight: '600',
     marginBottom: 32,
-    textAlign: 'left'
+    textAlign: 'left',
+    marginTop: 50,
   },
   button: {
     backgroundColor: '#F0F0F0',

@@ -3,31 +3,40 @@ import DashboardScreen from '../screens/DashboardScreen';
 import CustomizeScreen from '../screens/CustomizeScreen';
 import DetoxScreen from '../screens/DetoxScreen';
 import SettingsScreen from '../screens/SettingsScreen';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const Tab = createBottomTabNavigator();
 
 function TabNavigator() {
   return (
-        <Tab.Navigator screenOptions={styles}>
+    <Tab.Navigator screenOptions={styles}>
       <Tab.Screen
         name="Dashboard"
         component={DashboardScreen}
-        options={{ header: () => null }}
+        options={{ header: () => null, tabBarIcon: ({ color, size }) => (
+          <Ionicons name="home" color={color} size={size} /> ),
+        }}
       />
       <Tab.Screen
         name="Customize"
         component={CustomizeScreen}
-        options={{ header: () => null }}
+        options={{ header: () => null, tabBarIcon: ({ color, size }) => (
+          <Ionicons name="pencil" color={color} size={size} /> ),
+        }}
       />
       <Tab.Screen
         name="Detox"
         component={DetoxScreen}
-        options={{ header: () => null }}
+        options={{ header: () => null, tabBarIcon: ({ color, size }) => (
+          <Ionicons name="time" color={color} size={size} /> ),
+        }}
       />
       <Tab.Screen
         name="Settings"
         component={SettingsScreen}
-        options={{ header: () => null }}
+        options={{ header: () => null, tabBarIcon: ({ color, size }) => (
+          <Ionicons name="settings" color={color} size={size} /> ),
+        }}
       />
     </Tab.Navigator>
   );
