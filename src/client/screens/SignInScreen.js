@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import { API_URL } from '@env'; // do this: npm install react-native-dotenv
 import { saveUser } from '../helper/userStorage.js';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage'; 
 
 const SignInScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
@@ -65,11 +65,11 @@ const SignInScreen = ({ navigation }) => {
   };
 
   return (
-    <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'android' ? 'height' : 'padding'}>
+    <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'android' ? 'height' : 'padding'}>
       <Text style={styles.title}>Sign in</Text>
       <TextInput
         style={styles.input}
-        placeholder="Email Address"
+        placeholder="Email address"
         placeholderTextColor="#888"
         keyboardType="email-address"
         autoCapitalize="none"
@@ -101,12 +101,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     flex: 1,
     padding: 24,
+    justifyContent: 'center',
   },
   title: {
     color: '#222E50',
     fontFamily: 'Times New Roman',
     fontSize: 48,
-    fontWeight: '600',
     marginBottom: 36,
     textAlign: 'center',
   },

@@ -12,7 +12,7 @@ const styles = StyleSheet.create({
     //add container style
   },
   logo: {
-    //add logo style
+    color: '#000000'
   },
   //add any other necessary styles
 });
