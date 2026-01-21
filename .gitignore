@@ -143,3 +143,5 @@ vite.config.ts.timestamp-*
 android/app/.cxx/
 **/.cxx/
 **/build/
+
+.prettierrc.js
