@@ -1,0 +1,21 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "src/client/assets/fonts/Shrikhand.ttf",
+      "sha1": "ee1a2ca14244d2173f066edb18eb96b6faf4c09f"
+    },
+    {
+      "path": "src/client/assets/fonts/TIMES.ttf",
+      "sha1": "987c1b9a77488ecd9f7480e757e63b3b825d6823"
+    },
+    {
+      "path": "src/client/assets/fonts/TIMESBD.ttf",
+      "sha1": "06f396238608d67d5fb10d6bca4509de08c0d5cf"
+    },
+    {
+      "path": "src/client/assets/fonts/Verdana.ttf",
+      "sha1": "53cecbef9f6c7f8ae021d5a9806a0ce04cc9a125"
+    }
+  ]
+}
