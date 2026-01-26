@@ -4,6 +4,7 @@ import CustomizeScreen from '../screens/CustomizeScreen';
 import DetoxScreen from '../screens/DetoxScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import DummyScreen from '../screens/DummyScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -36,6 +37,13 @@ function TabNavigator() {
         component={SettingsScreen}
         options={{ header: () => null, tabBarIcon: ({ color, size }) => (
           <Ionicons name="settings" color={color} size={size} /> ),
+        }}
+      />
+      <Tab.Screen
+        name="Dummmy Phone"
+        component={DummyScreen}
+        options={{ header: () => null, tabBarIcon: ({ color, size }) => (
+          <Ionicons name="" color={color} size={size} /> ),
         }}
       />
     </Tab.Navigator>
