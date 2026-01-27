@@ -140,8 +140,20 @@ vite.config.ts.timestamp-*
 
 .idea/
 
+# android build files
 android/app/.cxx/
 **/.cxx/
 **/build/
+android/.gradle/
+android/app/.cxx/
+android/app/.externalNativeBuild/
+android/local.properties
+android/.idea/
+android/*.iml
+android/app/*.iml
+android/*.log
+
+
+
 
 .prettierrc.js
