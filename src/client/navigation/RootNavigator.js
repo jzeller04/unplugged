@@ -6,6 +6,9 @@ import StackNavigator from './StackNavigator';
 import TabNavigation from './TabNavigator';
 import LoadingScreen from '../screens/LoadingScreen';
 
+// DO NOT PUSH THIS BRANCH/LINE OF CODE TO MAIN
+import SystemPermissionTestingScreen from '../screens/SystemPermissionTestingScreen';
+
 const Stack = createNativeStackNavigator();
 
 function RootNavigator() {
@@ -34,11 +37,23 @@ function RootNavigator() {
     return <LoadingScreen />;
   }
 
+  // KEEP FOR AFTER TESTING
+  /*
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName={initialRoute} screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Authentication" component={StackNavigator} />
         <Stack.Screen name="MainApp" component={TabNavigation} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+  */
+
+  // DO NOT PUSH THIS CODE/BRANCH TO MAIN
+  return (
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName={initialRoute} screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="SystemPermissionTesting" component={SystemPermissionTestingScreen}/>
       </Stack.Navigator>
     </NavigationContainer>
   );
