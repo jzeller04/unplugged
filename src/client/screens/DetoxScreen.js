@@ -12,8 +12,8 @@ const DetoxScreen = () => {
         <Text style={styles.sectionTitle}>Start Mode</Text>
 
         <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.button}>
-            <Text style={styles.buttonText}>Focus Mode</Text>
+          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('StudyMode')}>
+            <Text style={styles.buttonText}>Study Mode</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.button}>
             <Text style={styles.buttonText}>Detox Mode</Text>

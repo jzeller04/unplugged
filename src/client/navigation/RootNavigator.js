@@ -39,6 +39,7 @@ function RootNavigator() {
       <Stack.Navigator initialRouteName={initialRoute} screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Authentication" component={StackNavigator} />
         <Stack.Screen name="MainApp" component={TabNavigation} />
+        <Stack.Screen name="StudyMode" component={StudyModeScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
