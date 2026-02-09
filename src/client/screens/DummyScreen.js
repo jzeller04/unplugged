@@ -1,27 +1,50 @@
 import React from 'react';
 import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { FontAwesome, FontAwesome5 } from '@expo/vector-icons';
+import { updateUserStatsOnAppOpen } from '../helper/userStorage';
 
+
+const handleInstagramPress = async () => {
+  await updateUserStatsOnAppOpen({ name: "instagram" });
+};
+
+const handleTikTokPress = async () => {
+  await updateUserStatsOnAppOpen({ name: "tiktok" });
+};
+
+const handleTwitterPress = async () => {
+  await updateUserStatsOnAppOpen({ name: "twitter" });
+};
 const DummyScreen = () => {
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={[styles.button, styles.instagram]}>
+      <TouchableOpacity
+        style={[styles.button, styles.instagram]}
+        onPress={handleInstagramPress}
+      >
         <FontAwesome name="instagram" size={22} color="#fff" />
         <Text style={styles.text}>Instagram</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={[styles.button, styles.tiktok]}>
+      <TouchableOpacity
+        style={[styles.button, styles.tiktok]}
+        onPress={handleTikTokPress}
+      >
         <FontAwesome5 name="tiktok" size={20} color="#fff" />
         <Text style={styles.text}>TikTok</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={[styles.button, styles.twitter]}>
+      <TouchableOpacity
+        style={[styles.button, styles.twitter]}
+        onPress={handleTwitterPress}
+      >
         <FontAwesome name="twitter" size={22} color="#fff" />
         <Text style={styles.text}>X / Twitter</Text>
       </TouchableOpacity>
     </View>
   );
 };
+
 
 export default DummyScreen;
 
