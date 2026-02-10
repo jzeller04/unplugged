@@ -1,4 +1,4 @@
-import {deleteUser, pushUser, scanWithEmail, updateUser} from "../db/dbUtil.js";
+import {deleteUser, pushUser, scanWithEmail} from "../db/dbUtil.js";
 //add isNextDay to previous import once used in code
 import argon2 from "argon2";
 import { v4 as uuidv4 } from 'uuid';

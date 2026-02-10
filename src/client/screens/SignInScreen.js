@@ -88,7 +88,7 @@ const SignInScreen = ({ navigation }) => {
       <TouchableOpacity style={styles.signInButton} onPress={handleSignIn}>
         <Text style={styles.signInButtonText}>Sign in</Text>
       </TouchableOpacity>
-      <Text style={styles.haveAccount}>Don't have an account?</Text>
+      <Text style={styles.haveAccount}>Don&apos;t have an account?</Text>
       <TouchableOpacity style={styles.registerButton} onPress={() => navigation.navigate('Register')}>
         <Text style={styles.registerButtonText}>Register</Text>
       </TouchableOpacity>
