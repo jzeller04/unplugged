@@ -24,9 +24,20 @@ const DashboardScreen = () => {
   }
 
   useEffect(() => {
-    loadUser();
+    let isMounted = true;
+    
+    const fetchUser = async () => {
+      if (isMounted) {
+        await loadUser();
+      }
+    };
+    
+    fetchUser();
+    
+    return () => {
+      isMounted = false;
+    };
   }, []);
-
   return (
     <ScrollView style={styles.container} contentContainerStyle={{ justifyContent: 'flex-start' }}>
       <Text style={styles.title}>Dashboard</Text>
