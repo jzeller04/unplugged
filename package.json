@@ -56,6 +56,7 @@
     "@testing-library/react-native": "^13.3.3",
     "@types/react": "~19.1.0",
     "@types/react-native": "^0.72.8",
+    "baseline-browser-mapping": "^2.9.19",
     "eslint": "^8.57.1",
     "eslint-config-expo": "~10.0.0",
     "eslint-plugin-jsx-a11y": "^6.10.2",
