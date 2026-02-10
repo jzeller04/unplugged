@@ -71,7 +71,6 @@ const StudyModeScreen = ({ navigation }) => {
       </Text>
 
       <View style={styles.circleContainer}>
-      //afaik, this cannot be moved to style sheet but change whatever visually
         <Svg width={300} height={300}>
           <Circle
             cx="150"

@@ -10,7 +10,7 @@
     "web": "expo start --web",
     "lint": "expo lint",
     "test": "jest",
-    "openapp": "\"C:\\Users\\justi\\AppData\\Local\\Android\\Sdk\\platform-tools\\adb.exe\" reverse tcp:3000 tcp:3000 && expo start --android"
+    "openapp": "\"C:\\Users\\marof\\AppData\\Local\\Android\\Sdk\\platform-tools\\adb.exe\" reverse tcp:3000 tcp:3000 && expo start --android"
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.907.0",
