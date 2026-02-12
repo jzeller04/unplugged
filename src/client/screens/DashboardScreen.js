@@ -1,14 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, Alert } from 'react-native';
 import { calculateStreaksAndUpdate, getUser } from '../helper/userStorage.js';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const DashboardScreen = () => {
   const [streakCount, setStreakCount] = useState(0);
   const [streakGoal, setStreakGoal] = useState(0);
+  const [weeklyStats, setWeeklyStats] = useState([]);
+
 
   const loadUser = async () => {
     try {
       const user = await getUser('user');
+      console.log(user);
       calculateStreaksAndUpdate();
       setStreakCount(user.streakCount);
       if(user.streakGoal == "week")
@@ -27,15 +31,74 @@ const DashboardScreen = () => {
     loadUser();
   }, []);
 
+// useEffect(() => {
+//   setWeeklyStats([
+//     { date: "TEST-DAY", apps: { instagram: 2, tiktok: 1 } }
+//   ]);
+// }, []);
+
+useEffect(() => {
+  const loadStats = async () => {
+    try {
+      const raw = await AsyncStorage.getItem("user");
+      console.log("RAW USER:", raw);
+
+      if (!raw) return;
+
+      const user = JSON.parse(raw);
+      console.log("PARSED USER:", user);
+
+      const byDate = user.appOpenedByDate;
+      console.log("BY DATE:", byDate);
+
+      if (!byDate) return;
+
+      const days = Object.entries(byDate).map(([date, apps]) => ({
+        date,
+        apps
+      }));
+
+      console.log("FINAL DAYS:", days);
+      setWeeklyStats(days);
+    } catch (e) {
+      console.error("Load stats failed:", e);
+    }
+  };
+
+  loadStats();
+}, []);
+
+
+console.log("WeeklyStats state:", weeklyStats);
+
+
+
   return (
     <ScrollView style={styles.container} contentContainerStyle={{ justifyContent: 'flex-start' }}>
       <Text style={styles.title}>Dashboard</Text>
       <Text style={styles.streak}>{streakCount} / {streakGoal} day streak of detox!</Text>
 
-      <View style={styles.reportContainer}>
-        <Text style={styles.reportTitle}>Weekly Report</Text>
-        <Text style={styles.reportBody}>This is where you will see weekly report information!</Text>
+     <View style={styles.reportContainer}>
+  <Text style={styles.reportTitle}>Weekly Report</Text>
+
+  {weeklyStats.length === 0 ? (
+    <Text style={styles.reportBody}>No app activity yet</Text>
+  ) : (
+    weeklyStats.map(day => (
+      <View key={day.date} style={{ marginBottom: 10 }}>
+        <Text style={{ fontWeight: "bold" }}>{day.date}</Text>
+
+        {Object.entries(day.apps).map(([app, count]) => (
+          <Text key={app} style={styles.reportBody}>
+            • {app}: {count}
+          </Text>
+        ))}
       </View>
+    ))
+  )}
+</View>
+
+
 
       <View style={styles.challengesContainer}>
         <Text style={styles.challengesTitle}>Weekly Challenges</Text>
