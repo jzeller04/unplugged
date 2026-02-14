@@ -4,12 +4,16 @@ import { useFocusEffect } from '@react-navigation/native';
 import Svg, { Circle } from 'react-native-svg';
 
 const FOCUS_TIME = (1 * 60);
-const BREAK_TIME = (5 * 60);
+const BREAK_TIME = (1 * 60);
 
 const StudyModeScreen = ({ navigation }) => {
   const [mode, setMode] = useState('focus');
   const [secondsLeft, setSecondsLeft] = useState(FOCUS_TIME);
+  const [totalElapsed, setTotalElapsed] = useState(0);
+
   const intervalRef = useRef(null);
+  const totalIntervalRef = useRef(null);
+  const modeRef = useRef('focus');
 
   const totalSeconds = mode === 'focus' ? FOCUS_TIME : BREAK_TIME;
 
@@ -25,28 +29,29 @@ const StudyModeScreen = ({ navigation }) => {
     intervalRef.current = setInterval(() => {
       setSecondsLeft((prev) => {
         if (prev <= 1) {
-          clearInterval(intervalRef.current);
-          intervalRef.current = null;
-
-          if (mode === 'focus') {
-            setMode('break');
-            setTimeout(() => startTimer(), 50);
-            return BREAK_TIME;
-          } else {
-            setMode('focus');
-            setTimeout(() => startTimer(), 50);
-            return FOCUS_TIME;
-          }
+          const nextMode = modeRef.current === 'focus' ? 'break' : 'focus';
+          setMode(nextMode);
+          return nextMode === 'focus' ? FOCUS_TIME : BREAK_TIME;
         }
         return prev - 1;
       });
     }, 1000);
+
+    if (!totalIntervalRef.current) {
+      totalIntervalRef.current = setInterval(() => {
+        setTotalElapsed((prev) => prev + 1);
+      }, 1000);
+    }
   };
 
   const pauseTimer = () => {
-  if (intervalRef.current) {
-    clearInterval(intervalRef.current);
-    intervalRef.current = null;
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+    if (totalIntervalRef.current) {
+      clearInterval(totalIntervalRef.current);
+      totalIntervalRef.current = null;
     }
   };
 
@@ -56,6 +61,11 @@ const StudyModeScreen = ({ navigation }) => {
     return () => pauseTimer();  // cleanup when leaving screen
     }, [])
   );
+
+  useEffect(() => {
+    modeRef.current = mode;
+  }, [mode]);
+
 
   // Circular progress math, change if needed based on visual changes
   const radius = 120;
@@ -84,27 +94,28 @@ const StudyModeScreen = ({ navigation }) => {
             cx="150"
             cy="150"
             r={radius}
-            stroke='#426B69'
+            stroke="#426B69"
             strokeWidth={strokeWidth}
             fill="none"
             strokeDasharray={circumference}
             strokeDashoffset={strokeDashoffset}
             strokeLinecap="round"
+            rotation="90"
+            origin="150,150"
           />
         </Svg>
 
         <View style={styles.timerTextContainer}>
           <Text style={styles.label}>Apps Blocked For:</Text>
           <Text style={styles.timerText}>
-            {format(totalSeconds - secondsLeft)}
+            {format(secondsLeft)}
           </Text>
         </View>
       </View>
 
       <Text style={styles.remainingText}>
-        {format(secondsLeft)} remaining in {mode} mode
+        Time in Study Mode: {format(totalElapsed)}
       </Text>
-
       <TouchableOpacity
         style={styles.stopButton}
         onPress={() => {
