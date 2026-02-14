@@ -106,7 +106,7 @@ const StudyModeScreen = ({ navigation }) => {
         </Svg>
 
         <View style={styles.timerTextContainer}>
-          <Text style={styles.label}>Apps Blocked For:</Text>
+          <Text style={styles.label}>Apps blocked for</Text>
           <Text style={styles.timerText}>
             {format(secondsLeft)}
           </Text>
@@ -114,7 +114,7 @@ const StudyModeScreen = ({ navigation }) => {
       </View>
 
       <Text style={styles.remainingText}>
-        Time in Study Mode: {format(totalElapsed)}
+        {format(totalElapsed)} in study mode
       </Text>
       <TouchableOpacity
         style={styles.stopButton}
@@ -181,3 +181,112 @@ const styles = StyleSheet.create({
 });
 
 export default StudyModeScreen;
+
+
+      <View style={styles.circleContainer}>
+        <Svg width={300} height={300}>
+          <Circle
+            cx="150"
+            cy="150"
+            r={radius}
+            stroke="#B5CA8D"
+            strokeWidth={strokeWidth}
+            fill="none"
+          />
+          <Circle
+            cx="150"
+            cy="150"
+            r={radius}
+            stroke="#426B69"
+            strokeWidth={strokeWidth}
+            fill="none"
+            strokeDasharray={circumference}
+            strokeDashoffset={strokeDashoffset}
+            strokeLinecap="round"
+            rotation="270"
+            origin="150,150"
+          />
+        </Svg>
+
+        <View style={styles.timerTextContainer}>
+          <Text style={styles.label}>Apps blocked for</Text>
+          <Text style={styles.timerText}>
+            {format(secondsLeft)}
+          </Text>
+        </View>
+      </View>
+
+      <Text style={styles.remainingText}>
+        {format(totalElapsed)} in study mode
+      </Text>
+      <TouchableOpacity
+        style={styles.stopButton}
+        onPress={() => {
+          clearInterval(intervalRef.current);
+          intervalRef.current = null;
+          navigation.goBack();
+        }}
+      >
+        <Text style={styles.stopButtonText}>Stop</Text>
+      </TouchableOpacity>
+    </View>
+  );
+};
+
+// change whatever you need to visually
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    paddingTop: 60,
+  },
+  title: {
+    color: '#222E50',
+    fontFamily: 'Times New Roman',
+    fontSize: 48,
+    fontWeight: '600',
+    marginBottom: 12,
+    textAlign: 'left',
+    marginTop: 50,
+  },
+  circleContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 30,
+  },
+  timerTextContainer: {
+    position: 'absolute',
+    alignItems: 'center',
+  },
+  label: {
+    fontSize: 16,
+    color: '#222E50',
+  },
+  timerText: {
+    fontSize: 48,
+    fontWeight: 'bold',
+    color: '#222E50',
+    fontFamily: 'Verdana',
+  },
+  remainingText: {
+    fontSize: 18,
+    color: '#222E50',
+    fontFamily: 'Verdana',
+    marginBottom: 40,
+  },
+  stopButton: {
+    backgroundColor: '#426B69',
+    borderRadius: 18,
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 150,
+  },
+  stopButtonText: {
+    fontFamily: 'Verdana',
+    color: '#FFFFFF',
+    fontSize: 16,
+    paddingVertical: 16,
+    paddingHorizontal: 20,
+  },
+});
