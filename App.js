@@ -1,15 +1,21 @@
 import { registerRootComponent } from 'expo';
 import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import StackNavigator from './src/client/navigation/StackNavigator';
+import RootNavigator from './src/client/navigation/RootNavigator.js';
+import { useFonts } from 'expo-font';
 
 const App = () => {
-  return (
-    <NavigationContainer>
-      <StackNavigator />
-    </NavigationContainer>
-  );
+  const [fontsLoaded] = useFonts({
+    Verdana: require('./src/client/assets/fonts/Verdana.ttf'),
+    'Times New Roman': require('./src/client/assets/fonts/TIMESBD.ttf'),
+    Shrikhand: require('./src/client/assets/fonts/Shrikhand.ttf'),
+  });
+
+  if (!fontsLoaded) {
+    // Don’t render until fonts are ready
+    return null;
+  }
+
+  return <RootNavigator />;
 };
 
-// This tells Expo to register the app
 registerRootComponent(App);

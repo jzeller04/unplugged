@@ -1,36 +1,39 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import { Text, TextInput, StyleSheet, TouchableOpacity, Alert, KeyboardAvoidingView, Platform } from 'react-native';
 import { API_URL } from '@env'; // do this: npm install react-native-dotenv
+import { saveUser } from '../helper/userStorage.js';
 // and in .env file: API_URL=http://192.168.1.100:3000 << your local ip
-const RegisterScreen = ({ navigation }) => {
-    const [email, setEmail] = useState('');
-    const [name, setName] = useState('');
-    const [password, setPassword] = useState('');
 
-    navigation.reset({
-      index: 0,
-      routes: [{ name: 'Dashboard' }],
-     });
+const RegisterScreen = ({ navigation }) => { // the navigation var not used. linting will cry about it
+  const [email, setEmail] = useState('');
+  const [name, setName] = useState('');
+  const [password, setPassword] = useState('');
   
+  if(navigation)
+  {
+    console.log("react + linting is so bad"); // how to fix this with linting PLEASE
+  }
+
     const getRegisterInfo = async () => {
-      console.log("clicked!");
       try{
-        
-        
         const registerInfo = { // send ts all as an object, this is how it is handled on backend. If you'd like i (justin) can create an abstracted version of this to reuse.
           email: email,
           name: name,
-          password: password
+          password: password,
+          streakCount: 0,
+          streakGoal: "week",
+          lastLogin: new Date().toISOString().split('T')[0],
+          detox: "on"
         }
 
-        // make post req to send to backend
-        console.log("about to fetch:", `${API_URL}/users/register`);
-        setTimeout(() => console.log("⏳ still waiting on fetch..."), 5000);
-        const response = await fetch(`${API_URL}/users/register`, { // the stuff in orange is the post request. this is the exact same thing as html for context
-          method: "POST",
-          headers:{"Content-Type": "application/json"},
-          body: JSON.stringify(registerInfo),
-        });
+      // make post req to send to backend
+      console.log("about to fetch:", `${API_URL}/users/register`);
+      //setTimeout(() => console.log("⏳ still waiting on fetch..."), 5000);
+      const response = await fetch(`${API_URL}/users/register`, { // the stuff in orange is the post request. this is the exact same thing as html for context
+        method: "POST",
+        headers:{"Content-Type": "application/json"},
+        body: JSON.stringify(registerInfo),
+      });
         const data = await response.json(); // check for response from server
         console.log("Server responded! ✅", data);
 
@@ -38,28 +41,30 @@ const RegisterScreen = ({ navigation }) => {
         if(data.success)
         {
           Alert.alert("Account created!");
+          navigation.reset({
+          index: 0,
+          routes: [{ name: 'MainApp' }],
+          });
+          await saveUser(registerInfo);
+        }
+        else if(!data.success && data.message == "User already exists")
+        {
+          Alert.alert("There is already a user under that account!");
         }
         else
         {
-          Alert.alert("Whoops, something went wrong!");
+          Alert.alert("Whoops... something with wrong");
         }
       }
-      catch
-      {
-          //Alert.alert("Whoops, something went wrong!", error.message);
-          //console.warn("Fetch error", error);
-      }
+    catch(err)
+    {
+        Alert.alert("Whoops, something went wrong!", err);
+        //console.warn("Fetch error", error);
     }
-    
-    // const handleRegister = () => { // may be easier to check valid info here actually... can still do it in backend tho
-    //     if (!email || !name || !password) {
-    //     Alert.alert('Error', 'Please fill out all fields');
-    //     return;
-    //     }
-    // };
+  }
 
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'android' ? 'height' : 'padding'}>
       <Text style={styles.title}>Register</Text>
       <TextInput
         style={styles.input}
@@ -88,45 +93,46 @@ const RegisterScreen = ({ navigation }) => {
       <TouchableOpacity style={styles.button} onPress={getRegisterInfo}>
         <Text style={styles.buttonText}>Register</Text>
       </TouchableOpacity>
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 
-//example style sheet, replace later (here or in separate file)
+//temporary style sheet, replace later in separate file or with components
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: '#fff',
     flex: 1,
     padding: 24,
-    justifyContent: 'center',
-    backgroundColor: '#fff',
   },
   title: {
-    fontSize: 28,
+    color: '#222E50',
+    fontFamily: 'Times New Roman',
+    fontSize: 48,
     fontWeight: '600',
-    marginBottom: 24,
+    marginBottom: 36,
+    marginTop: -100,
     textAlign: 'center',
   },
   input: {
+    backgroundColor: '#F0F0F0',
+    fontFamily: 'Verdana',
     height: 48,
-    borderColor: '#ccc',
-    borderWidth: 1,
-    borderRadius: 8,
-    paddingHorizontal: 12,
+    borderRadius: 24,
+    paddingHorizontal: 20,
     marginBottom: 16,
   },
   button: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#426B69',
     paddingVertical: 14,
-    borderRadius: 8,
+    borderRadius: 24,
     alignItems: 'center',
-    marginTop: 8,
+    marginTop: 16,
   },
   buttonText: {
-    color: '#fff',
+    fontFamily: 'Verdana',
+    color: '#FFFFFF',
     fontSize: 16,
-    fontWeight: '500',
   }
 });
 
 export default RegisterScreen;
-

@@ -1,0 +1,29 @@
+FROM node:18-alpine AS build
+
+# Create app directory
+WORKDIR /usr/src/app
+
+# Copy package files and install only production dependencies
+COPY package.json package-lock.json ./
+RUN npm ci --only=production
+
+# Copy source
+COPY . .
+
+# Build step is minimal; we just need the server files
+
+FROM node:18-alpine AS runtime
+WORKDIR /usr/src/app
+
+# Copy installed node_modules and source from build stage
+COPY --from=build /usr/src/app/node_modules ./node_modules
+COPY --from=build /usr/src/app .
+
+ENV NODE_ENV=production
+
+# Expose the port the server listens on
+EXPOSE 3000
+
+# Start the server (assumes server entry at src/server/server.js)
+CMD ["node", "src/server/server.js"]
+

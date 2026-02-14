@@ -1,9 +1,8 @@
 import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
+//import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import SignInScreen from '../screens/SignInScreen.js';
 import RegisterScreen from '../screens/RegisterScreen.js';
-import DashboardScreen from '../screens/DashboardScreen.js';
 
 const Stack = createNativeStackNavigator();
 
@@ -19,14 +18,9 @@ const StackNavigator = () => {
         name="Register"
         component={RegisterScreen}
         options={{
-          title: 'Register',
+          headerTitle: 'false',
           headerBackTitle: 'Back'
         }}
-      />
-      <Stack.Screen
-        name="Dashboard"
-        component={DashboardScreen}
-        options={{ title: 'Dashboard' }}
       />
     </Stack.Navigator>
   );
