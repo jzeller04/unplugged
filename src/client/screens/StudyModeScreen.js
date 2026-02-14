@@ -67,7 +67,6 @@ const StudyModeScreen = ({ navigation }) => {
   }, [mode]);
 
 
-  // Circular progress math, change if needed based on visual changes
   const radius = 120;
   const strokeWidth = 30;
   const circumference = 2 * Math.PI * radius;
@@ -130,110 +129,6 @@ const StudyModeScreen = ({ navigation }) => {
   );
 };
 
-// change whatever you need to visually
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    paddingTop: 60,
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: '700',
-    marginBottom: 20,
-    color: '#222E50',
-  },
-  circleContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 30,
-  },
-  timerTextContainer: {
-    position: 'absolute',
-    alignItems: 'center',
-  },
-  label: {
-    fontSize: 16,
-    color: '#666',
-  },
-  timerText: {
-    fontSize: 48,
-    fontWeight: 'bold',
-    color: '#222E50',
-  },
-  remainingText: {
-    fontSize: 18,
-    color: '#444',
-    marginBottom: 40,
-  },
-  stopButton: {
-    backgroundColor: '#426B69',
-    paddingVertical: 16,
-    paddingHorizontal: 40,
-    borderRadius: 30,
-  },
-  stopButtonText: {
-    color: '#fff',
-    fontSize: 20,
-    fontWeight: '600',
-  },
-});
-
-export default StudyModeScreen;
-
-
-      <View style={styles.circleContainer}>
-        <Svg width={300} height={300}>
-          <Circle
-            cx="150"
-            cy="150"
-            r={radius}
-            stroke="#B5CA8D"
-            strokeWidth={strokeWidth}
-            fill="none"
-          />
-          <Circle
-            cx="150"
-            cy="150"
-            r={radius}
-            stroke="#426B69"
-            strokeWidth={strokeWidth}
-            fill="none"
-            strokeDasharray={circumference}
-            strokeDashoffset={strokeDashoffset}
-            strokeLinecap="round"
-            rotation="270"
-            origin="150,150"
-          />
-        </Svg>
-
-        <View style={styles.timerTextContainer}>
-          <Text style={styles.label}>Apps blocked for</Text>
-          <Text style={styles.timerText}>
-            {format(secondsLeft)}
-          </Text>
-        </View>
-      </View>
-
-      <Text style={styles.remainingText}>
-        {format(totalElapsed)} in study mode
-      </Text>
-      <TouchableOpacity
-        style={styles.stopButton}
-        onPress={() => {
-          clearInterval(intervalRef.current);
-          intervalRef.current = null;
-          navigation.goBack();
-        }}
-      >
-        <Text style={styles.stopButtonText}>Stop</Text>
-      </TouchableOpacity>
-    </View>
-  );
-};
-
-// change whatever you need to visually
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -290,3 +185,5 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
 });
+
+export default StudyModeScreen;
