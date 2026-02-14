@@ -69,7 +69,7 @@ const StudyModeScreen = ({ navigation }) => {
 
   // Circular progress math, change if needed based on visual changes
   const radius = 120;
-  const strokeWidth = 12;
+  const strokeWidth = 30;
   const circumference = 2 * Math.PI * radius;
   const progress = secondsLeft / totalSeconds;
   const strokeDashoffset = circumference * (1 - progress);
