@@ -3,8 +3,8 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import Svg, { Circle } from 'react-native-svg';
 
-const FOCUS_TIME = (1 * 60);
-const BREAK_TIME = (1 * 60);
+const FOCUS_TIME = (25 * 60);
+const BREAK_TIME = (5 * 60);
 
 const StudyModeScreen = ({ navigation }) => {
   const [mode, setMode] = useState('focus');
