@@ -100,7 +100,7 @@ const StudyModeScreen = ({ navigation }) => {
             strokeDasharray={circumference}
             strokeDashoffset={strokeDashoffset}
             strokeLinecap="round"
-            rotation="90"
+            rotation="270"
             origin="150,150"
           />
         </Svg>
