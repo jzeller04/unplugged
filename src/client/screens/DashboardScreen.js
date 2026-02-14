@@ -71,34 +71,30 @@ useEffect(() => {
 
 console.log("WeeklyStats state:", weeklyStats);
 
-
-
   return (
     <ScrollView style={styles.container} contentContainerStyle={{ justifyContent: 'flex-start' }}>
       <Text style={styles.title}>Dashboard</Text>
-      <Text style={styles.streak}>{streakCount} / {streakGoal} day streak of detox!</Text>
+      <Text style={styles.streak}>{streakCount} day streak!</Text>
 
-     <View style={styles.reportContainer}>
-  <Text style={styles.reportTitle}>Weekly Report</Text>
+      <View style={styles.reportContainer}>
+        <Text style={styles.reportTitle}>Weekly Report</Text>
 
-  {weeklyStats.length === 0 ? (
-    <Text style={styles.reportBody}>No app activity yet</Text>
-  ) : (
-    weeklyStats.map(day => (
-      <View key={day.date} style={{ marginBottom: 10 }}>
-        <Text style={{ fontWeight: "bold" }}>{day.date}</Text>
+        {weeklyStats.length === 0 ? (
+          <Text style={styles.reportBody}>No app activity yet</Text>
+        ) : (
+          weeklyStats.map(day => (
+            <View key={day.date} style={styles.reportBody}>
+              <Text style={styles.reportBody}>{day.date}</Text>
 
-        {Object.entries(day.apps).map(([app, count]) => (
-          <Text key={app} style={styles.reportBody}>
-            • {app}: {count}
-          </Text>
-        ))}
+              {Object.entries(day.apps).map(([app, count]) => (
+                <Text key={app} style={styles.reportBody}>
+                  • {app}: Opened {count} times
+                </Text>
+              ))}
+            </View>
+          ))
+        )}
       </View>
-    ))
-  )}
-</View>
-
-
 
       <View style={styles.challengesContainer}>
         <Text style={styles.challengesTitle}>Weekly Challenges</Text>
