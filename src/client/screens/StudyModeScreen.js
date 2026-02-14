@@ -86,7 +86,7 @@ const StudyModeScreen = ({ navigation }) => {
             cx="150"
             cy="150"
             r={radius}
-            stroke="#D0E8D0"
+            stroke="#B5CA8D"
             strokeWidth={strokeWidth}
             fill="none"
           />
