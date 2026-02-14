@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import Svg, { Circle } from 'react-native-svg';
 
-const FOCUS_TIME = (25 * 60);
+const FOCUS_TIME = (1 * 60);
 const BREAK_TIME = (5 * 60);
 
 const StudyModeScreen = ({ navigation }) => {
@@ -84,7 +84,7 @@ const StudyModeScreen = ({ navigation }) => {
             cx="150"
             cy="150"
             r={radius}
-            stroke="#4CAF50"
+            stroke='#426B69'
             strokeWidth={strokeWidth}
             fill="none"
             strokeDasharray={circumference}
@@ -157,7 +157,7 @@ const styles = StyleSheet.create({
     marginBottom: 40,
   },
   stopButton: {
-    backgroundColor: '#4CAF50',
+    backgroundColor: '#426B69',
     paddingVertical: 16,
     paddingHorizontal: 40,
     borderRadius: 30,
