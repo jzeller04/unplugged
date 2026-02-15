@@ -2,6 +2,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import DashboardScreen from '../screens/DashboardScreen';
 import CustomizeScreen from '../screens/CustomizeScreen';
 import DetoxScreen from '../screens/DetoxScreen';
+import StudyModeScreen from '../screens/StudyModeScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import DummyScreen from '../screens/DummyScreen';

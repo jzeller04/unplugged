@@ -28,7 +28,8 @@ const SpinningCircle = ({ size, value }) => {
 };
 
 const LoadingScreen = () => {
-  const rotate = useRef(new Animated.Value(0)).current;
+  const rotateRef = useRef(new Animated.Value(0));
+  const rotate = rotateRef.current;
   const loopRef = useRef(null);
 
   useEffect(() => {
@@ -59,7 +60,7 @@ const LoadingScreen = () => {
       loopRef.current?.stop();
       rotate.stopAnimation();
     };
-  }, []);
+  }, [rotate]);
 
   return (
     <View style={styles.container} key={HOT_RELOAD_COUNTER}>
