@@ -10,8 +10,9 @@
     "web": "expo start --web",
     "lint": "expo lint",
     "test": "jest",
-    "openapp": "\"C:\\Users\\macie\\AppData\\Local\\Android\\Sdk\\platform-tools\\adb.exe\" reverse tcp:3000 tcp:3000 && expo start --android",
-    "openappmac": "~/Library/Android/sdk/platform-tools/adb reverse tcp:3000 tcp:3000 && expo start --android"
+    "openapp": "adb reverse tcp:3000 tcp:3000 && expo start --android",
+    "openapp:windows": "C:/Users/macie/AppData/Local/Android/Sdk/platform-tools/adb.exe reverse tcp:3000 tcp:3000 && expo start --android",
+    "openapp:mac": "~/Library/Android/sdk/platform-tools/adb reverse tcp:3000 tcp:3000 && expo start --android"
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.907.0",
