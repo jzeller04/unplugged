@@ -5,6 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import StackNavigator from './StackNavigator';
 import TabNavigation from './TabNavigator';
 import LoadingScreen from '../screens/LoadingScreen';
+import StudyModeScreen from '../screens/StudyModeScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -39,6 +40,7 @@ function RootNavigator() {
       <Stack.Navigator initialRouteName={initialRoute} screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Authentication" component={StackNavigator} />
         <Stack.Screen name="MainApp" component={TabNavigation} />
+        <Stack.Screen name="StudyMode" component={StudyModeScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
