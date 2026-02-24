@@ -11,7 +11,7 @@
     "lint": "expo lint",
     "test": "jest",
     "openappmacie": "\"C:\\Users\\macie\\AppData\\Local\\Android\\Sdk\\platform-tools\\adb.exe\" reverse tcp:3000 tcp:3000 && expo start --android",
-    "openappjustin": "\"C:\\Users\\justi\\AppData\\Local\\Android\\Sdk\\platform-tools\\adb.exe\" reverse tcp:3000 tcp:3000 && expo start --android"
+    "openappjustin": "\"C:\\Users\\justi\\AppData\\Local\\Android\\Sdk\\platform-tools\\adb.exe\" reverse tcp:3000 tcp:3000 && expo start --android",
     "openappmac": "~/Library/Android/sdk/platform-tools/adb reverse tcp:3000 tcp:3000 && expo start --android"
   },
   "dependencies": {

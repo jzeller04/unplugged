@@ -5,14 +5,17 @@ import { updateUserStatsOnAppOpen } from '../helper/userStorage';
 
 
 const handleInstagramPress = async () => {
+  // if app blocking off
   await updateUserStatsOnAppOpen({ name: "instagram" });
 };
 
 const handleTikTokPress = async () => {
+  // if app blocking off
   await updateUserStatsOnAppOpen({ name: "tiktok" });
 };
 
 const handleTwitterPress = async () => {
+  // if app blocking off
   await updateUserStatsOnAppOpen({ name: "twitter" });
 };
 const DummyScreen = () => {
