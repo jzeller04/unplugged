@@ -16,12 +16,12 @@ export function isScreenOn() {
   return false;
 }
 
-export function startFocusSession(ts) {
+export function startFocusSession(_ts) {
   console.warn("NativeUsageManager not linked");
   return true;
 }
 
-export function endFocusSession(ts) {
+export function endFocusSession(_ts) {
   console.warn("NativeUsageManager not linked");
   return true;
 }
