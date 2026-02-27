@@ -1,102 +1,110 @@
-import React from 'react';
-import { Text, StyleSheet, ScrollView, View } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { Text, StyleSheet, ScrollView, View, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 
-const CustomizeScreen = () => {
-  //const [detoxModes, setDetoxModes] = useState([]);
-  //const [blockedLocations, setBlockedLocations] = useState([]);
-  //const [scheduledDowntimes, setScheduledDowntimes] = useState([]);
+const CustomizeScreen = ({ navigation, route }) => {
+  const [detoxModes, setDetoxModes] = useState([]);
+
+  // Receive new or edited mode
+  useEffect(() => {
+    if (route.params?.savedMode) {
+      const mode = route.params.savedMode;
+
+      setDetoxModes(prev => {
+        const exists = prev.find(m => m.id === mode.id);
+        if (exists) {
+          return prev.map(m => (m.id === mode.id ? mode : m));
+        }
+        return [...prev, mode];
+      });
+
+      // Add backend logic to save mode changes to Async or whatever
+    }
+  }, [route.params?.savedMode]);
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={{ justifyContent: 'flex-start' }}>
+    <ScrollView style={styles.container}>
       <Text style={styles.screenTitle}>Customize</Text>
-      <Text style={styles.description}>Set custom app-blocking settings</Text>
 
-      <Section
-        title="Detox Modes"
-        items={[]}
-        //items={detoxModes}
-        
-        //add functionality later
-        //addLabel="Add new mode"
-        //on press, navigate to new page to customize mode and add to array of modes
-      />
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Detox Modes</Text>
 
-      <Section
-        title="Blocked Locations"
-        items={[]}
-        //items={blockedLocations}
+        <TouchableOpacity onPress={() => navigation.navigate('EditMode')} style={styles.addButton}>
+          <Text style={styles.addText}>+ Add new mode</Text>
+        </TouchableOpacity>
 
-        //add functionality later
-        //addLabel="Add new location"
-        //on press, navigate to new page to customize location and add to array of locations
-      />
+        {detoxModes.map((mode) => (
+          <TouchableOpacity key={mode.id} style={styles.itemRow} onPress={() => navigation.navigate('EditMode', { mode })}>
+            <View>
+              <Text style={styles.itemName}>{mode.name}</Text>
 
-      <Section
-        title="Scheduled Downtime"
-        items={[]}
-        //items={scheduledDowntimes}
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Icon name="clock" size={16} color="#555555" />
+                <Text style={styles.itemTime}>
+                  {mode.startTime} → {mode.endTime}
+                </Text>
+              </View>
+            </View>
 
-        //add functionality later
-        //addLabel="Add new downtime"
-        //on press, navigate to new page to customize downtime and add to array of downtimes
-      />
+            <Icon name="edit" size={22} color="#222E50" />
+          </TouchableOpacity>
+        ))}
+      </View>
     </ScrollView>
   );
 };
-
-//later add in button function to add new
-//also later add in functionality to edit button to navigate to edit page
-const Section = ({ title, items }) => (
-  <View style={styles.section}>
-    <Text style={styles.sectionTitle}>{title}</Text>
-    {items.map((item, index) => (
-      <View key={index} style={styles.itemRow}>
-        <Text>{item}</Text>
-        <Icon name="edit" size={20} />
-      </View>
-    ))}
-  </View>
-);
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 24,
-    backgroundColor: '#fff',
+    backgroundColor: '#FFFFFF'
   },
   screenTitle: {
     color: '#222E50',
     fontFamily: 'Times New Roman',
     fontSize: 48,
     fontWeight: '600',
-    marginBottom: 12,
-    textAlign: 'left',
     marginTop: 50,
   },
-  description: {
-    color: '#222E50',
-    fontFamily: 'Verdana',
-    fontSize: 18,
-    marginBottom: 18,
-  },
   section: {
-    flex: 1,
     backgroundColor: '#F0F0F0',
     marginBottom: 20,
-    minHeight:200,
+    minHeight: 200,
     borderRadius: 30,
-    padding:16,
+    padding: 16,
   },
   sectionTitle: {
     color: '#222E50',
     fontFamily: 'Times New Roman',
     fontSize: 24,
     fontWeight: '600',
-    flex: 1,
+  },
+  addButton: {
+    marginTop: 10,
+    marginBottom: 20
+  },
+  addText: {
+    color: '#426B69',
+    fontSize: 18,
+    fontFamily: 'Verdana'
   },
   itemRow: {
-
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingVertical: 14,
+    borderBottomWidth: 1,
+    borderColor: '#DDDDDD',
+  },
+  itemName: {
+    fontSize: 18,
+    fontFamily: 'Verdana',
+    color: '#222E50',
+  },
+  itemTime: {
+    fontSize: 14,
+    color: '#555555',
+    marginTop: 4,
   },
 });
 
