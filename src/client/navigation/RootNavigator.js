@@ -6,6 +6,7 @@ import StackNavigator from './StackNavigator';
 import TabNavigation from './TabNavigator';
 import LoadingScreen from '../screens/LoadingScreen';
 import StudyModeScreen from '../screens/StudyModeScreen';
+import EditModeScreen from '../screens/EditModeScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -41,6 +42,7 @@ function RootNavigator() {
         <Stack.Screen name="Authentication" component={StackNavigator} />
         <Stack.Screen name="MainApp" component={TabNavigation} />
         <Stack.Screen name="StudyMode" component={StudyModeScreen} />
+        <Stack.Screen name="EditMode" component={EditModeScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
