@@ -1,10 +1,10 @@
 // Mock argon2-browser BEFORE importing
+import { hash as argon2Hash, verify } from 'argon2-browser';
+
 jest.mock('argon2-browser', () => ({
   hash: jest.fn(),
   verify: jest.fn(),
 }));
-
-import { hash as argon2Hash, verify } from 'argon2-browser';
 
 describe('Authentication and Password Hashing', () => {
   beforeEach(() => {
