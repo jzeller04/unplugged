@@ -1,21 +1,41 @@
 import React from 'react';
 import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { FontAwesome, FontAwesome5 } from '@expo/vector-icons';
-import { updateUserStatsOnAppOpen } from '../helper/userStorage';
+import { updateUserStatsOnAppOpen, isAppBlockingEnabled } from '../helper/userStorage';
+import { Alert } from 'react-native';
 
 
 const handleInstagramPress = async () => {
-  // if app blocking off
+  const isBlocked = await isAppBlockingEnabled({ name: "instagram" });
+
+  if (isBlocked) {
+    Alert.alert("Instagram is blocked");
+    return; // stop here
+  }
+
   await updateUserStatsOnAppOpen({ name: "instagram" });
+
+  // optionally navigate or open app here
 };
 
 const handleTikTokPress = async () => {
-  // if app blocking off
+  const isBlocked = await isAppBlockingEnabled({ name: "tiktok" });
+
+  if (isBlocked) {
+    Alert.alert("TikTok is blocked");
+    return;
+  }
+
   await updateUserStatsOnAppOpen({ name: "tiktok" });
 };
 
 const handleTwitterPress = async () => {
-  // if app blocking off
+  const isBlocked = await isAppBlockingEnabled({ name: "twitter" });
+
+  if (isBlocked) {
+    Alert.alert("Twitter is blocked");
+    return;
+  }
   await updateUserStatsOnAppOpen({ name: "twitter" });
 };
 const DummyScreen = () => {
