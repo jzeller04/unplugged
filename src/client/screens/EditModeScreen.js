@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, StyleSheet, Text, TextInput, TouchableOpacity } from 'react-native';
 
 const EditModeScreen = ({ route, navigation }) => {
   const existing = route.params?.mode;
+  const onSave = route.params?.onSave;
 
   const [name, setName] = useState(existing?.name || '');
   const [startTime, setStartTime] = useState(existing?.startTime || '09:00 AM');
@@ -10,56 +11,55 @@ const EditModeScreen = ({ route, navigation }) => {
 
   const saveMode = () => {
     const newMode = {
-        id: existing?.id || Date.now().toString(),
-        name,
-        startTime,
-        endTime,
-        apps: existing?.apps || [], // placeholder for future app picking
+      id: existing?.id || Date.now().toString(),
+      name,
+      startTime,
+      endTime,
+      apps: existing?.apps || []
     };
 
-    // Send back to CustomizeScreen
-    navigation.navigate('Customize', { savedMode: newMode });
+    if (onSave) {
+      onSave(newMode);
+    }
 
-    // Add backend saving logic
-    };
+    navigation.goBack();
+  };
 
-    return (
-        <View style={styles.container}>
-        <Text style={styles.title}>
-            {existing ? 'Edit Mode' : 'Create Mode'}
-        </Text>
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title}>
+        {existing ? 'Edit Mode' : 'Create Mode'}
+      </Text>
 
-        <Text style={styles.label}>Mode Name</Text>
-        <TextInput
-            style={styles.input}
-            value={name}
-            onChangeText={setName}
-            placeholder="New mode title"
-        />
+      <Text style={styles.label}>Mode Name</Text>
+      <TextInput
+        style={styles.input}
+        value={name}
+        onChangeText={setName}
+        placeholder="New mode title"
+      />
 
-        <Text style={styles.label}>Start Time</Text>
-        <TextInput
-            style={styles.input}
-            value={startTime}
-            onChangeText={setStartTime}
-            placeholder="10:00 AM"
-        />
+      <Text style={styles.label}>Start Time</Text>
+      <TextInput
+        style={styles.input}
+        value={startTime}
+        onChangeText={setStartTime}
+        placeholder="10:00 AM"
+      />
 
-        <Text style={styles.label}>End Time</Text>
-        <TextInput
-            style={styles.input}
-            value={endTime}
-            onChangeText={setEndTime}
-            placeholder="10:00 PM"
-        />
+      <Text style={styles.label}>End Time</Text>
+      <TextInput
+        style={styles.input}
+        value={endTime}
+        onChangeText={setEndTime}
+        placeholder="10:00 PM"
+      />
 
-        <TouchableOpacity style={styles.saveButton} onPress={saveMode}>
-            <Text style={styles.saveText}>Save</Text>
-        </TouchableOpacity>
-
-        {/* add feature to add apps to block */}
-        </View>
-    );
+      <TouchableOpacity style={styles.saveButton} onPress={saveMode}>
+        <Text style={styles.saveText}>Save</Text>
+      </TouchableOpacity>
+    </View>
+  );
 };
 
 const styles = StyleSheet.create({

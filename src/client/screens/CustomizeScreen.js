@@ -1,26 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Text, StyleSheet, ScrollView, View, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 
-const CustomizeScreen = ({ navigation, route }) => {
+const CustomizeScreen = ({ navigation }) => {
   const [detoxModes, setDetoxModes] = useState([]);
 
-  // Receive new or edited mode
-  useEffect(() => {
-    if (route.params?.savedMode) {
-      const mode = route.params.savedMode;
-
-      setDetoxModes(prev => {
-        const exists = prev.find(m => m.id === mode.id);
-        if (exists) {
-          return prev.map(m => (m.id === mode.id ? mode : m));
-        }
-        return [...prev, mode];
-      });
-
-      // Add backend logic to save mode changes to Async or whatever
-    }
-  }, [route.params?.savedMode]);
+  const handleSave = (savedMode) => {
+    setDetoxModes(prev => {
+      const exists = prev.find(m => m.id === savedMode.id);
+      if (exists) {
+        return prev.map(m => (m.id === savedMode.id ? savedMode : m));
+      }
+      return [...prev, savedMode];
+    });
+  };
 
   return (
     <ScrollView style={styles.container}>
@@ -29,17 +22,33 @@ const CustomizeScreen = ({ navigation, route }) => {
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Detox Modes</Text>
 
-        <TouchableOpacity onPress={() => navigation.navigate('EditMode')} style={styles.addButton}>
+        <TouchableOpacity
+          style={styles.addButton}
+          onPress={() =>
+            navigation.navigate('EditMode', {
+              onSave: handleSave
+            })
+          }
+        >
           <Text style={styles.addText}>+ Add new mode</Text>
         </TouchableOpacity>
 
         {detoxModes.map((mode) => (
-          <TouchableOpacity key={mode.id} style={styles.itemRow} onPress={() => navigation.navigate('EditMode', { mode })}>
+          <TouchableOpacity
+            key={mode.id}
+            style={styles.itemRow}
+            onPress={() =>
+              navigation.navigate('EditMode', {
+                mode,
+                onSave: handleSave
+              })
+            }
+          >
             <View>
               <Text style={styles.itemName}>{mode.name}</Text>
 
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <Icon name="clock" size={16} color="#555555" />
+                <Icon name="clock" size={16} color="#555" />
                 <Text style={styles.itemTime}>
                   {mode.startTime} → {mode.endTime}
                 </Text>
