@@ -117,8 +117,9 @@ const styles = StyleSheet.create({
   itemRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
     paddingVertical: 14,
-    borderBottomWidth: 1,
+    paddingHorizontal: 8,
     borderColor: '#DDDDDD',
   },
   itemName: {
@@ -127,9 +128,11 @@ const styles = StyleSheet.create({
     color: '#222E50',
   },
   itemTime: {
-    fontSize: 14,
+    fontFamily: 'Verdana',
+    fontSize: 12,
     color: '#555555',
     marginTop: 4,
+    paddingHorizontal: 8,
   },
 });
 
