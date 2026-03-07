@@ -69,35 +69,42 @@ const styles = StyleSheet.create({
         backgroundColor: '#FFFFFF'
     },
     title: {
-        fontSize: 32,
-        fontWeight: '700',
-        marginBottom: 20,
-        color: '#222E50' 
+      color: '#222E50',
+      fontFamily: 'Times New Roman',
+      fontSize: 48,
+      fontWeight: '600',
+      marginBottom: 12,
+      textAlign: 'left',
+      marginTop: 50,
     },
     label: {
+        color: '#222E50',
+        fontFamily: 'Verdana',
         fontSize: 18,
-        marginTop: 20,
-        color: '#222E50' 
     },
     input: {
+        fontFamily: 'Verdana',
         borderWidth: 1,
         borderColor: '#ccc',
         padding: 12,
         borderRadius: 10,
         marginTop: 8,
+        marginBottom: 18,
         fontSize: 16,
     },
     saveButton: {
         backgroundColor: '#426B69',
-        padding: 16,
-        borderRadius: 20,
-        marginTop: 40,
+        borderRadius: 18,
+        justifyContent: 'center',
         alignItems: 'center',
+        marginTop: 16,
     },
     saveText: {
+        fontFamily: 'Verdana',
         color: '#FFFFFF',
-        fontSize: 18, 
-        fontWeight: '600'
+        fontSize: 16,
+        paddingVertical: 16,
+        paddingHorizontal: 20,
     },
 });
 
