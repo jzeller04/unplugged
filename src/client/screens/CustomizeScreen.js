@@ -19,6 +19,8 @@ const CustomizeScreen = ({ navigation }) => {
     <ScrollView style={styles.container}>
       <Text style={styles.screenTitle}>Customize</Text>
 
+      <Text style={styles.description}>Set screen time and modes</Text>
+
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Detox Modes</Text>
 
@@ -75,13 +77,21 @@ const styles = StyleSheet.create({
     fontSize: 48,
     fontWeight: '600',
     marginTop: 50,
+    marginBottom: 12,
+    textAlign: 'left',
+  },
+  description: {
+    color: '#222E50',
+    fontFamily: 'Verdana',
+    fontSize: 18,
+    marginBottom: 18,
   },
   section: {
     backgroundColor: '#F0F0F0',
-    marginBottom: 20,
-    minHeight: 200,
+    marginBottom: 10,
     borderRadius: 30,
     padding: 16,
+    paddingBottom: 0,
   },
   sectionTitle: {
     color: '#222E50',
@@ -90,13 +100,19 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   addButton: {
+    backgroundColor: '#426B69',
+    borderRadius: 18,
     marginTop: 10,
-    marginBottom: 20
+    marginBottom: 20,
+    width: 175,
+    alignItems: 'center',
   },
   addText: {
-    color: '#426B69',
+    fontFamily: 'Verdana',
+    color: '#FFFFFF',
     fontSize: 18,
-    fontFamily: 'Verdana'
+    paddingVertical: 14,
+    paddingHorizontal: 20,
   },
   itemRow: {
     flexDirection: 'row',
