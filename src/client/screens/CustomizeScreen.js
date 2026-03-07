@@ -22,17 +22,6 @@ const CustomizeScreen = ({ navigation }) => {
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Detox Modes</Text>
 
-        <TouchableOpacity
-          style={styles.addButton}
-          onPress={() =>
-            navigation.navigate('EditMode', {
-              onSave: handleSave
-            })
-          }
-        >
-          <Text style={styles.addText}>+ Add new mode</Text>
-        </TouchableOpacity>
-
         {detoxModes.map((mode) => (
           <TouchableOpacity
             key={mode.id}
@@ -58,6 +47,17 @@ const CustomizeScreen = ({ navigation }) => {
             <Icon name="edit" size={22} color="#222E50" />
           </TouchableOpacity>
         ))}
+
+        <TouchableOpacity
+          style={styles.addButton}
+          onPress={() =>
+            navigation.navigate('EditMode', {
+              onSave: handleSave
+            })
+          }
+        >
+          <Text style={styles.addText}>Add new mode</Text>
+        </TouchableOpacity>
       </View>
     </ScrollView>
   );
