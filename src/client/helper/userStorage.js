@@ -12,6 +12,100 @@ export const saveUser = async (user) =>
   }
 };
 
+export const toggleUserAppblocking = async (app) =>
+{
+  try {
+    if (!app || !app.name) {
+      console.warn("No app name passed:", app);
+      return;
+    }
+
+    const appName = app.name;
+
+    const storedUser = await AsyncStorage.getItem('user');
+    let user = storedUser ? JSON.parse(storedUser) : {};
+
+    if (!user.appBlocking) {
+      user.appBlocking = {};
+    }
+
+    // Initialize if not existing
+    if (user.appBlocking[appName] === undefined) {
+      user.appBlocking[appName] = false;
+    }
+
+    // Toggle value
+    user.appBlocking[appName] = !user.appBlocking[appName];
+
+    await AsyncStorage.setItem('user', JSON.stringify(user));
+
+    console.log(`App blocking for ${appName}:`, user.appBlocking[appName]);
+
+    return user.appBlocking[appName]; // return new state if needed
+  } catch (error) {
+    console.error("Failed to toggle app blocking:", error);
+  }
+};
+
+export const isAppBlockingEnabled = async (app) => {
+  try {
+    if (!app || !app.name) {
+      return false;
+    }
+
+    const storedUser = await AsyncStorage.getItem("user");
+    let user = storedUser ? JSON.parse(storedUser) : {};
+
+    if (!user.appBlocking) {
+      return false;
+    }
+
+    return user.appBlocking[app.name] === true;
+  } catch (error) {
+    console.error("Error checking block status:", error);
+    return false;
+  }
+};
+
+export const updateUserStatsOnAppOpen = async (app) => {
+  try {
+
+    if (!app || !app.name) {
+      console.warn("No app name passed:", app);
+      return;
+    }
+
+    const today = new Date().toISOString().split("T")[0];
+    const appName = app.name;
+
+    const storedUser = await AsyncStorage.getItem('user');
+    let user = storedUser ? JSON.parse(storedUser) : {};
+
+    if (!user.appOpenedByDate) {
+      user.appOpenedByDate = {};
+    }
+
+    // init day object
+    if (!user.appOpenedByDate[today]) {
+      user.appOpenedByDate[today] = {};
+    }
+
+    // init app counter
+    if (!user.appOpenedByDate[today][appName]) {
+      user.appOpenedByDate[today][appName] = 0;
+    }
+
+    // increment
+    user.appOpenedByDate[today][appName] += 1;
+
+    await AsyncStorage.setItem('user', JSON.stringify(user));
+
+    console.log("Updated stats:", user.appOpenedByDate);
+  } catch (error) {
+    console.error("Failed to update app stats:", error);
+  }
+};
+
 export const getUser = async () => {
   try {
     const value = await AsyncStorage.getItem('user');

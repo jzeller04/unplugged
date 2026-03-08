@@ -19,4 +19,18 @@ module.exports = {
     // Allow unescaped entities in JSX
     'react/no-unescaped-entities': 'off',
   },
+  overrides: [
+    {
+      files: [
+        "**/*.test.js",
+        "**/*.spec.js",
+        "**/__tests__/**/*.[jt]s?(x)",
+        "testSuite/**/*.[jt]s?(x)",
+        "jest.setup.js"
+      ],
+      env: {
+        jest: true,
+      },
+    },
+  ],
 };
