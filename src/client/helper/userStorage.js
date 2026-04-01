@@ -47,6 +47,16 @@ export const toggleUserAppblocking = async (app) =>
   }
 };
 
+let timerDetoxState = false;
+
+export const setTimerDetox = async (value) => {
+  timerDetoxState = value;
+};
+
+export const isTimerDetoxEnabled = async () => {
+  return timerDetoxState;
+};
+
 export const isAppBlockingEnabled = async (app) => {
   try {
     if (!app || !app.name) {

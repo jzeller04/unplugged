@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   TouchableOpacity,
@@ -15,32 +15,24 @@ import {
 } from '@expo/vector-icons';
 import {
   updateUserStatsOnAppOpen,
-  isAppBlockingEnabled
+  isAppBlockingEnabled,
+  isTimerDetoxEnabled
 } from '../helper/userStorage';
 
-const handleAppPress = async (appName) => {
-  const trackedApps = ["instagram", "tiktok", "twitter"];
-
-  if (trackedApps.includes(appName)) {
-    const isBlocked = await isAppBlockingEnabled({ name: appName });
-
-    if (isBlocked) {
-      Alert.alert(`${appName} is blocked`);
-      return;
-    }
-
-    await updateUserStatsOnAppOpen({ name: appName });
-  } else {
-    Alert.alert(`${appName} opened`);
-  }
-};
-
 const DummyScreen = () => {
+  // ----------------------
+  // State
+  // ----------------------
+  const [countdown, setCountdown] = useState(0);  // Countdown for delay
+  const [currentApp, setCurrentApp] = useState(null); // App currently delaying
+
+  // ----------------------
+  // Apps list
+  // ----------------------
   const apps = [
     { name: "instagram", label: "Instagram", icon: <FontAwesome name="instagram" size={30} color="#fff" />, color: "#E1306C" },
     { name: "tiktok", label: "TikTok", icon: <FontAwesome5 name="tiktok" size={26} color="#fff" />, color: "#000" },
     { name: "twitter", label: "X", icon: <FontAwesome name="twitter" size={30} color="#fff" />, color: "#1DA1F2" },
-
     { name: "spotify", label: "Spotify", icon: <FontAwesome name="spotify" size={30} color="#fff" />, color: "#1DB954" },
     { name: "snapchat", label: "Snapchat", icon: <FontAwesome name="snapchat-ghost" size={28} color="#fff" />, color: "#FFFC00" },
     { name: "youtube", label: "YouTube", icon: <FontAwesome name="youtube-play" size={28} color="#fff" />, color: "#FF0000" },
@@ -55,8 +47,72 @@ const DummyScreen = () => {
     { name: "messages", label: "Messages", icon: <Ionicons name="chatbubble" size={28} color="#fff" />, color: "#34C759" },
   ];
 
+  // ----------------------
+  // Handle App Press
+  // ----------------------
+  const handleAppPress = async (appName) => {
+    const trackedApps = ["instagram", "tiktok", "twitter"];
+    const isTimer = await isTimerDetoxEnabled();
+
+    if (trackedApps.includes(appName)) {
+      const isBlocked = await isAppBlockingEnabled({ name: appName });
+
+      if (isBlocked) {
+        if (isTimer) {
+          // Start the 10-second countdown
+          if (countdown > 0) return; // prevent multiple timers
+          setCurrentApp(appName);
+          setCountdown(10); // start countdown
+          return;
+        }
+
+        Alert.alert(`${appName} is blocked`);
+        return;
+      }
+
+      await updateUserStatsOnAppOpen({ name: appName });
+    } else {
+      Alert.alert(`${appName} opened`);
+    }
+  };
+
+  // ----------------------
+  // Countdown decrement
+  // ----------------------
+  useEffect(() => {
+    if (countdown <= 0) return;
+
+    const timer = setInterval(() => {
+      setCountdown(prev => prev - 1);
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [countdown]);
+
+  // ----------------------
+  // Trigger app open when countdown hits 0
+  // ----------------------
+  useEffect(() => {
+    if (countdown === 0 && currentApp) {
+      updateUserStatsOnAppOpen({ name: currentApp });
+      Alert.alert(`${currentApp} opened after delay`);
+      setCurrentApp(null); // reset
+    }
+  }, [countdown]);
+
+  // ----------------------
+  // Render
+  // ----------------------
   return (
     <View style={styles.container}>
+      {countdown > 0 && (
+        <View style={styles.timerContainer}>
+          <Text style={styles.timerText}>
+            Opening {currentApp} in {countdown}s...
+          </Text>
+        </View>
+      )}
+
       <View style={styles.grid}>
         {apps.map((app) => (
           <TouchableOpacity
@@ -77,6 +133,9 @@ const DummyScreen = () => {
 
 export default DummyScreen;
 
+// ----------------------
+// Styles
+// ----------------------
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -106,5 +165,17 @@ const styles = StyleSheet.create({
     color: '#000',
     fontWeight: '500',
     textAlign: 'center',
+  },
+  timerContainer: {
+    backgroundColor: '#FFCC00',
+    padding: 12,
+    borderRadius: 12,
+    marginBottom: 20,
+    alignItems: 'center',
+  },
+  timerText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#000',
   },
 });
