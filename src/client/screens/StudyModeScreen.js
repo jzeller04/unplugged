@@ -2,6 +2,10 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import Svg, { Circle } from 'react-native-svg';
+import { 
+  toggleUserAppblocking, 
+  isAppBlockingEnabled 
+} from '../helper/userStorage';
 
 const FOCUS_TIME = (25 * 60);
 const BREAK_TIME = (5 * 60);
@@ -17,10 +21,27 @@ const StudyModeScreen = ({ navigation }) => {
 
   const totalSeconds = mode === 'focus' ? FOCUS_TIME : BREAK_TIME;
 
+  // Apps to block during study mode
+  const studyApps = ["instagram", "tiktok", "twitter"];
+
   const format = (s) => {
     const m = Math.floor(s / 60);
     const sec = s % 60;
     return `${m.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`;
+  };
+
+  const toggleStudyBlocking = async (shouldBlock) => {
+    try {
+      for (const app of studyApps) {
+        const isBlocked = await isAppBlockingEnabled({ name: app });
+
+        if (isBlocked !== shouldBlock) {
+          await toggleUserAppblocking({ name: app });
+        }
+      }
+    } catch (error) {
+      console.error("Error toggling study blocking:", error);
+    }
   };
 
   const startTimer = () => {
@@ -57,15 +78,19 @@ const StudyModeScreen = ({ navigation }) => {
 
   useFocusEffect(
     useCallback(() => {
-    startTimer();        // auto-start when screen is focused
-    return () => pauseTimer();  // cleanup when leaving screen
+      startTimer();
+      toggleStudyBlocking(true); // 🔒 Block apps when entering
+
+      return () => {
+        pauseTimer();
+        toggleStudyBlocking(false); // 🔓 Unblock when leaving
+      };
     }, [])
   );
 
   useEffect(() => {
     modeRef.current = mode;
   }, [mode]);
-
 
   const radius = 120;
   const strokeWidth = 30;
@@ -115,11 +140,12 @@ const StudyModeScreen = ({ navigation }) => {
       <Text style={styles.remainingText}>
         {format(totalElapsed)} in study mode
       </Text>
+
       <TouchableOpacity
         style={styles.stopButton}
-        onPress={() => {
-          clearInterval(intervalRef.current);
-          intervalRef.current = null;
+        onPress={async () => {
+          pauseTimer();
+          await toggleStudyBlocking(false); // 🔓 Unblock apps
           navigation.goBack();
         }}
       >

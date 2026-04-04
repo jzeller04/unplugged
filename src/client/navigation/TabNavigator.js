@@ -41,10 +41,10 @@ function TabNavigator() {
         }}
       />
       <Tab.Screen
-        name="Dummmy Phone"
+        name="Dummy"
         component={DummyScreen}
         options={{ header: () => null, tabBarIcon: ({ color, size }) => (
-          <Ionicons name="" color={color} size={size} /> ),
+          <Ionicons name="phone-portrait-outline" color={color} size={size} /> ),
         }}
       />
     </Tab.Navigator>
