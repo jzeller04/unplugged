@@ -140,7 +140,7 @@ const DetoxScreen = ({ navigation }) => {
             style={[
               styles.button,
               timerDetox && { backgroundColor: '#B22222' }, // red when active
-              { flex: 1, marginLeft: 5, backgroundColor: '#8884FF' }
+              { flex: 1, marginLeft: 5, backgroundColor: '#426B69' }
             ]}
             onPress={handleTimerToggle}
             disabled={detoxActive} // can't start timer if normal detox is active
@@ -165,20 +165,87 @@ const DetoxScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 24, backgroundColor: '#fff' },
-  title: { color: '#222E50', fontFamily: 'Times New Roman', fontSize: 48, fontWeight: '600', marginBottom: 12, marginTop: 50 },
-  description: { color: '#222E50', fontFamily: 'Verdana', fontSize: 18, marginBottom: 18 },
-  modesContainer: { backgroundColor: '#F0F0F0', padding: 16, borderRadius: 30, marginBottom: 10 },
-  appItem: { backgroundColor: '#FFFFFF', padding: 16, borderRadius: 16, marginBottom: 12, alignItems: 'center' },
-  appItemSelected: { backgroundColor: '#426B69' },
-  appText: { fontFamily: 'Verdana', fontSize: 16, color: '#222E50' },
-  appTextSelected: { color: '#FFFFFF' },
-  button: { backgroundColor: '#426B69', borderRadius: 18, justifyContent: 'center', alignItems: 'center', marginTop: 10 },
-  buttonActive: { backgroundColor: '#B22222' },
-  buttonText: { fontFamily: 'Verdana', color: '#FFFFFF', fontSize: 16, paddingVertical: 16, paddingHorizontal: 20 },
-  statsContainer: { backgroundColor: '#B5CA8D', minHeight: 250, borderRadius: 30, padding: 16, marginTop: 10 },
-  sectionTitle: { color: '#222E50', fontFamily: 'Times New Roman', fontSize: 24, fontWeight: '600', marginBottom: 10 },
-  body: { color: '#222E50', fontFamily: 'Verdana', fontSize: 16 },
+  container: {
+    flex: 1,
+    padding: 24,
+    backgroundColor: '#FFFFFF'
+  },
+  title: {
+    color: '#222E50',
+    fontFamily: 'Times New Roman',
+    fontSize: 48,
+    fontWeight: '600',
+    marginBottom: 12,
+    marginTop: 50
+  },
+  description: {
+    color: '#222E50',
+    fontFamily: 'Verdana',
+    fontSize: 18,
+    marginBottom: 18
+  },
+  modesContainer: {
+    backgroundColor: '#F0F0F0',
+    padding: 16,
+    borderRadius: 30,
+    marginBottom: 10
+  },
+  appItem: {
+    backgroundColor: '#FFFFFF',
+    padding: 16, borderRadius: 16,
+    marginBottom: 12,
+    alignItems: 'center'
+  },
+  appItemSelected: {
+    backgroundColor: '#426B69'
+  },
+  appText: {
+    fontFamily: 'Verdana',
+    fontSize: 16,
+    color: '#222E50'
+  },
+  appTextSelected: {
+    color: '#FFFFFF'
+  },
+  button: {
+    backgroundColor: '#426B69',
+    borderRadius: 18,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 10
+  },
+  buttonActive: {
+    backgroundColor: '#B22222'
+  },
+  buttonText: {
+    fontFamily: 'Verdana',
+    color: '#FFFFFF',
+    fontSize: 16,
+    textAlign: 'center',
+    includeFontPadding: false,
+    textAlignVertical: 'center',
+    paddingVertical: 16,
+    paddingHorizontal: 20
+  },
+  statsContainer: {
+    backgroundColor: '#B5CA8D',
+    minHeight: 250,
+    borderRadius: 30,
+    padding: 16,
+    marginTop: 10
+  },
+  sectionTitle: {
+    color: '#222E50',
+    fontFamily: 'Times New Roman',
+    fontSize: 24,
+    fontWeight: '600',
+    marginBottom: 10
+  },
+  body: {
+    color: '#222E50',
+    fontFamily: 'Verdana',
+    fontSize: 16
+  },
 });
 
 export default DetoxScreen;
