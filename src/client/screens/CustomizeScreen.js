@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import { Text, StyleSheet, ScrollView, View, TouchableOpacity } from 'react-native';
+import { Text, StyleSheet, ScrollView, View, TouchableOpacity, Modal } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 
 const CustomizeScreen = ({ navigation }) => {
   const [detoxModes, setDetoxModes] = useState([]);
+  const [deleteModalVisible, setDeleteModalVisible] = useState(false);
+  const [modeToDelete, setModeToDelete] = useState(null);
 
   const handleSave = (savedMode) => {
     setDetoxModes(prev => {
@@ -13,10 +15,6 @@ const CustomizeScreen = ({ navigation }) => {
       }
       return [...prev, savedMode];
     });
-  };
-
-  const confirmDelete = (id) => {
-    setDetoxModes(prev => prev.filter(m => m.id !== id));
   };
 
   return (
@@ -62,7 +60,12 @@ const CustomizeScreen = ({ navigation }) => {
                 <Icon name="edit" size={22} color="#222E50" style={{ marginRight: 16 }} />
               </TouchableOpacity>
 
-              <TouchableOpacity onPress={() => confirmDelete(mode.id)}>
+              <TouchableOpacity
+                onPress={() => {
+                  setModeToDelete(mode.id);
+                  setDeleteModalVisible(true);
+                }}
+              >
                 <Icon name="trash-2" size={22} color="#222E50" />
               </TouchableOpacity>
             </View>
@@ -80,6 +83,35 @@ const CustomizeScreen = ({ navigation }) => {
           <Text style={styles.addText}>Add new mode</Text>
         </TouchableOpacity>
       </View>
+
+      <Modal visible={deleteModalVisible} transparent>
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Delete this mode?</Text>
+            <Text style={styles.modalSubtitle}>This action cannot be undone.</Text>
+
+            <View style={styles.buttonRow}>
+              <TouchableOpacity
+                style={styles.cancelButton}
+                onPress={() => setDeleteModalVisible(false)}
+              >
+                <Text style={styles.cancelText}>Cancel</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.confirmButton}
+                onPress={() => {
+                  setDetoxModes(prev => prev.filter(m => m.id !== modeToDelete));
+                  setDeleteModalVisible(false);
+                  setModeToDelete(null);
+                }}
+              >
+                <Text style={styles.confirmText}>Delete</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </ScrollView>
   );
 };
@@ -153,6 +185,63 @@ const styles = StyleSheet.create({
     marginTop: 4,
     paddingHorizontal: 8,
   },
+  modalOverlay: {
+    flex: 1,
+    justifyContent: 'center',
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    padding: 24
+  },
+  modalContent: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    paddingTop: 24,
+    paddingBottom: 0,
+    alignItems: 'center'
+  },
+  modalTitle: {
+    color: '#222E50',
+    fontFamily: 'Times New Roman',
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 8,
+    textAlign: 'center'
+  },
+  modalSubtitle: {
+    color: '#222E50',
+    fontFamily: 'Verdana',
+    fontSize: 14,
+    marginBottom: 24,
+    textAlign: 'center'
+  },
+  buttonRow: {
+    flexDirection: 'row',
+    width: '100%',
+    height: 56,
+    borderTopWidth: 1,
+    borderColor: '#DDDDDD'
+  },
+  cancelButton: {
+    flex: 1,
+    backgroundColor: '#ccc',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderBottomLeftRadius: 16
+  },
+  cancelText: {
+    color: '#222E50',
+    fontFamily: 'Verdana'
+  },
+  confirmButton: {
+    flex: 1,
+    backgroundColor: '#426B69',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderBottomRightRadius: 16
+  },
+  confirmText: {
+    color: '#FFFFFF',
+    fontFamily: 'Verdana'
+  }
 });
 
 export default CustomizeScreen;

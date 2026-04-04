@@ -95,7 +95,6 @@ const SettingsScreen = ({ navigation }) => {
   );
 };
 
-//temporary style sheet, replace with separate file or components later
 const styles = StyleSheet.create({
   container: {
     flex: 1,
