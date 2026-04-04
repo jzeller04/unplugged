@@ -4,7 +4,7 @@ import Icon from 'react-native-vector-icons/Feather';
 
 const CustomizeScreen = ({ navigation }) => {
   const [detoxModes, setDetoxModes] = useState([]);
-  const [deleteModalVisible, setDeleteModalVisible] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
   const [modeToDelete, setModeToDelete] = useState(null);
 
   const handleSave = (savedMode) => {
@@ -63,7 +63,7 @@ const CustomizeScreen = ({ navigation }) => {
               <TouchableOpacity
                 onPress={() => {
                   setModeToDelete(mode.id);
-                  setDeleteModalVisible(true);
+                  setModalVisible(true);
                 }}
               >
                 <Icon name="trash-2" size={22} color="#222E50" />
@@ -84,7 +84,7 @@ const CustomizeScreen = ({ navigation }) => {
         </TouchableOpacity>
       </View>
 
-      <Modal visible={deleteModalVisible} transparent>
+      <Modal visible={modalVisible} transparent>
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
             <Text style={styles.modalTitle}>Delete this mode?</Text>
@@ -93,7 +93,7 @@ const CustomizeScreen = ({ navigation }) => {
             <View style={styles.buttonRow}>
               <TouchableOpacity
                 style={styles.cancelButton}
-                onPress={() => setDeleteModalVisible(false)}
+                onPress={() => setModalVisible(false)}
               >
                 <Text style={styles.cancelText}>Cancel</Text>
               </TouchableOpacity>
@@ -102,7 +102,7 @@ const CustomizeScreen = ({ navigation }) => {
                 style={styles.confirmButton}
                 onPress={() => {
                   setDetoxModes(prev => prev.filter(m => m.id !== modeToDelete));
-                  setDeleteModalVisible(false);
+                  setModalVisible(false);
                   setModeToDelete(null);
                 }}
               >

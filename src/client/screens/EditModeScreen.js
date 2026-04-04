@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Text, TextInput, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, Text, TextInput, TouchableOpacity, Modal } from 'react-native';
+import Icon from 'react-native-vector-icons/Feather';
 
 const EditModeScreen = ({ route, navigation }) => {
   const existing = route.params?.mode;
@@ -42,7 +43,7 @@ const EditModeScreen = ({ route, navigation }) => {
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={handleExitPress} style={styles.exitButton}>
-        <Text style={styles.exitText}>Cancel</Text>
+        <Icon name="x" size={25} color="#222E50" style={{ marginRight: 16 }} />
       </TouchableOpacity>
 
       <Text style={styles.title}>

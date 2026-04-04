@@ -21,8 +21,12 @@ function RootNavigator() {
     //add any other API calls or checks of any sort
 
     const init = async () => {
+      // TEMPORARY FIX FOR AWS ISSUE
+      setInitialRoute('MainApp');
+
+      /* TEMPORARY FIX FOR AWS ISSUE
       const isLoggedIn = await AsyncStorage.getItem('isLoggedIn');
-      setInitialRoute(isLoggedIn === 'true' ? 'MainApp' : 'Authentication');
+      setInitialRoute(isLoggedIn === 'true' ? 'MainApp' : 'Authentication'); */
 
       const elapsed = Date.now() - start;
       const remaining = MIN_LOADING_TIME - elapsed;
