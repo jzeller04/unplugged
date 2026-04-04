@@ -1,3 +1,11 @@
+import request from 'supertest';
+import express from 'express';
+import { DynamoDBClient, PutItemCommand, GetItemCommand } from '@aws-sdk/client-dynamodb';
+import { marshall, unmarshall } from '@aws-sdk/util-dynamodb';
+import { hash, verify } from 'argon2-browser';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { v4 as uuidv4 } from 'uuid';
+
 jest.mock('@aws-sdk/client-dynamodb', () => ({
   DynamoDBClient: jest.fn(),
   PutItemCommand: jest.fn(),
@@ -13,14 +21,6 @@ jest.mock('argon2-browser', () => ({
   hash: jest.fn(),
   verify: jest.fn(),
 }));
-
-import request from 'supertest';
-import express from 'express';
-import { DynamoDBClient, PutItemCommand, GetItemCommand } from '@aws-sdk/client-dynamodb';
-import { marshall, unmarshall } from '@aws-sdk/util-dynamodb';
-import { hash, verify } from 'argon2-browser';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { v4 as uuidv4 } from 'uuid';
 
 describe('Integration Tests', () => {
   let app;

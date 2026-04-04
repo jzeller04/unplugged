@@ -1,4 +1,7 @@
 // Mock DynamoDB service BEFORE importing
+import { DynamoDBClient, PutItemCommand, GetItemCommand, QueryCommand, UpdateItemCommand, DeleteItemCommand } from '@aws-sdk/client-dynamodb';
+import { marshall, unmarshall } from '@aws-sdk/util-dynamodb';
+
 jest.mock('@aws-sdk/client-dynamodb', () => ({
   DynamoDBClient: jest.fn(),
   PutItemCommand: jest.fn(),
@@ -12,9 +15,6 @@ jest.mock('@aws-sdk/util-dynamodb', () => ({
   marshall: jest.fn((item) => item),
   unmarshall: jest.fn((item) => item),
 }));
-
-import { DynamoDBClient, PutItemCommand, GetItemCommand, QueryCommand, UpdateItemCommand, DeleteItemCommand } from '@aws-sdk/client-dynamodb';
-import { marshall, unmarshall } from '@aws-sdk/util-dynamodb';
 
 describe('DynamoDB Operations', () => {
   let mockClient;

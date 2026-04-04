@@ -38,9 +38,8 @@ jobs:
       - name: Run ESLint
         id: lint
         run: |
-          npx eslint "**/*.{js,jsx}" --max-warnings=97
+          npx eslint "**/*.{js,jsx}" --max-warnings=0
 
-      
   test-code:
     name: run all tests
     runs-on: ubuntu-latest
