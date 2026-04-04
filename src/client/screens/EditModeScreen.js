@@ -8,6 +8,12 @@ const EditModeScreen = ({ route, navigation }) => {
   const [name, setName] = useState(existing?.name || '');
   const [startTime, setStartTime] = useState(existing?.startTime || '09:00 AM');
   const [endTime, setEndTime] = useState(existing?.endTime || '03:00 PM');
+  const [exitModalVisible, setExitModalVisible] = useState(false);
+
+  const hasUnsavedChanges =
+    name !== (existing?.name || '') ||
+    startTime !== (existing?.startTime || '') ||
+    endTime !== (existing?.endTime || '');
 
   const saveMode = () => {
     const newMode = {
@@ -26,9 +32,12 @@ const EditModeScreen = ({ route, navigation }) => {
   };
 
   const handleExitPress = () => {
-    navigation.goBack();
-    return;
-  };
+    if (!hasUnsavedChanges) {
+      navigation.goBack();
+      return;
+    }
+    setExitModalVisible(true);
+  }
 
   return (
     <View style={styles.container}>
@@ -67,6 +76,36 @@ const EditModeScreen = ({ route, navigation }) => {
       <TouchableOpacity style={styles.saveButton} onPress={saveMode}>
         <Text style={styles.saveText}>Save</Text>
       </TouchableOpacity>
+
+      <Modal visible={exitModalVisible} transparent>
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Discard changes?</Text>
+            <Text style={styles.modalSubtitle}>
+              Your changes will not be saved.
+            </Text>
+
+            <View style={styles.buttonRow}>
+              <TouchableOpacity
+                style={styles.cancelButton}
+                onPress={() => setExitModalVisible(false)}
+              >
+                <Text style={styles.cancelText}>Keep editing</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.confirmButton}
+                onPress={() => {
+                  setExitModalVisible(false);
+                  navigation.goBack();
+                }}
+              >
+                <Text style={styles.confirmText}>Exit</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -125,6 +164,63 @@ const styles = StyleSheet.create({
     fontFamily: 'Verdana',
     fontSize: 16
   },
+  modalOverlay: {
+    flex: 1,
+    justifyContent: 'center',
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    padding: 24
+  },
+  modalContent: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    paddingTop: 24,
+    paddingBottom: 0,
+    alignItems: 'center'
+  },
+  modalTitle: {
+    color: '#222E50',
+    fontFamily: 'Times New Roman',
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 8,
+    textAlign: 'center'
+  },
+  modalSubtitle: {
+    color: '#222E50',
+    fontFamily: 'Verdana',
+    fontSize: 14,
+    marginBottom: 24,
+    textAlign: 'center'
+  },
+  buttonRow: {
+    flexDirection: 'row',
+    width: '100%',
+    height: 56,
+    borderTopWidth: 1,
+    borderColor: '#DDDDDD'
+  },
+  cancelButton: {
+    flex: 1,
+    backgroundColor: '#ccc',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderBottomLeftRadius: 16
+  },
+  cancelText: {
+    color: '#222E50',
+    fontFamily: 'Verdana'
+  },
+  confirmButton: {
+    flex: 1,
+    backgroundColor: '#426B69',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderBottomRightRadius: 16
+  },
+  confirmText: {
+    color: '#FFFFFF',
+    fontFamily: 'Verdana'
+  }
 });
 
 export default EditModeScreen;
