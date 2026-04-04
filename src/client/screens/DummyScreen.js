@@ -1,23 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import {
-  View,
-  TouchableOpacity,
-  Text,
-  StyleSheet,
-  Alert
-} from 'react-native';
-import {
-  FontAwesome,
-  FontAwesome5,
-  MaterialIcons,
-  Ionicons,
-  Entypo
-} from '@expo/vector-icons';
-import {
-  updateUserStatsOnAppOpen,
-  isAppBlockingEnabled,
-  isTimerDetoxEnabled
-} from '../helper/userStorage';
+import { View, TouchableOpacity, Text, StyleSheet, Alert } from 'react-native';
+import { FontAwesome, FontAwesome5, MaterialIcons, Ionicons, Entypo } from '@expo/vector-icons';
+import { updateUserStatsOnAppOpen, isAppBlockingEnabled, isTimerDetoxEnabled } from '../helper/userStorage';
 
 const DummyScreen = () => {
   // ----------------------
@@ -131,11 +115,6 @@ const DummyScreen = () => {
   );
 };
 
-export default DummyScreen;
-
-// ----------------------
-// Styles
-// ----------------------
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -145,11 +124,11 @@ const styles = StyleSheet.create({
   grid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'space-around',
+    justifyContent: 'flex-start',
   },
   appWrapper: {
+    width: 100,
     alignItems: 'center',
-    width: 85,
     marginBottom: 40,
   },
   iconContainer: {
@@ -179,3 +158,5 @@ const styles = StyleSheet.create({
     color: '#000',
   },
 });
+
+export default DummyScreen;
