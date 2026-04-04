@@ -25,8 +25,17 @@ const EditModeScreen = ({ route, navigation }) => {
     navigation.goBack();
   };
 
+  const handleExitPress = () => {
+    navigation.goBack();
+    return;
+  };
+
   return (
     <View style={styles.container}>
+      <TouchableOpacity onPress={handleExitPress} style={styles.exitButton}>
+        <Text style={styles.exitText}>Cancel</Text>
+      </TouchableOpacity>
+
       <Text style={styles.title}>
         {existing ? 'Edit Mode' : 'Create Mode'}
       </Text>
@@ -63,49 +72,59 @@ const EditModeScreen = ({ route, navigation }) => {
 };
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        padding: 24,
-        backgroundColor: '#FFFFFF'
-    },
-    title: {
-      color: '#222E50',
-      fontFamily: 'Times New Roman',
-      fontSize: 48,
-      fontWeight: '600',
-      marginBottom: 12,
-      textAlign: 'left',
-      marginTop: 50,
-    },
-    label: {
-        color: '#222E50',
-        fontFamily: 'Verdana',
-        fontSize: 18,
-    },
-    input: {
-        fontFamily: 'Verdana',
-        borderWidth: 1,
-        borderColor: '#ccc',
-        padding: 12,
-        borderRadius: 10,
-        marginTop: 8,
-        marginBottom: 18,
-        fontSize: 16,
-    },
-    saveButton: {
-        backgroundColor: '#426B69',
-        borderRadius: 18,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginTop: 16,
-    },
-    saveText: {
-        fontFamily: 'Verdana',
-        color: '#FFFFFF',
-        fontSize: 16,
-        paddingVertical: 16,
-        paddingHorizontal: 20,
-    },
+  container: {
+    flex: 1,
+    padding: 24,
+    backgroundColor: '#FFFFFF'
+  },
+  title: {
+    color: '#222E50',
+    fontFamily: 'Times New Roman',
+    fontSize: 48,
+    fontWeight: '600',
+    marginBottom: 12,
+    textAlign: 'left',
+    marginTop: 50,
+  },
+  label: {
+    color: '#222E50',
+    fontFamily: 'Verdana',
+    fontSize: 18,
+  },
+  input: {
+    fontFamily: 'Verdana',
+    borderWidth: 1,
+    borderColor: '#ccc',
+    padding: 12,
+    borderRadius: 10,
+    marginTop: 8,
+    marginBottom: 18,
+    fontSize: 16,
+  },
+  saveButton: {
+    backgroundColor: '#426B69',
+    borderRadius: 18,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 16,
+  },
+  saveText: {
+    fontFamily: 'Verdana',
+    color: '#FFFFFF',
+    fontSize: 16,
+    paddingVertical: 16,
+    paddingHorizontal: 20,
+  },
+  exitButton: {
+    position: 'absolute',
+    top: 50,
+    right: 24
+  },
+  exitText: {
+    color: '#426B69',
+    fontFamily: 'Verdana',
+    fontSize: 16
+  },
 });
 
 export default EditModeScreen;
