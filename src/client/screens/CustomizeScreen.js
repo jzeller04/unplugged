@@ -15,6 +15,10 @@ const CustomizeScreen = ({ navigation }) => {
     });
   };
 
+  const confirmDelete = (id) => {
+    setDetoxModes(prev => prev.filter(m => m.id !== id));
+  };
+
   return (
     <ScrollView style={styles.container}>
       <Text style={styles.screenTitle}>Customize</Text>
@@ -46,7 +50,22 @@ const CustomizeScreen = ({ navigation }) => {
               </View>
             </View>
 
-            <Icon name="edit" size={22} color="#222E50" />
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate('EditMode', {
+                    mode,
+                    onSave: handleSave
+                  })
+                }
+              >
+                <Icon name="edit" size={22} color="#222E50" style={{ marginRight: 16 }} />
+              </TouchableOpacity>
+
+              <TouchableOpacity onPress={() => confirmDelete(mode.id)}>
+                <Icon name="trash-2" size={22} color="#222E50" />
+              </TouchableOpacity>
+            </View>
           </TouchableOpacity>
         ))}
 
