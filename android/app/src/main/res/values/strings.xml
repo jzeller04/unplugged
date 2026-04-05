@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">unplugged</string>
+    <string name="accessibility_description">Unplugged requires accessibility access to detect and block distracting applications to help you maintain your focus.</string>
 </resources>

@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { NavigationContainer } from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import StackNavigator from './StackNavigator';
-import TabNavigation from './TabNavigator';
-import LoadingScreen from '../screens/LoadingScreen';
+import React, { useEffect, useState } from "react";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { NavigationContainer } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import StackNavigator from "./StackNavigator";
+import TabNavigation from "./TabNavigator";
+import LoadingScreen from "../screens/LoadingScreen";
 
 // DO NOT PUSH THIS BRANCH/LINE OF CODE TO MAIN
-import SystemPermissionTestingScreen from '../screens/SystemPermissionTestingScreen';
+import SystemPermissionTestingScreen from "../screens/SystemPermissionTestingScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -16,14 +16,15 @@ function RootNavigator() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const MIN_LOADING_TIME = 4000; 
+    const MIN_LOADING_TIME = 4000;
     const start = Date.now();
 
     //add any other API calls or checks of any sort
 
     const init = async () => {
       const isLoggedIn = await AsyncStorage.getItem('isLoggedIn');
-      setInitialRoute(isLoggedIn === 'true' ? 'MainApp' : 'Authentication');
+      // setInitialRoute(isLoggedIn === 'true' ? 'MainApp' : 'Authentication');
+      setInitialRoute("MainApp");
 
       const elapsed = Date.now() - start;
       const remaining = MIN_LOADING_TIME - elapsed;
@@ -38,7 +39,7 @@ function RootNavigator() {
   }
 
   // KEEP FOR AFTER TESTING
-  /*
+  
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName={initialRoute} screenOptions={{ headerShown: false }}>
@@ -47,16 +48,24 @@ function RootNavigator() {
       </Stack.Navigator>
     </NavigationContainer>
   );
-  */
+  
 
   // DO NOT PUSH THIS CODE/BRANCH TO MAIN
+  /*
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName={initialRoute} screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="SystemPermissionTesting" component={SystemPermissionTestingScreen}/>
+      <Stack.Navigator
+        initialRouteName={initialRoute}
+        screenOptions={{ headerShown: false }}
+      >
+        <Stack.Screen
+          name="SystemPermissionTesting"
+          component={SystemPermissionTestingScreen}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
+  */
 }
 
 export default RootNavigator;
