@@ -22,7 +22,7 @@ const StudyModeScreen = ({ navigation }) => {
   const totalSeconds = mode === 'focus' ? FOCUS_TIME : BREAK_TIME;
 
   // Apps to block during study mode
-  const studyApps = ["instagram", "tiktok", "twitter"];
+  const studyApps = ["Instagram", "TikTok", "Twitter"];
 
   const format = (s) => {
     const m = Math.floor(s / 60);

@@ -15,7 +15,7 @@ import {
 } from '../helper/userStorage';
 
 const DetoxScreen = ({ navigation }) => {
-  const availableApps = ["instagram", "tiktok", "twitter"];
+  const availableApps = ["Instagram", "TikTok", "Twitter"];
 
   const [selectedApps, setSelectedApps] = useState([]);
   const [detoxActive, setDetoxActive] = useState(false);
