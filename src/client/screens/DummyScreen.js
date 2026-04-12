@@ -44,18 +44,20 @@ const DummyScreen = () => {
       const isBlocked = await isAppBlockingEnabled({ name: appName });
 
       if (isBlocked) {
-        if (isTimer) {
+        
+
+        setBlockedAppName(appName);
+        setBlockedModalVisible(true);
+        return;
+      }
+
+      if (isTimer) {
           // Start the 10-second countdown
           if (countdown > 0) return; // prevent multiple timers
           setCurrentApp(appName);
           setCountdown(10); // start countdown
           return;
         }
-
-        setBlockedAppName(appName);
-        setBlockedModalVisible(true);
-        return;
-      }
 
       await updateUserStatsOnAppOpen({ name: appName });
     } else {
