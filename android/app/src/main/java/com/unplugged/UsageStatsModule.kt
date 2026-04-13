@@ -1,6 +1,7 @@
 package com.unplugged
 
 import android.app.usage.UsageStatsManager
+import android.app.usage.UsageEvents
 import android.content.Context
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
@@ -10,6 +11,7 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.util.Base64
 import java.io.ByteArrayOutputStream
+import java.util.Locale
 
 class UsageStatsModule(reactContext: ReactApplicationContext) :
     ReactContextBaseJavaModule(reactContext) {
@@ -70,6 +72,12 @@ class UsageStatsModule(reactContext: ReactApplicationContext) :
             calendar.set(Calendar.MILLISECOND, 0)
             val startTime = calendar.timeInMillis
 
+            val openCounts = getOpenCountsByPackageName(
+                usageStatsManager = usageStatsManager,
+                startTime = startTime,
+                endTime = endTime
+            )
+
             // Group usage stats by package name
             val aggregatedStats =
                 usageStatsManager.queryAndAggregateUsageStats(startTime, endTime)
@@ -80,6 +88,12 @@ class UsageStatsModule(reactContext: ReactApplicationContext) :
 
                 // Filter out apps with 0ms usage
                 if (totalTime > 0) {
+                    val isUserLaunchable =
+                        packageManager.getLaunchIntentForPackage(packageName) != null
+                    if (!isUserLaunchable || isExcludedNoisePackage(packageName)) {
+                        continue
+                    }
+
                     val map = Arguments.createMap()
                     map.putString("packageName", packageName)
                     map.putDouble("totalTimeInForeground", totalTime.toDouble())
@@ -87,6 +101,7 @@ class UsageStatsModule(reactContext: ReactApplicationContext) :
                         "lastTimeUsed",
                         usageStat.lastTimeUsed.toDouble()
                     )
+                    map.putInt("openCount", openCounts[packageName] ?: 0)
 
                     var resolvedAppName = packageName
                     var isSystemApp = false
@@ -96,6 +111,7 @@ class UsageStatsModule(reactContext: ReactApplicationContext) :
                                 packageName,
                                 PackageManager.GET_META_DATA
                             )
+
                         resolvedAppName =
                             packageManager
                                 .getApplicationLabel(appInfo)
@@ -119,7 +135,7 @@ class UsageStatsModule(reactContext: ReactApplicationContext) :
                     bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
                     map.putString("appIcon", Base64.encodeToString(stream.toByteArray(), Base64.NO_WRAP))
                     } catch (e: PackageManager.NameNotFoundException) {
-                        resolvedAppName = packageName
+                        continue
                     }
 
                     map.putString("appName", resolvedAppName)
@@ -141,5 +157,58 @@ class UsageStatsModule(reactContext: ReactApplicationContext) :
                 e
             )
         }
+    }
+
+    private fun isExcludedNoisePackage(packageName: String): Boolean {
+        val normalizedPackageName = packageName.lowercase(Locale.US)
+        return normalizedPackageName in EXCLUDED_NOISE_PACKAGES
+    }
+
+    private fun getOpenCountsByPackageName(
+        usageStatsManager: UsageStatsManager,
+        startTime: Long,
+        endTime: Long
+    ): Map<String, Int> {
+        val counts = mutableMapOf<String, Int>()
+
+        val events = usageStatsManager.queryEvents(startTime, endTime)
+        val event = UsageEvents.Event()
+
+        var lastForegroundPackageName: String? = null
+        while (events.hasNextEvent()) {
+            events.getNextEvent(event)
+
+            val type = event.eventType
+            val isForegroundEvent =
+                type == UsageEvents.Event.ACTIVITY_RESUMED ||
+                    type == UsageEvents.Event.MOVE_TO_FOREGROUND
+
+            if (!isForegroundEvent) {
+                continue
+            }
+
+            val packageName = event.packageName ?: continue
+            if (packageName == lastForegroundPackageName) {
+                continue
+            }
+
+            counts[packageName] = (counts[packageName] ?: 0) + 1
+            lastForegroundPackageName = packageName
+        }
+
+        return counts
+    }
+
+    companion object {
+        private val EXCLUDED_NOISE_PACKAGES = setOf(
+            "com.android.systemui",
+            "com.google.android.permissioncontroller",
+            "com.android.permissioncontroller",
+            "com.google.android.packageinstaller",
+            "com.android.packageinstaller",
+            "com.google.android.setupwizard",
+            "com.android.provision",
+            "com.android.launcher3.quickstep"
+        )
     }
 }

@@ -120,11 +120,10 @@ const UsageDataService = {
 
   getFilteredUsage: async () => {
     const allUsage = await UsageDataService.getTodayUsage();
-    const filtered = allUsage.filter((app) => !app.isSystemApp);
     console.log(
-      `[UsageDataService] After filtering system apps: ${filtered.length} apps remaining.`,
+      `[UsageDataService] After native launchable-app filtering: ${allUsage.length} apps remaining.`,
     );
-    return filtered;
+    return allUsage;
   },
 
   formatTime: (milliseconds) => {
