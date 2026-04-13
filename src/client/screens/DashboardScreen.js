@@ -40,6 +40,15 @@ const DashboardScreen = () => {
     fetchUsageData();
   }, []);
 
+  const totalScreenTime = usageData.reduce(
+    (sum, item) => sum + item.totalTimeInForeground,
+    0,
+  );
+  const totalOpens = usageData.reduce(
+    (sum, item) => sum + (item.openCount || 0),
+    0,
+  );
+
   return (
     <ScrollView
       style={styles.container}
@@ -52,26 +61,61 @@ const DashboardScreen = () => {
 
       <View style={styles.reportContainer}>
         <Text style={styles.reportTitle}>Today's Usage Report</Text>
-        {usageData.length === 0 ? (
-          <Text style={styles.reportBody}>No usage data available for today.</Text>
-        ) : (
-          usageData.map((item) => (
-            <View key={item.packageName} style={styles.usageRow}>
-              {item.appIcon && (
-                <Image
-                  source={{ uri: `data:image/png;base64,${item.appIcon}` }}
-                  style={styles.appIcon}
-                />
-              )}
-              <Text style={styles.appName} numberOfLines={1}>
-                {item.appName || item.packageName}
-              </Text>
-              <Text style={styles.usageTime}>
-                {UsageDataService.formatTime(item.totalTimeInForeground)}
-              </Text>
-            </View>
-          ))
-        )}
+        <View style={styles.summaryRow}>
+          <View style={styles.summaryCard}>
+            <Text style={styles.summaryValue}>
+              {UsageDataService.formatTime(totalScreenTime)}
+            </Text>
+            <Text style={styles.summaryLabel}>screen time</Text>
+          </View>
+          <View style={styles.summaryCard}>
+            <Text style={styles.summaryValue}>{totalOpens}</Text>
+            <Text style={styles.summaryLabel}>opens</Text>
+          </View>
+          <View style={styles.summaryCard}>
+            <Text style={styles.summaryValue}>{usageData.length}</Text>
+            <Text style={styles.summaryLabel}>apps used</Text>
+          </View>
+        </View>
+        <ScrollView
+          style={styles.usageList}
+          contentContainerStyle={styles.usageListContent}
+          showsVerticalScrollIndicator={false}
+        >
+          {usageData.length === 0 ? (
+            <Text style={styles.reportBody}>No usage data available for today.</Text>
+          ) : (
+            usageData.map((item) => (
+              <View key={item.packageName} style={styles.usageRow}>
+                <View style={styles.iconContainer}>
+                  {item.appIcon ? (
+                    <Image
+                      source={{ uri: `data:image/png;base64,${item.appIcon}` }}
+                      style={styles.appIcon}
+                    />
+                  ) : (
+                    <View style={styles.appIconFallback}>
+                      <Text style={styles.appIconFallbackText}>
+                        {(item.appName || item.packageName || "?").charAt(0).toUpperCase()}
+                      </Text>
+                    </View>
+                  )}
+                </View>
+                <View style={styles.appInfo}>
+                  <Text style={styles.appName} numberOfLines={1}>
+                    {item.appName || item.packageName}
+                  </Text>
+                  <Text style={styles.appMeta} numberOfLines={1}>
+                    {(item.openCount || 0)} opens today
+                  </Text>
+                </View>
+                <Text style={styles.usageTime}>
+                  {UsageDataService.formatTime(item.totalTimeInForeground)}
+                </Text>
+              </View>
+            ))
+          )}
+        </ScrollView>
       </View>
 
       <View style={styles.challengesContainer}>
@@ -106,52 +150,117 @@ const styles = StyleSheet.create({
     marginBottom: 18,
   },
   reportContainer: {
-    flex: 1,
     backgroundColor: "#F0F0F0",
     marginBottom: 20,
-    minHeight: 250,
+    height: 400,
     borderRadius: 30,
-    padding: 16,
+    padding: 18,
   },
   reportTitle: {
     color: "#222E50",
     fontFamily: "Times New Roman",
     fontSize: 24,
     fontWeight: "600",
-    marginBottom: 12,
+    marginBottom: 14,
+  },
+  summaryRow: {
+    flexDirection: "row",
+    gap: 10,
+    marginBottom: 16,
+  },
+  usageList: {
+    flex: 1,
+  },
+  usageListContent: {
+    paddingBottom: 4,
+  },
+  summaryCard: {
+    flex: 1,
+    backgroundColor: "#FFFFFF",
+    borderRadius: 18,
+    paddingVertical: 12,
+    paddingHorizontal: 10,
+    alignItems: "center",
+  },
+  summaryValue: {
+    color: "#426B69",
+    fontFamily: "Verdana",
+    fontSize: 16,
+    fontWeight: "700",
+    marginBottom: 4,
+  },
+  summaryLabel: {
+    color: "#6F7894",
+    fontFamily: "Verdana",
+    fontSize: 11,
+    textTransform: "uppercase",
   },
   usageRow: {
     flexDirection: "row",
-    justifyContent: "space-between",
     alignItems: "center",
-    paddingVertical: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: "#E0E0E0",
+    backgroundColor: "#FFFFFF",
+    borderRadius: 20,
+    paddingVertical: 12,
+    paddingHorizontal: 14,
+    marginBottom: 10,
+  },
+  iconContainer: {
+    width: 48,
+    height: 48,
+    borderRadius: 16,
+    backgroundColor: "#F5F5F5",
+    justifyContent: "center",
+    alignItems: "center",
+    marginRight: 14,
   },
   appIcon: {
-    width: 28,
-    height: 28,
+    width: 30,
+    height: 30,
+    borderRadius: 8,
+  },
+  appIconFallback: {
+    width: 30,
+    height: 30,
+    borderRadius: 10,
+    backgroundColor: "#B5CA8D",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  appIconFallbackText: {
+    color: "#222E50",
+    fontFamily: "Verdana",
+    fontSize: 14,
+    fontWeight: "700",
+  },
+  appInfo: {
+    flex: 1,
+    justifyContent: "center",
     marginRight: 12,
   },
   appName: {
     color: "#222E50",
     fontFamily: "Verdana",
     fontSize: 16,
-    flex: 1,
-    marginRight: 16,
+    fontWeight: "600",
+    marginBottom: 4,
+  },
+  appMeta: {
+    color: "#6F7894",
+    fontFamily: "Verdana",
+    fontSize: 12,
   },
   usageTime: {
     color: "#426B69",
     fontFamily: "Verdana",
-    fontSize: 16,
-    fontWeight: "bold",
+    fontSize: 18,
+    fontWeight: "700",
+    minWidth: 62,
+    textAlign: "right",
   },
   reportBody: {
     color: "#222E50",
     fontFamily: "Verdana",
     fontSize: 16,
-    flex: 1,
-    justifyContent: "center",
     marginTop: 8,
   },
   challengesContainer: {
