@@ -1,5 +1,6 @@
 package com.unplugged
 
+import android.os.Build
 import android.content.Context
 import android.graphics.Color
 import android.graphics.PixelFormat
@@ -29,30 +30,48 @@ class BlockingOverlayManager(
     private val shrikhandTypeface: Typeface by lazy { loadShrikhandTypeface() }
 
     fun showOverlay() {
-        mainHandler.post {
+        runOnMainThread {
             if (overlayView != null) {
-                Log.d(TAG, "Overlay already showing; skipping duplicate add")
-                return@post
+                return@runOnMainThread
             }
 
-            val view = createOverlayView()
-            val layoutParams = createLayoutParams()
+            try {
+                val view = createOverlayView()
+                val layoutParams = createLayoutParams()
 
-            windowManager.addView(view, layoutParams)
-            overlayView = view
+                windowManager.addView(view, layoutParams)
+                overlayView = view
 
-            Log.d(TAG, "Blocking overlay shown")
+                Log.d(TAG, "Blocking overlay shown")
+            } catch (error: Exception) {
+                Log.e(TAG, "Failed to show blocking overlay", error)
+            }
         }
     }
 
     fun hideOverlay() {
+        runOnMainThread {
+            val view = overlayView ?: return@runOnMainThread
+
+            try {
+                windowManager.removeView(view)
+                Log.d(TAG, "Blocking overlay hidden")
+            } catch (error: Exception) {
+                Log.e(TAG, "Failed to hide blocking overlay", error)
+            } finally {
+                overlayView = null
+            }
+        }
+    }
+
+    private inline fun runOnMainThread(crossinline action: () -> Unit) {
+        if (Looper.myLooper() == Looper.getMainLooper()) {
+            action()
+            return
+        }
+
         mainHandler.post {
-            val view = overlayView ?: return@post
-
-            windowManager.removeView(view)
-            overlayView = null
-
-            Log.d(TAG, "Blocking overlay hidden")
+            action()
         }
     }
 
@@ -64,6 +83,12 @@ class BlockingOverlayManager(
             setBackgroundColor(PRIMARY_COLOR)
             isClickable = true
             isFocusable = true
+            fitsSystemWindows = false
+            setPadding(0, 0, 0, 0)
+            systemUiVisibility =
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
+                    View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
+                    View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
         }
 
         val logoBadge = createLogoBadge(layoutSpec)
@@ -211,7 +236,6 @@ class BlockingOverlayManager(
             isClickable = true
             isFocusable = true
             setOnClickListener {
-                Log.d(TAG, "Overlay exit button pressed")
                 onExitClicked()
             }
         }
@@ -259,11 +283,16 @@ class BlockingOverlayManager(
             WindowManager.LayoutParams.MATCH_PARENT,
             WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
             WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
-                WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
+                WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or
+                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
             PixelFormat.TRANSLUCENT
         )
             .apply {
             gravity = Gravity.TOP or Gravity.START
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                layoutInDisplayCutoutMode =
+                    WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
+            }
         }
     }
 
