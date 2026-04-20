@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { View, TouchableOpacity, Text, StyleSheet, Alert, Modal } from 'react-native';
-import { FontAwesome, FontAwesome5, MaterialIcons, Ionicons, Entypo } from '@expo/vector-icons';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import Entypo from 'react-native-vector-icons/Entypo';
 import { updateUserStatsOnAppOpen, isAppBlockingEnabled, isTimerDetoxEnabled } from '../helper/userStorage';
 
 const DummyScreen = () => {

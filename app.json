@@ -1,5 +1,4 @@
 {
-  "plugins": [
-    "expo-font"
-  ]
+  "name": "unplugged",
+  "displayName": "unplugged"
 }

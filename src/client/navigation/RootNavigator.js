@@ -8,6 +8,9 @@ import LoadingScreen from '../screens/LoadingScreen';
 import StudyModeScreen from '../screens/StudyModeScreen';
 import EditModeScreen from '../screens/EditModeScreen';
 
+// DO NOT PUSH THIS BRANCH/LINE OF CODE TO MAIN
+import SystemPermissionTestingScreen from "../screens/SystemPermissionTestingScreen";
+
 const Stack = createNativeStackNavigator();
 
 function RootNavigator() {
@@ -15,7 +18,7 @@ function RootNavigator() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const MIN_LOADING_TIME = 4000; 
+    const MIN_LOADING_TIME = 4000;
     const start = Date.now();
 
     //add any other API calls or checks of any sort
@@ -24,9 +27,10 @@ function RootNavigator() {
       // TEMPORARY FIX FOR AWS ISSUE
       setInitialRoute('MainApp');
 
-      /* TEMPORARY FIX FOR AWS ISSUE
+      // TEMPORARY FIX FOR AWS ISSUE
       const isLoggedIn = await AsyncStorage.getItem('isLoggedIn');
-      setInitialRoute(isLoggedIn === 'true' ? 'MainApp' : 'Authentication'); */
+      // setInitialRoute(isLoggedIn === 'true' ? 'MainApp' : 'Authentication');
+      setInitialRoute("MainApp");
 
       const elapsed = Date.now() - start;
       const remaining = MIN_LOADING_TIME - elapsed;
@@ -40,6 +44,8 @@ function RootNavigator() {
     return <LoadingScreen />;
   }
 
+  // KEEP FOR AFTER TESTING
+  
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName={initialRoute} screenOptions={{ headerShown: false }}>
@@ -50,6 +56,24 @@ function RootNavigator() {
       </Stack.Navigator>
     </NavigationContainer>
   );
+  
+
+  // DO NOT PUSH THIS CODE/BRANCH TO MAIN
+  /*
+  return (
+    <NavigationContainer>
+      <Stack.Navigator
+        initialRouteName={initialRoute}
+        screenOptions={{ headerShown: false }}
+      >
+        <Stack.Screen
+          name="SystemPermissionTesting"
+          component={SystemPermissionTestingScreen}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+  */
 }
 
 export default RootNavigator;

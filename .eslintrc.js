@@ -1,6 +1,7 @@
 module.exports = {
-  extends: ['expo'],
-  rules: {
+  root: true,
+  extends: '@react-native',
+   rules: {
     // Disable unused vars warning for parameters starting with _
     'no-unused-vars': ['error', { 
       argsIgnorePattern: '^_',

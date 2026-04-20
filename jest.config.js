@@ -5,7 +5,7 @@ module.exports = {
   
   // Handle ESM modules from node_modules
   transformIgnorePatterns: [
-    'node_modules/(?!(react-native|@react-native|expo|@expo|@react-navigation|react-native-vector-icons|@aws-sdk|uuid)/)',
+    'node_modules/(?!(react-native|@react-native|@react-navigation|react-native-vector-icons|@aws-sdk|uuid)/)',
   ],
   
   // Module file extensions
