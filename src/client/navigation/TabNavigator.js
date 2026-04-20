@@ -4,7 +4,9 @@ import CustomizeScreen from '../screens/CustomizeScreen';
 import DetoxScreen from '../screens/DetoxScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import BlockingAppSelectionScreen from '../screens/BlockingAppSelectionScreen';
 import DummyScreen from '../screens/DummyScreen';
+import SystemPermissionTestingScreen from '../screens/SystemPermissionTestingScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -41,7 +43,7 @@ function TabNavigator() {
       />
       <Tab.Screen
         name="Dummmy Phone"
-        component={DummyScreen}
+        component={BlockingAppSelectionScreen}
         options={{ header: () => null, tabBarIcon: ({ color, size }) => (
           <Ionicons name="" color={color} size={size} /> ),
         }}

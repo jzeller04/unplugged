@@ -1,40 +1,29 @@
 // DO NOT PUSH THIS BRANCH/PAGE TO MAIN
 
-import React, { useState } from 'react';
+import React from 'react';
 import { 
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
 } from 'react-native';
+import { openAccessibility, openOverlay, openUsageAccess } from '../android/permissions';
 
 const SystemPermissionTestingScreen = () => {
-    //example button behavior, change as needed
-    const [lastPressed, setLastPressed] = useState(null);
-
-    const handleButtonPress = (buttonNumber) => {
-        setLastPressed(buttonNumber);
-        console.log(`Button ${buttonNumber} pressed`);
-    };
-
     return (
         <View style={styles.container}>
             <Text style={styles.title}>System Permission Testing</Text>
 
-            <TouchableOpacity style={styles.button} onPress={() => handleButtonPress(1)}>
-                <Text style={styles.buttonText}>1</Text>
+            <TouchableOpacity style={styles.button} onPress={openAccessibility}>
+                <Text style={styles.buttonText}>Accessibility</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.button} onPress={() => handleButtonPress(2)}>
-                <Text style={styles.buttonText}>2</Text>
+            <TouchableOpacity style={styles.button} onPress={openOverlay}>
+                <Text style={styles.buttonText}>Overlay</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.button} onPress={() => handleButtonPress(3)}>
-                <Text style={styles.buttonText}>3</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.button} onPress={() => handleButtonPress(4)}>
-                <Text style={styles.buttonText}>4</Text>
+            <TouchableOpacity style={styles.button} onPress={openUsageAccess}>
+                <Text style={styles.buttonText}>Usage Access</Text>
             </TouchableOpacity>
         </View>
     );

@@ -1,0 +1,515 @@
+import React, { useEffect, useState } from 'react';
+import {
+  ActivityIndicator,
+  FlatList,
+  Image,
+  Pressable,
+  StyleSheet,
+  Switch,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import AppSelectionService from '../android/AppSelectionService';
+import blockingConfig from '../android/blockingConfig';
+
+const BlockingAppSelectionScreen = () => {
+  const [apps, setApps] = useState([]);
+  const [selectedPackageNames, setSelectedPackageNames] = useState(() => new Set());
+  const [status, setStatus] = useState('loading');
+  const [errorMessage, setErrorMessage] = useState('');
+  const [blockingEnabled, setBlockingEnabled] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [saveError, setSaveError] = useState('');
+  const [saveSuccessMessage, setSaveSuccessMessage] = useState('');
+  const [isSavingToggle, setIsSavingToggle] = useState(false);
+  const [toggleError, setToggleError] = useState('');
+
+  const loadAppSelectionData = async () => {
+    setStatus('loading');
+    setErrorMessage('');
+    setSaveError('');
+    setSaveSuccessMessage('');
+    setToggleError('');
+
+    try {
+      const [installedApps, config] = await Promise.all([
+        AppSelectionService.getApps(),
+        blockingConfig.getBlockingConfig(),
+      ]);
+
+      const sortedApps = [...(installedApps || [])].sort((leftApp, rightApp) =>
+        (leftApp.appName || '').localeCompare(rightApp.appName || ''),
+      );
+      const visiblePackageNames = new Set(sortedApps.map((app) => app.packageName));
+      const preselectedPackages = Array.isArray(config?.blockedPackages)
+        ? Array.from(
+            new Set(
+              config.blockedPackages.filter((packageName) => visiblePackageNames.has(packageName)),
+            ),
+          )
+        : [];
+
+      setApps(sortedApps);
+      setSelectedPackageNames(new Set(preselectedPackages));
+      setBlockingEnabled(config?.blockingEnabled === true);
+      setStatus(sortedApps.length > 0 ? 'success' : 'empty');
+    } catch (error) {
+      console.error('[BlockingAppSelectionScreen] Failed to load app selection data:', error);
+      setApps([]);
+      setSelectedPackageNames(new Set());
+      setBlockingEnabled(false);
+      setErrorMessage(error?.message || 'Failed to load installed apps.');
+      setStatus('error');
+    }
+  };
+
+  useEffect(() => {
+    loadAppSelectionData();
+  }, []);
+
+  const handleConfirmPress = async () => {
+    if (isSaving || status !== 'success') {
+      return;
+    }
+
+    setIsSaving(true);
+    setSaveError('');
+    setSaveSuccessMessage('');
+
+    try {
+      const cleanSelectedPackages = Array.from(selectedPackageNames).reduce(
+        (packages, packageName) => {
+          if (typeof packageName !== 'string') {
+            return packages;
+          }
+
+          const normalizedPackageName = packageName.trim();
+          if (!normalizedPackageName) {
+            return packages;
+          }
+
+          packages.push(normalizedPackageName);
+          return packages;
+        },
+        [],
+      );
+
+      await blockingConfig.setBlockedPackages(cleanSelectedPackages);
+
+      console.log(
+        '[BlockingAppSelectionScreen] Saved blocked packages:',
+        cleanSelectedPackages,
+      );
+      setSaveSuccessMessage('Saved');
+    } catch (error) {
+      console.error('[BlockingAppSelectionScreen] Failed to save blocked packages:', error);
+      setSaveError(error?.message || 'Failed to save blocked apps.');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleBlockingEnabledChange = async (nextValue) => {
+    if (isSavingToggle) {
+      return;
+    }
+
+    const previousValue = blockingEnabled;
+
+    setBlockingEnabled(nextValue);
+    setIsSavingToggle(true);
+    setToggleError('');
+
+    try {
+      await blockingConfig.setBlockingEnabled(nextValue);
+      console.log(
+        '[BlockingAppSelectionScreen] Saved blockingEnabled:',
+        nextValue,
+      );
+    } catch (error) {
+      console.error('[BlockingAppSelectionScreen] Failed to save blockingEnabled:', error);
+      setBlockingEnabled(previousValue);
+      setToggleError(error?.message || 'Failed to update blocker state.');
+    } finally {
+      setIsSavingToggle(false);
+    }
+  };
+
+  const togglePackageSelection = (packageName) => {
+    setSaveError('');
+    setSaveSuccessMessage('');
+
+    setSelectedPackageNames((currentPackages) => {
+      const nextPackages = new Set(currentPackages);
+
+      if (nextPackages.has(packageName)) {
+        nextPackages.delete(packageName);
+      } else {
+        nextPackages.add(packageName);
+      }
+
+      return nextPackages;
+    });
+  };
+
+  const renderAppRow = ({ item }) => {
+    const isSelected = selectedPackageNames.has(item.packageName);
+    const iconSource = item.appIcon
+      ? { uri: `data:image/png;base64,${item.appIcon}` }
+      : null;
+
+    return (
+      <TouchableOpacity
+        style={[styles.row, isSelected && styles.rowSelected]}
+        onPress={() => togglePackageSelection(item.packageName)}
+        activeOpacity={0.8}
+      >
+        <View style={styles.iconContainer}>
+          {iconSource ? (
+            <Image source={iconSource} style={styles.icon} />
+          ) : (
+            <View style={styles.iconFallback}>
+              <Text style={styles.iconFallbackText}>
+                {(item.appName || '?').charAt(0).toUpperCase()}
+              </Text>
+            </View>
+          )}
+        </View>
+
+        <View style={styles.rowText}>
+          <Text style={styles.appName}>{item.appName}</Text>
+          <Text style={styles.packageName}>{item.packageName}</Text>
+        </View>
+
+        <View style={[styles.selectionIndicator, isSelected && styles.selectionIndicatorSelected]}>
+          {isSelected ? <View style={styles.selectionIndicatorDot} /> : null}
+        </View>
+      </TouchableOpacity>
+    );
+  };
+
+  const renderStateContent = (title, body, showRetry = false) => (
+    <View style={styles.stateContent}>
+      {status === 'loading' ? <ActivityIndicator size="large" color="#426B69" /> : null}
+      <Text style={styles.stateTitle}>{title}</Text>
+      <Text style={styles.stateBody}>{body}</Text>
+      {showRetry ? (
+        <TouchableOpacity style={styles.retryButton} onPress={loadAppSelectionData}>
+          <Text style={styles.retryButtonText}>Try again</Text>
+        </TouchableOpacity>
+      ) : null}
+    </View>
+  );
+
+  const renderBody = () => {
+    if (status === 'loading') {
+      return renderStateContent(
+        'Loading apps',
+        'Fetching installed apps and current blocked apps.',
+      );
+    }
+
+    if (status === 'error') {
+      return renderStateContent('Could not load app selection', errorMessage, true);
+    }
+
+    if (status === 'empty') {
+      return renderStateContent(
+        'No apps found',
+        'No launchable apps were returned by the device.',
+      );
+    }
+
+    return (
+      <FlatList
+        data={apps}
+        keyExtractor={(item) => item.packageName}
+        renderItem={renderAppRow}
+        contentContainerStyle={styles.listContent}
+        style={styles.list}
+        showsVerticalScrollIndicator={false}
+      />
+    );
+  };
+
+  const isConfirmDisabled = isSaving || status !== 'success';
+  const confirmButtonLabel = isSaving ? 'Saving...' : 'Confirm';
+  const isToggleDisabled = isSavingToggle || status === 'loading' || status === 'error';
+
+  return (
+    <View style={styles.container}>
+      <View style={styles.header}>
+        <Text style={styles.title}>Select Apps to Block</Text>
+        <Text style={styles.description}>Choose apps that will be blocked when enabled.</Text>
+        <View style={styles.blockingToggleRow}>
+          <View style={styles.blockingToggleText}>
+            <Text style={styles.blockingToggleLabel}>Blocking Enabled</Text>
+            <Text style={styles.blockingToggleValue}>
+              {isSavingToggle ? 'Saving...' : blockingEnabled ? 'ON' : 'OFF'}
+            </Text>
+          </View>
+          <Switch
+            value={blockingEnabled}
+            disabled={isToggleDisabled}
+            onValueChange={handleBlockingEnabledChange}
+            trackColor={{ false: '#C7D3D1', true: '#7FA5A1' }}
+            thumbColor={blockingEnabled ? '#426B69' : '#F4F3F4'}
+            ios_backgroundColor="#C7D3D1"
+          />
+        </View>
+        {toggleError ? <Text style={styles.toggleErrorText}>{toggleError}</Text> : null}
+        <View style={styles.selectionHeader}>
+          <Text style={styles.selectedCount}>{selectedPackageNames.size} selected</Text>
+        </View>
+      </View>
+
+      {renderBody()}
+
+      <View pointerEvents="box-none" style={styles.confirmButtonOverlay}>
+        {saveError ? <Text style={styles.saveErrorText}>{saveError}</Text> : null}
+        {!saveError && saveSuccessMessage ? (
+          <Text style={styles.saveSuccessText}>{saveSuccessMessage}</Text>
+        ) : null}
+        <Pressable
+          style={({ pressed }) => [
+            styles.confirmButton,
+            isConfirmDisabled && styles.confirmButtonDisabled,
+            pressed && !isConfirmDisabled && styles.confirmButtonPressed,
+          ]}
+          disabled={isConfirmDisabled}
+          onPress={handleConfirmPress}
+        >
+          <Text style={styles.confirmButtonText}>{confirmButtonLabel}</Text>
+        </Pressable>
+      </View>
+    </View>
+  );
+};
+
+export default BlockingAppSelectionScreen;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingTop: 24,
+    backgroundColor: '#FFFFFF',
+  },
+  header: {
+    paddingHorizontal: 24,
+  },
+  title: {
+    color: '#222E50',
+    fontFamily: 'Times New Roman',
+    fontSize: 30,
+    fontWeight: '600',
+    marginBottom: 8,
+    textAlign: 'left',
+    marginTop: 50,
+  },
+  description: {
+    color: '#222E50',
+    fontFamily: 'Verdana',
+    fontSize: 15,
+    lineHeight: 22,
+    marginBottom: 10,
+  },
+  selectionHeader: {
+    alignItems: 'flex-end',
+    marginBottom: 12,
+  },
+  blockingToggleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 8,
+  },
+  blockingToggleText: {
+    flex: 1,
+    marginRight: 16,
+  },
+  blockingToggleLabel: {
+    color: '#222E50',
+    fontFamily: 'Verdana',
+    fontSize: 16,
+    fontWeight: '600',
+    marginBottom: 2,
+  },
+  blockingToggleValue: {
+    color: '#6F7894',
+    fontFamily: 'Verdana',
+    fontSize: 13,
+  },
+  toggleErrorText: {
+    color: '#B22222',
+    fontFamily: 'Verdana',
+    fontSize: 13,
+    marginBottom: 8,
+  },
+  selectedCount: {
+    color: '#6F7894',
+    fontFamily: 'Verdana',
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  list: {
+    flex: 1,
+  },
+  listContent: {
+    paddingHorizontal: 20,
+    paddingBottom: 92,
+  },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#F0F0F0',
+    borderRadius: 20,
+    paddingVertical: 12,
+    paddingHorizontal: 14,
+    marginBottom: 10,
+  },
+  rowSelected: {
+    backgroundColor: '#DCE9D9',
+  },
+  iconContainer: {
+    width: 48,
+    height: 48,
+    borderRadius: 16,
+    backgroundColor: '#F5F5F5',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 14,
+  },
+  icon: {
+    width: 30,
+    height: 30,
+    borderRadius: 8,
+  },
+  iconFallback: {
+    width: 30,
+    height: 30,
+    borderRadius: 10,
+    backgroundColor: '#B5CA8D',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  iconFallbackText: {
+    color: '#222E50',
+    fontFamily: 'Verdana',
+    fontSize: 14,
+    fontWeight: '700',
+  },
+  rowText: {
+    flex: 1,
+    marginRight: 12,
+  },
+  appName: {
+    color: '#222E50',
+    fontFamily: 'Verdana',
+    fontSize: 16,
+    fontWeight: '600',
+    marginBottom: 4,
+  },
+  packageName: {
+    color: '#6F7894',
+    fontFamily: 'Verdana',
+    fontSize: 12,
+  },
+  selectionIndicator: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    borderWidth: 2,
+    borderColor: '#6F7894',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#FFFFFF',
+  },
+  selectionIndicatorSelected: {
+    backgroundColor: '#426B69',
+    borderColor: '#426B69',
+  },
+  selectionIndicatorDot: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: '#FFFFFF',
+  },
+  stateContent: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 40,
+  },
+  stateTitle: {
+    color: '#222E50',
+    fontFamily: 'Times New Roman',
+    fontSize: 22,
+    fontWeight: '600',
+    marginTop: 18,
+    marginBottom: 10,
+    textAlign: 'center',
+  },
+  stateBody: {
+    color: '#222E50',
+    fontFamily: 'Verdana',
+    fontSize: 15,
+    lineHeight: 22,
+    textAlign: 'center',
+  },
+  retryButton: {
+    marginTop: 20,
+    backgroundColor: '#426B69',
+    borderRadius: 18,
+    paddingHorizontal: 18,
+    paddingVertical: 12,
+  },
+  retryButtonText: {
+    color: '#FFFFFF',
+    fontFamily: 'Verdana',
+    fontSize: 15,
+    fontWeight: '600',
+  },
+  confirmButtonOverlay: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 14,
+    alignItems: 'center',
+  },
+  confirmButton: {
+    minWidth: 220,
+    paddingVertical: 16,
+    paddingHorizontal: 28,
+    borderRadius: 24,
+    backgroundColor: '#426B69',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  confirmButtonDisabled: {
+    backgroundColor: '#91A9A6',
+  },
+  confirmButtonPressed: {
+    backgroundColor: '#5A8783',
+  },
+  confirmButtonText: {
+    color: '#FFFFFF',
+    fontFamily: 'Verdana',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  saveErrorText: {
+    color: '#B22222',
+    fontFamily: 'Verdana',
+    fontSize: 13,
+    marginBottom: 8,
+    textAlign: 'center',
+  },
+  saveSuccessText: {
+    color: '#426B69',
+    fontFamily: 'Verdana',
+    fontSize: 13,
+    marginBottom: 8,
+    textAlign: 'center',
+  },
+});
