@@ -7,6 +7,7 @@ import TabNavigation from './TabNavigator';
 import LoadingScreen from '../screens/LoadingScreen';
 import StudyModeScreen from '../screens/StudyModeScreen';
 import EditModeScreen from '../screens/EditModeScreen';
+import BlockingAppSelectionScreen from '../screens/BlockingAppSelectionScreen';
 
 // DO NOT PUSH THIS BRANCH/LINE OF CODE TO MAIN
 import SystemPermissionTestingScreen from "../screens/SystemPermissionTestingScreen";
@@ -53,6 +54,7 @@ function RootNavigator() {
         <Stack.Screen name="MainApp" component={TabNavigation} />
         <Stack.Screen name="StudyMode" component={StudyModeScreen} />
         <Stack.Screen name="EditMode" component={EditModeScreen} />
+        <Stack.Screen name="BlockingAppSelection" component={BlockingAppSelectionScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

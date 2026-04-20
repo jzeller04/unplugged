@@ -44,7 +44,7 @@ function TabNavigator() {
       />
       <Tab.Screen
         name="Dummy"
-        component={BlockingAppSelectionScreen}
+        component={DummyScreen}
         options={{ header: () => null, tabBarIcon: ({ color, size }) => (
           <Ionicons name="phone-portrait-outline" color={color} size={size} /> ),
         }}

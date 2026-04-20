@@ -10,10 +10,16 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import Icon from 'react-native-vector-icons/Feather';
 import AppSelectionService from '../android/AppSelectionService';
-import blockingConfig from '../android/blockingConfig';
+import blockingConfig from '../android/BlockingConfig';
 
-const BlockingAppSelectionScreen = () => {
+const BlockingAppSelectionScreen = ({ route, navigation }) => {
+  const initialSelectedPackages = Array.isArray(route.params?.initialSelectedPackages)
+    ? route.params.initialSelectedPackages
+    : null;
+  const onSelectionConfirm = route.params?.onSelectionConfirm;
+  const isChildPickerFlow = typeof onSelectionConfirm === 'function';
   const [apps, setApps] = useState([]);
   const [selectedPackageNames, setSelectedPackageNames] = useState(() => new Set());
   const [status, setStatus] = useState('loading');
@@ -42,17 +48,20 @@ const BlockingAppSelectionScreen = () => {
         (leftApp.appName || '').localeCompare(rightApp.appName || ''),
       );
       const visiblePackageNames = new Set(sortedApps.map((app) => app.packageName));
-      const preselectedPackages = Array.isArray(config?.blockedPackages)
+      const sourceSelectedPackages = Array.isArray(initialSelectedPackages)
+        ? initialSelectedPackages
+        : config?.blockedPackages;
+      const preselectedPackages = Array.isArray(sourceSelectedPackages)
         ? Array.from(
             new Set(
-              config.blockedPackages.filter((packageName) => visiblePackageNames.has(packageName)),
+              sourceSelectedPackages.filter((packageName) => visiblePackageNames.has(packageName)),
             ),
           )
         : [];
 
       setApps(sortedApps);
       setSelectedPackageNames(new Set(preselectedPackages));
-      setBlockingEnabled(config?.blockingEnabled === true);
+      setBlockingEnabled(isChildPickerFlow ? false : config?.blockingEnabled === true);
       setStatus(sortedApps.length > 0 ? 'success' : 'empty');
     } catch (error) {
       console.error('[BlockingAppSelectionScreen] Failed to load app selection data:', error);
@@ -78,14 +87,14 @@ const BlockingAppSelectionScreen = () => {
     setSaveSuccessMessage('');
 
     try {
-      const cleanSelectedPackages = Array.from(selectedPackageNames).reduce(
+      const cleanSelectedPackages = apps.reduce(
         (packages, packageName) => {
-          if (typeof packageName !== 'string') {
-            return packages;
-          }
+          const normalizedPackageName =
+            typeof packageName?.packageName === 'string'
+              ? packageName.packageName.trim()
+              : '';
 
-          const normalizedPackageName = packageName.trim();
-          if (!normalizedPackageName) {
+          if (!normalizedPackageName || !selectedPackageNames.has(normalizedPackageName)) {
             return packages;
           }
 
@@ -94,6 +103,12 @@ const BlockingAppSelectionScreen = () => {
         },
         [],
       );
+
+      if (isChildPickerFlow) {
+        onSelectionConfirm(cleanSelectedPackages);
+        navigation.goBack();
+        return;
+      }
 
       await blockingConfig.setBlockedPackages(cleanSelectedPackages);
 
@@ -153,6 +168,10 @@ const BlockingAppSelectionScreen = () => {
     });
   };
 
+  const handleExitPress = () => {
+    navigation.goBack();
+  };
+
   const renderAppRow = ({ item }) => {
     const isSelected = selectedPackageNames.has(item.packageName);
     const iconSource = item.appIcon
@@ -179,7 +198,6 @@ const BlockingAppSelectionScreen = () => {
 
         <View style={styles.rowText}>
           <Text style={styles.appName}>{item.appName}</Text>
-          <Text style={styles.packageName}>{item.packageName}</Text>
         </View>
 
         <View style={[styles.selectionIndicator, isSelected && styles.selectionIndicatorSelected]}>
@@ -235,33 +253,38 @@ const BlockingAppSelectionScreen = () => {
 
   const isConfirmDisabled = isSaving || status !== 'success';
   const confirmButtonLabel = isSaving ? 'Saving...' : 'Confirm';
-  const isToggleDisabled = isSavingToggle || status === 'loading' || status === 'error';
+  const isToggleDisabled =
+    isChildPickerFlow || isSavingToggle || status === 'loading' || status === 'error';
 
   return (
     <View style={styles.container}>
+      {isChildPickerFlow ? (
+        <TouchableOpacity onPress={handleExitPress} style={styles.exitButton}>
+          <Icon name="x" size={25} color="#222E50" style={{ marginRight: 16 }} />
+        </TouchableOpacity>
+      ) : null}
       <View style={styles.header}>
         <Text style={styles.title}>Select Apps to Block</Text>
         <Text style={styles.description}>Choose apps that will be blocked when enabled.</Text>
-        <View style={styles.blockingToggleRow}>
-          <View style={styles.blockingToggleText}>
-            <Text style={styles.blockingToggleLabel}>Blocking Enabled</Text>
-            <Text style={styles.blockingToggleValue}>
-              {isSavingToggle ? 'Saving...' : blockingEnabled ? 'ON' : 'OFF'}
-            </Text>
+        {!isChildPickerFlow ? (
+          <View style={styles.blockingToggleRow}>
+            <View style={styles.blockingToggleText}>
+              <Text style={styles.blockingToggleLabel}>Blocking Enabled</Text>
+              <Text style={styles.blockingToggleValue}>
+                {isSavingToggle ? 'Saving...' : blockingEnabled ? 'ON' : 'OFF'}
+              </Text>
+            </View>
+            <Switch
+              value={blockingEnabled}
+              disabled={isToggleDisabled}
+              onValueChange={handleBlockingEnabledChange}
+              trackColor={{ false: '#C7D3D1', true: '#7FA5A1' }}
+              thumbColor={blockingEnabled ? '#426B69' : '#F4F3F4'}
+              ios_backgroundColor="#C7D3D1"
+            />
           </View>
-          <Switch
-            value={blockingEnabled}
-            disabled={isToggleDisabled}
-            onValueChange={handleBlockingEnabledChange}
-            trackColor={{ false: '#C7D3D1', true: '#7FA5A1' }}
-            thumbColor={blockingEnabled ? '#426B69' : '#F4F3F4'}
-            ios_backgroundColor="#C7D3D1"
-          />
-        </View>
+        ) : null}
         {toggleError ? <Text style={styles.toggleErrorText}>{toggleError}</Text> : null}
-        <View style={styles.selectionHeader}>
-          <Text style={styles.selectedCount}>{selectedPackageNames.size} selected</Text>
-        </View>
       </View>
 
       {renderBody()}
@@ -298,6 +321,12 @@ const styles = StyleSheet.create({
   header: {
     paddingHorizontal: 24,
   },
+  exitButton: {
+    position: 'absolute',
+    top: 50,
+    right: 24,
+    zIndex: 1,
+  },
   title: {
     color: '#222E50',
     fontFamily: 'Times New Roman',
@@ -313,10 +342,6 @@ const styles = StyleSheet.create({
     fontSize: 15,
     lineHeight: 22,
     marginBottom: 10,
-  },
-  selectionHeader: {
-    alignItems: 'flex-end',
-    marginBottom: 12,
   },
   blockingToggleRow: {
     flexDirection: 'row',
@@ -345,12 +370,6 @@ const styles = StyleSheet.create({
     fontFamily: 'Verdana',
     fontSize: 13,
     marginBottom: 8,
-  },
-  selectedCount: {
-    color: '#6F7894',
-    fontFamily: 'Verdana',
-    fontSize: 14,
-    fontWeight: '600',
   },
   list: {
     flex: 1,
@@ -402,18 +421,13 @@ const styles = StyleSheet.create({
   rowText: {
     flex: 1,
     marginRight: 12,
+    justifyContent: 'center',
   },
   appName: {
     color: '#222E50',
     fontFamily: 'Verdana',
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: '600',
-    marginBottom: 4,
-  },
-  packageName: {
-    color: '#6F7894',
-    fontFamily: 'Verdana',
-    fontSize: 12,
   },
   selectionIndicator: {
     width: 32,

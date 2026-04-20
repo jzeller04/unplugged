@@ -1,28 +1,93 @@
-import React, { useState } from 'react';
-import { View, StyleSheet, Text, TextInput, TouchableOpacity, Modal } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import {
+  View,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  Modal,
+  Image,
+} from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
+import AppSelectionService from '../android/AppSelectionService';
+
+const createGroupId = () => `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+
+const sortPackagesByAppName = (packages = [], appNamesByPackage = {}) =>
+  [...packages].sort((leftPackageName, rightPackageName) =>
+    (appNamesByPackage[leftPackageName] || leftPackageName).localeCompare(
+      appNamesByPackage[rightPackageName] || rightPackageName,
+    ),
+  );
 
 const EditModeScreen = ({ route, navigation }) => {
-  const existing = route.params?.mode;
+  // const existing = route.params?.mode;
+  // const onSave = route.params?.onSave;
+
+  const existing = route.params?.groupData || route.params?.group || null;
+  const screenMode = route.params?.screenMode || (existing ? 'edit' : 'create');
   const onSave = route.params?.onSave;
+  const initialSelectedPackages = existing?.selectedPackages ?? [];
 
   const [name, setName] = useState(existing?.name || '');
   const [startTime, setStartTime] = useState(existing?.startTime || '09:00 AM');
-  const [endTime, setEndTime] = useState(existing?.endTime || '03:00 PM');
+  const [endTime, setEndTime] = useState(existing?.endTime || '05:00 PM');
+  const [selectedPackages, setSelectedPackages] = useState(initialSelectedPackages);
   const [exitModalVisible, setExitModalVisible] = useState(false);
+  const [appIconsByPackage, setAppIconsByPackage] = useState({});
+  const [appNamesByPackage, setAppNamesByPackage] = useState({});
 
   const hasUnsavedChanges =
     name !== (existing?.name || '') ||
-    startTime !== (existing?.startTime || '') ||
-    endTime !== (existing?.endTime || '');
+    startTime !== (existing?.startTime || '09:00 AM') ||
+    endTime !== (existing?.endTime || '05:00 PM') ||
+    selectedPackages.join('|') !== initialSelectedPackages.join('|');
+
+  const selectedAppsSummary = selectedPackages.length === 0
+    ? 'No apps selected'
+    : `${selectedPackages.length} app${selectedPackages.length === 1 ? '' : 's'} selected`;
+  const sortedSelectedPackages = sortPackagesByAppName(selectedPackages, appNamesByPackage);
+
+  useEffect(() => {
+    const hydrateAppMetadata = async () => {
+      try {
+        const installedApps = await AppSelectionService.getApps();
+        const nextAppIconsByPackage = {};
+        const nextAppNamesByPackage = {};
+
+        (installedApps || []).forEach((app) => {
+          if (!app?.packageName) {
+            return;
+          }
+
+          if (app.appIcon) {
+            nextAppIconsByPackage[app.packageName] = app.appIcon;
+          }
+
+          if (app.appName) {
+            nextAppNamesByPackage[app.packageName] = app.appName;
+          }
+        });
+
+        setAppIconsByPackage(nextAppIconsByPackage);
+        setAppNamesByPackage(nextAppNamesByPackage);
+      } catch (error) {
+        console.error('[EditModeScreen] Failed to load app metadata:', error);
+      }
+    };
+
+    hydrateAppMetadata();
+  }, []);
 
   const saveMode = () => {
+    const sortedPackages = sortPackagesByAppName(selectedPackages, appNamesByPackage);
     const newMode = {
-      id: existing?.id || Date.now().toString(),
-      name,
+      id: existing?.id || createGroupId(),
+      name: name.trim() || 'Untitled Group',
       startTime,
       endTime,
-      apps: existing?.apps || []
+      // apps: selectedPackages,
+      selectedPackages: sortedPackages,
     };
 
     if (onSave) {
@@ -38,7 +103,23 @@ const EditModeScreen = ({ route, navigation }) => {
       return;
     }
     setExitModalVisible(true);
-  }
+  };
+
+  const handleChooseAppsPress = () => {
+    navigation.navigate('BlockingAppSelection', {
+      initialSelectedPackages: selectedPackages,
+      onSelectionConfirm: (nextSelectedPackages = []) => {
+        const cleanSelectedPackages = Array.from(
+          new Set(
+            nextSelectedPackages.filter(
+              (packageName) => typeof packageName === 'string' && packageName.trim().length > 0,
+            ),
+          ),
+        );
+        setSelectedPackages(sortPackagesByAppName(cleanSelectedPackages, appNamesByPackage));
+      },
+    });
+  };
 
   return (
     <View style={styles.container}>
@@ -47,15 +128,15 @@ const EditModeScreen = ({ route, navigation }) => {
       </TouchableOpacity>
 
       <Text style={styles.title}>
-        {existing ? 'Edit Mode' : 'Create Mode'}
+        {screenMode === 'edit' ? 'Edit Group' : 'Create Group'}
       </Text>
 
-      <Text style={styles.label}>Mode Name</Text>
+      <Text style={styles.label}>Group Name</Text>
       <TextInput
         style={styles.input}
         value={name}
         onChangeText={setName}
-        placeholder="New mode title"
+        placeholder="Enter group name"
       />
 
       <Text style={styles.label}>Start Time</Text>
@@ -73,6 +154,40 @@ const EditModeScreen = ({ route, navigation }) => {
         onChangeText={setEndTime}
         placeholder="10:00 PM"
       />
+
+      <Text style={styles.label}>Selected Apps</Text>
+      <View style={styles.selectionBox}>
+        <Text style={styles.selectionText}>{selectedAppsSummary}</Text>
+        {sortedSelectedPackages.length > 0 ? (
+          <View style={styles.selectedIconsRow}>
+            {sortedSelectedPackages.slice(0, 6).map((packageName) => {
+              const appIcon = appIconsByPackage[packageName];
+
+              if (!appIcon) {
+                return (
+                  <View key={packageName} style={styles.selectedIconFallback}>
+                    <Text style={styles.selectedIconFallbackText}>
+                      {(packageName || '?').charAt(0).toUpperCase()}
+                    </Text>
+                  </View>
+                );
+              }
+
+              return (
+                <Image
+                  key={packageName}
+                  source={{ uri: `data:image/png;base64,${appIcon}` }}
+                  style={styles.selectedAppIcon}
+                />
+              );
+            })}
+          </View>
+        ) : null}
+      </View>
+
+      <TouchableOpacity style={styles.secondaryButton} onPress={handleChooseAppsPress}>
+        <Text style={styles.secondaryButtonText}>Choose Apps</Text>
+      </TouchableOpacity>
 
       <TouchableOpacity style={styles.saveButton} onPress={saveMode}>
         <Text style={styles.saveText}>Save</Text>
@@ -135,11 +250,67 @@ const styles = StyleSheet.create({
     fontFamily: 'Verdana',
     borderWidth: 1,
     borderColor: '#ccc',
+    backgroundColor: '#FFFFFF',
     padding: 12,
     borderRadius: 10,
     marginTop: 8,
     marginBottom: 18,
     fontSize: 16,
+  },
+  selectionBox: {
+    backgroundColor: '#F0F0F0',
+    borderRadius: 18,
+    paddingVertical: 14,
+    paddingHorizontal: 16,
+    marginTop: 8,
+  },
+  selectionText: {
+    color: '#555555',
+    fontFamily: 'Verdana',
+    fontSize: 16,
+  },
+  selectedIconsRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flexWrap: 'wrap',
+    marginTop: 12,
+  },
+  selectedAppIcon: {
+    width: 32,
+    height: 32,
+    borderRadius: 10,
+    marginRight: 8,
+    marginBottom: 8,
+  },
+  selectedIconFallback: {
+    width: 32,
+    height: 32,
+    borderRadius: 10,
+    backgroundColor: '#B5CA8D',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 8,
+    marginBottom: 8,
+  },
+  selectedIconFallbackText: {
+    color: '#222E50',
+    fontFamily: 'Verdana',
+    fontSize: 12,
+    fontWeight: '700',
+  },
+  secondaryButton: {
+    backgroundColor: '#F0F0F0',
+    borderRadius: 18,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 12,
+  },
+  secondaryButtonText: {
+    fontFamily: 'Verdana',
+    color: '#222E50',
+    fontSize: 16,
+    paddingVertical: 14,
+    paddingHorizontal: 20,
   },
   saveButton: {
     backgroundColor: '#426B69',

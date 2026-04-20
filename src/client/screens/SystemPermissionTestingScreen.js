@@ -7,7 +7,7 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from 'react-native';
-import { openAccessibility, openOverlay, openUsageAccess } from '../android/permissions';
+import { openAccessibility, openOverlay, openUsageAccess } from '../android/Permissions';
 
 const SystemPermissionTestingScreen = () => {
     return (
