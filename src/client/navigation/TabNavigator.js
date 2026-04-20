@@ -37,7 +37,7 @@ function TabNavigator() {
       />
       <Tab.Screen
         name="Settings"
-        component={SettingsScreen}
+        component={SystemPermissionTestingScreen}
         options={{ header: () => null, tabBarIcon: ({ color, size }) => (
           <Ionicons name="settings" color={color} size={size} /> ),
         }}
