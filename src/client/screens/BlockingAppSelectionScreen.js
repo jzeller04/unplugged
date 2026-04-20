@@ -339,9 +339,9 @@ const styles = StyleSheet.create({
   description: {
     color: '#222E50',
     fontFamily: 'Verdana',
-    fontSize: 15,
-    lineHeight: 22,
-    marginBottom: 10,
+    fontSize: 14,
+    lineHeight: 20,
+    marginBottom: 8,
   },
   blockingToggleRow: {
     flexDirection: 'row',
@@ -375,29 +375,27 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   listContent: {
-    paddingHorizontal: 20,
+    paddingHorizontal: 24,
     paddingBottom: 92,
   },
   row: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#F0F0F0',
-    borderRadius: 20,
+    borderRadius: 18,
     paddingVertical: 12,
     paddingHorizontal: 14,
-    marginBottom: 10,
+    marginBottom: 8,
   },
   rowSelected: {
-    backgroundColor: '#DCE9D9',
+    backgroundColor: '#E7EEE7',
   },
   iconContainer: {
-    width: 48,
-    height: 48,
-    borderRadius: 16,
-    backgroundColor: '#F5F5F5',
+    width: 44,
+    height: 44,
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 14,
+    marginRight: 12,
   },
   icon: {
     width: 30,
@@ -407,15 +405,15 @@ const styles = StyleSheet.create({
   iconFallback: {
     width: 30,
     height: 30,
-    borderRadius: 10,
-    backgroundColor: '#B5CA8D',
+    borderRadius: 8,
+    backgroundColor: '#D7D7D7',
     justifyContent: 'center',
     alignItems: 'center',
   },
   iconFallbackText: {
     color: '#222E50',
     fontFamily: 'Verdana',
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: '700',
   },
   rowText: {
@@ -426,13 +424,12 @@ const styles = StyleSheet.create({
   appName: {
     color: '#222E50',
     fontFamily: 'Verdana',
-    fontSize: 18,
-    fontWeight: '600',
+    fontSize: 20,
   },
   selectionIndicator: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
+    width: 28,
+    height: 28,
+    borderRadius: 14,
     borderWidth: 2,
     borderColor: '#6F7894',
     alignItems: 'center',
@@ -444,9 +441,9 @@ const styles = StyleSheet.create({
     borderColor: '#426B69',
   },
   selectionIndicatorDot: {
-    width: 10,
-    height: 10,
-    borderRadius: 5,
+    width: 9,
+    height: 9,
+    borderRadius: 4.5,
     backgroundColor: '#FFFFFF',
   },
   stateContent: {
@@ -474,7 +471,7 @@ const styles = StyleSheet.create({
   retryButton: {
     marginTop: 20,
     backgroundColor: '#426B69',
-    borderRadius: 18,
+    borderRadius: 12,
     paddingHorizontal: 18,
     paddingVertical: 12,
   },
