@@ -5,12 +5,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import StackNavigator from './StackNavigator';
 import TabNavigation from './TabNavigator';
 import LoadingScreen from '../screens/LoadingScreen';
-import StudyModeScreen from '../screens/StudyModeScreen';
 import EditModeScreen from '../screens/EditModeScreen';
 import BlockingAppSelectionScreen from '../screens/BlockingAppSelectionScreen';
-
-// DO NOT PUSH THIS BRANCH/LINE OF CODE TO MAIN
-import SystemPermissionTestingScreen from "../screens/SystemPermissionTestingScreen";
+import FocusModeTimerScreen from '../screens/FocusModeTimerScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -29,7 +26,7 @@ function RootNavigator() {
       setInitialRoute('MainApp');
 
       // TEMPORARY FIX FOR AWS ISSUE
-      const isLoggedIn = await AsyncStorage.getItem('isLoggedIn');
+      const _isLoggedIn = await AsyncStorage.getItem('isLoggedIn');
       // setInitialRoute(isLoggedIn === 'true' ? 'MainApp' : 'Authentication');
       setInitialRoute("MainApp");
 
@@ -52,7 +49,7 @@ function RootNavigator() {
       <Stack.Navigator initialRouteName={initialRoute} screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Authentication" component={StackNavigator} />
         <Stack.Screen name="MainApp" component={TabNavigation} />
-        <Stack.Screen name="StudyMode" component={StudyModeScreen} />
+        <Stack.Screen name="FocusModeTimer" component={FocusModeTimerScreen} />
         <Stack.Screen name="EditMode" component={EditModeScreen} />
         <Stack.Screen name="BlockingAppSelection" component={BlockingAppSelectionScreen} />
       </Stack.Navigator>

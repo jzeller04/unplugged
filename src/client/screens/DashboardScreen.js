@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { View, Text, StyleSheet, ScrollView, Alert, Image } from "react-native";
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useFocusEffect } from "@react-navigation/native";
 import { calculateStreaksAndUpdate, getUser } from "../helper/userStorage.js";
 import UsageDataService from "../android/UsageDataService";
 
-const DashboardScreen = () => {
+const DashboardScreen = ({ navigation }) => {
   const [streakCount, setStreakCount] = useState(0);
-  const [streakGoal, setStreakGoal] = useState(0);
+  const [, setStreakGoal] = useState(0);
   const [usageData, setUsageData] = useState([]);
 
-  const fetchUsageData = async () => {
+  const fetchUsageData = useCallback(async () => {
     try {
       const data = await UsageDataService.getFilteredUsage();
       const sortedData = data
@@ -19,28 +19,44 @@ const DashboardScreen = () => {
     } catch (error) {
       Alert.alert("Error fetching usage data", error.message);
     }
-  };
+  }, []);
 
-  const loadUser = async () => {
+  const loadUser = useCallback(async () => {
     try {
       const user = await getUser('user');
       console.log(user);
       calculateStreaksAndUpdate();
       setStreakCount(user.streakCount);
-      if (user.streakGoal == "week") {
+      if (user.streakGoal === "week") {
         setStreakGoal(7);
-      } else if (user.streakGoal == "month") {
+      } else if (user.streakGoal === "month") {
         setStreakGoal(30);
       }
     } catch (error) {
       Alert.alert("Something went wrong...");
     }
-  };
+  }, []);
 
-  useEffect(() => {
+  const refreshDashboard = useCallback(() => {
     loadUser();
     fetchUsageData();
-  }, []);
+  }, [fetchUsageData, loadUser]);
+
+  useFocusEffect(
+    useCallback(() => {
+      refreshDashboard();
+    }, [refreshDashboard]),
+  );
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener("tabPress", () => {
+      if (navigation.isFocused()) {
+        refreshDashboard();
+      }
+    });
+
+    return unsubscribe;
+  }, [navigation, refreshDashboard]);
 
   const totalScreenTime = usageData.reduce(
     (sum, item) => sum + item.totalTimeInForeground,
@@ -54,7 +70,7 @@ const DashboardScreen = () => {
   return (
     <ScrollView
       style={styles.container}
-      contentContainerStyle={{ justifyContent: "flex-start" }}
+      contentContainerStyle={styles.contentContainer}
     >
       <Text style={styles.title}>Dashboard</Text>
       <Text style={styles.streak}>{streakCount} day streak!</Text>
@@ -133,6 +149,9 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 24,
     backgroundColor: "#fff",
+  },
+  contentContainer: {
+    justifyContent: "flex-start",
   },
   title: {
     color: "#222E50",

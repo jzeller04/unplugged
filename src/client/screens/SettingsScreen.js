@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, Modal, TextInput, Alert } fro
 import { API_URL } from '@env'
 import { getUser, deleteUser } from '../helper/userStorage.js';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { openAccessibility, openOverlay, openUsageAccess } from '../android/Permissions';
 
 const SettingsScreen = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -66,6 +67,18 @@ const SettingsScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Settings</Text>
+      <TouchableOpacity style={styles.button} onPress={openAccessibility}>
+        <Text style={styles.buttonText}>Open Accessibility Settings</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.button} onPress={openOverlay}>
+        <Text style={styles.buttonText}>Open Overlay Settings</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.button} onPress={openUsageAccess}>
+        <Text style={styles.buttonText}>Open Usage Access Settings</Text>
+      </TouchableOpacity>
+
       <TouchableOpacity style={styles.button} onPress={() => setModalVisible(true)}>
         <Text style={styles.buttonText}>Delete account</Text>
       </TouchableOpacity>

@@ -2,7 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { Text, StyleSheet, ScrollView, View, TouchableOpacity, Modal, Switch } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 import AppSelectionService from '../android/AppSelectionService';
-import blockingConfig from '../android/BlockingConfig';
+import {
+  readNativeBlockerRuntimeState,
+  syncSavedGroupRuntimeToNative,
+} from '../helper/blockerRuntimeSync';
 import {
   clearActiveDetoxGroupId,
   loadActiveDetoxGroupId,
@@ -28,30 +31,6 @@ const getBlockedAppsSummary = (apps = [], appNamesByPackage = {}) => {
   return `Blocked apps: ${appNames.slice(0, 2).join(', ')} +${appNames.length - 2} more`;
 };
 
-const normalizeSelectedPackages = (selectedPackages = []) => {
-  if (!Array.isArray(selectedPackages)) {
-    return [];
-  }
-
-  return Array.from(
-    new Set(
-      selectedPackages.reduce((packages, packageName) => {
-        if (typeof packageName !== 'string') {
-          return packages;
-        }
-
-        const normalizedPackageName = packageName.trim();
-        if (!normalizedPackageName) {
-          return packages;
-        }
-
-        packages.push(normalizedPackageName);
-        return packages;
-      }, []),
-    ),
-  );
-};
-
 const CustomizeScreen = ({ navigation }) => {
   const [detoxModes, setDetoxModes] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
@@ -65,15 +44,6 @@ const CustomizeScreen = ({ navigation }) => {
   const [blockingEnabled, setBlockingEnabled] = useState(false);
   const [isSavingToggle, setIsSavingToggle] = useState(false);
   const [toggleError, setToggleError] = useState('');
-
-  const syncActiveGroupToNative = async (groups, nextActiveGroupId) => {
-    const activeGroup = Array.isArray(groups)
-      ? groups.find((group) => group.id === nextActiveGroupId)
-      : null;
-    const normalizedPackages = normalizeSelectedPackages(activeGroup?.selectedPackages);
-
-    await blockingConfig.setBlockedPackages(normalizedPackages);
-  };
 
   useEffect(() => {
     const loadAppNames = async () => {
@@ -116,7 +86,10 @@ const CustomizeScreen = ({ navigation }) => {
       }
 
       try {
-        await syncActiveGroupToNative(storedGroups, nextActiveGroupId);
+        await syncSavedGroupRuntimeToNative({
+          groups: storedGroups,
+          activeGroupId: nextActiveGroupId,
+        });
         setActiveGroupId(nextActiveGroupId);
         setActiveGroupError('');
       } catch (error) {
@@ -134,7 +107,7 @@ const CustomizeScreen = ({ navigation }) => {
       setIsNavigating(false);
 
       try {
-        const config = await blockingConfig.getBlockingConfig();
+        const config = await readNativeBlockerRuntimeState();
 
         setBlockingEnabled(config?.blockingEnabled === true);
         setToggleError('');
@@ -169,7 +142,10 @@ const CustomizeScreen = ({ navigation }) => {
     saveDetoxGroups(nextModes);
 
     if (savedMode.id === activeGroupId) {
-      syncActiveGroupToNative(nextModes, activeGroupId)
+      syncSavedGroupRuntimeToNative({
+        groups: nextModes,
+        activeGroupId,
+      })
         .then(() => {
           setActiveGroupError('');
         })
@@ -220,7 +196,10 @@ const CustomizeScreen = ({ navigation }) => {
     if (shouldClearActiveGroupId) {
       setActiveGroupId(null);
       clearActiveDetoxGroupId();
-      syncActiveGroupToNative(nextModes, null)
+      syncSavedGroupRuntimeToNative({
+        groups: nextModes,
+        activeGroupId: null,
+      })
         .then(() => {
           setActiveGroupError('');
         })
@@ -242,8 +221,13 @@ const CustomizeScreen = ({ navigation }) => {
     setActiveGroupError('');
 
     try {
-      await syncActiveGroupToNative(detoxModes, groupId);
+      await syncSavedGroupRuntimeToNative({
+        groups: detoxModes,
+        activeGroupId: groupId,
+        blockingEnabled: true,
+      });
       setActiveGroupId(groupId);
+      setBlockingEnabled(true);
       await saveActiveDetoxGroupId(groupId);
     } catch (error) {
       console.error('[CustomizeScreen] Failed to activate detox group:', error);
@@ -259,16 +243,29 @@ const CustomizeScreen = ({ navigation }) => {
     }
 
     const previousValue = blockingEnabled;
+    const previousActiveGroupId = activeGroupId;
+    const nextActiveGroupId = nextValue ? activeGroupId : null;
 
     setBlockingEnabled(nextValue);
+    if (!nextValue) {
+      setActiveGroupId(null);
+    }
     setIsSavingToggle(true);
     setToggleError('');
 
     try {
-      await blockingConfig.setBlockingEnabled(nextValue);
+      await syncSavedGroupRuntimeToNative({
+        groups: detoxModes,
+        activeGroupId: nextActiveGroupId,
+        blockingEnabled: nextValue,
+      });
+      if (!nextValue) {
+        await clearActiveDetoxGroupId();
+      }
     } catch (error) {
       console.error('[CustomizeScreen] Failed to save blockingEnabled:', error);
       setBlockingEnabled(previousValue);
+      setActiveGroupId(previousActiveGroupId);
       setToggleError(error?.message || 'Failed to update blocker state.');
     } finally {
       setIsSavingToggle(false);
@@ -277,12 +274,12 @@ const CustomizeScreen = ({ navigation }) => {
 
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.screenTitle}>Customize</Text>
+      <Text style={styles.screenTitle}>Detox</Text>
 
-      <Text style={styles.description}>Set screen time and modes</Text>
+      <Text style={styles.description}>Set up Detox groups for distraction-free time</Text>
 
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Detox Modes</Text>
+        <Text style={styles.sectionTitle}>Detox Groups</Text>
 
         {detoxModes.map((mode) => {
           const isActive = mode.id === activeGroupId;
@@ -296,7 +293,7 @@ const CustomizeScreen = ({ navigation }) => {
               disabled={isSyncingActiveGroup}
             >
               <View style={styles.modeHeaderRow}>
-                <Text style={styles.itemName}>{mode.name || 'Untitled mode'}</Text>
+                <Text style={styles.itemName}>{mode.name || 'New group'}</Text>
                 {isActive ? <Text style={styles.activeBadge}>Active</Text> : null}
               </View>
 

@@ -7,8 +7,8 @@ import {
   isAppBlockingEnabled 
 } from '../helper/userStorage';
 
-const FOCUS_TIME = (25 * 60);
-const BREAK_TIME = (5 * 60);
+const FOCUS_TIME = 30;
+const BREAK_TIME = 30;
 
 const StudyModeScreen = ({ navigation }) => {
   const [mode, setMode] = useState('focus');

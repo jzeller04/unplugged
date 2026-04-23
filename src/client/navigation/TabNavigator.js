@@ -1,13 +1,9 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import DashboardScreen from '../screens/DashboardScreen';
 import CustomizeScreen from '../screens/CustomizeScreen';
-import DetoxScreen from '../screens/DetoxScreen';
-import StudyModeScreen from '../screens/StudyModeScreen';
+import FocusModeSetupScreen from '../screens/FocusModeSetupScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import BlockingAppSelectionScreen from '../screens/BlockingAppSelectionScreen';
-import DummyScreen from '../screens/DummyScreen';
-import SystemPermissionTestingScreen from '../screens/SystemPermissionTestingScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -22,31 +18,24 @@ function TabNavigator() {
         }}
       />
       <Tab.Screen
-        name="Customize"
+        name="Detox"
         component={CustomizeScreen}
         options={{ header: () => null, tabBarIcon: ({ color, size }) => (
           <Ionicons name="pencil" color={color} size={size} /> ),
         }}
       />
       <Tab.Screen
-        name="Detox"
-        component={DetoxScreen}
+        name="Focus"
+        component={FocusModeSetupScreen}
         options={{ header: () => null, tabBarIcon: ({ color, size }) => (
           <Ionicons name="time" color={color} size={size} /> ),
         }}
       />
       <Tab.Screen
         name="Settings"
-        component={SystemPermissionTestingScreen}
+        component={SettingsScreen}
         options={{ header: () => null, tabBarIcon: ({ color, size }) => (
           <Ionicons name="settings" color={color} size={size} /> ),
-        }}
-      />
-      <Tab.Screen
-        name="Dummy"
-        component={DummyScreen}
-        options={{ header: () => null, tabBarIcon: ({ color, size }) => (
-          <Ionicons name="phone-portrait-outline" color={color} size={size} /> ),
         }}
       />
     </Tab.Navigator>
