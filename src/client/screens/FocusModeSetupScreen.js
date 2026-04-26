@@ -11,7 +11,8 @@ import {
 import AppSelectionService from '../android/AppSelectionService';
 import { loadFocusModePrefs, saveFocusModePrefs } from '../helper/focusModeStorage';
 
-const DURATION_OPTIONS = [30, 60, 90, 120];
+const DEFAULT_FOCUS_MINUTES = 25;
+const DEFAULT_BREAK_MINUTES = 5;
 
 const normalizeMinuteInput = (rawValue) =>
   String(rawValue || '').replace(/[^\d]/g, '');
@@ -112,13 +113,6 @@ const getSelectedAppsSummary = (selectedPackages, appNamesByPackage) => {
   };
 };
 
-const getSavedDurationSelectionState = (selectedDuration) => ({
-  selectedFocusMinutes: DURATION_OPTIONS.includes(selectedDuration)
-    ? selectedDuration
-    : DURATION_OPTIONS[0],
-  customFocusMinutes: String(selectedDuration),
-});
-
 const buildFocusSessionConfig = ({
   selectedPackages,
   selectedAppNames,
@@ -141,10 +135,8 @@ const buildFocusSessionConfig = ({
 };
 
 const FocusModeSetupScreen = ({ navigation }) => {
-  const [selectedFocusMinutes, setSelectedFocusMinutes] = useState(25);
-  const [selectedBreakMinutes] = useState(5);
-  const [customFocusMinutes, setCustomFocusMinutes] = useState(('25'));
-  const [customBreakMinutes, setCustomBreakMinutes] = useState('5');
+  const [customFocusMinutes, setCustomFocusMinutes] = useState(String(DEFAULT_FOCUS_MINUTES));
+  const [customBreakMinutes, setCustomBreakMinutes] = useState(String(DEFAULT_BREAK_MINUTES));
   const [selectedPackages, setSelectedPackages] = useState([]);
   const [appNamesByPackage, setAppNamesByPackage] = useState({});
   const [isLaunchingSession, setIsLaunchingSession] = useState(false);
@@ -155,11 +147,9 @@ const FocusModeSetupScreen = ({ navigation }) => {
 
   const persistFocusModePrefs = async ({
     nextSelectedPackages = selectedPackages,
-    nextSelectedDuration = normalizeMinutes(customFocusMinutes, selectedFocusMinutes),
   } = {}) => {
     await saveFocusModePrefs({
       selectedPackages: normalizeSelectedPackages(nextSelectedPackages),
-      selectedDuration: nextSelectedDuration,
     });
   };
 
@@ -198,13 +188,6 @@ const FocusModeSetupScreen = ({ navigation }) => {
       }
 
       setSelectedPackages(normalizeSelectedPackages(savedPrefs.selectedPackages));
-
-      if (savedPrefs.selectedDuration) {
-        const savedDuration = normalizeMinutes(savedPrefs.selectedDuration, DURATION_OPTIONS[0]);
-        const savedDurationState = getSavedDurationSelectionState(savedDuration);
-        setSelectedFocusMinutes(savedDurationState.selectedFocusMinutes);
-        setCustomFocusMinutes(savedDurationState.customFocusMinutes);
-      }
     };
 
     loadSavedFocusModePrefs();
@@ -230,11 +213,6 @@ const FocusModeSetupScreen = ({ navigation }) => {
   const handleFocusMinutesChange = (nextValue) => {
     const nextIntegerValue = normalizeMinuteInput(nextValue);
     setCustomFocusMinutes(nextIntegerValue);
-    persistFocusModePrefs({
-      nextSelectedDuration: normalizeMinutes(nextIntegerValue, selectedFocusMinutes),
-    }).catch((error) => {
-      console.error('[FocusModeSetupScreen] Failed to save focus duration:', error);
-    });
   };
 
   const handleBreakMinutesChange = (nextValue) => {
@@ -254,8 +232,8 @@ const FocusModeSetupScreen = ({ navigation }) => {
       return;
     }
 
-    const focusDurationMinutes = normalizeMinutes(customFocusMinutes, selectedFocusMinutes);
-    const breakDurationMinutes = normalizeMinutes(customBreakMinutes, selectedBreakMinutes);
+    const focusDurationMinutes = normalizeMinutes(customFocusMinutes, DEFAULT_FOCUS_MINUTES);
+    const breakDurationMinutes = normalizeMinutes(customBreakMinutes, DEFAULT_BREAK_MINUTES);
     const sessionConfig = buildFocusSessionConfig({
       selectedPackages,
       selectedAppNames,

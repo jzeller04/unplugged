@@ -1,13 +1,13 @@
 package com.unplugged
 
+import android.util.Log
+import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
 import com.facebook.react.bridge.ReadableArray
 import com.facebook.react.bridge.ReadableType
-import com.facebook.react.bridge.Arguments
-import android.util.Log
 
 class BlockingConfigModule(
     reactContext: ReactApplicationContext
@@ -15,9 +15,7 @@ class BlockingConfigModule(
 
     private val configStore = BlockingConfigStore(reactContext)
 
-    override fun getName(): String {
-        return "BlockingConfigModule"
-    }
+    override fun getName(): String = "BlockingConfigModule"
 
     @ReactMethod
     fun getBlockingConfig(promise: Promise) {

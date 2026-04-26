@@ -21,9 +21,6 @@ const sortPackagesByAppName = (packages = [], appNamesByPackage = {}) =>
   );
 
 const EditModeScreen = ({ route, navigation }) => {
-  // const existing = route.params?.mode;
-  // const onSave = route.params?.onSave;
-
   const existing = route.params?.groupData || route.params?.group || null;
   const screenMode = route.params?.screenMode || (existing ? 'edit' : 'create');
   const onSave = route.params?.onSave;
@@ -79,19 +76,18 @@ const EditModeScreen = ({ route, navigation }) => {
     hydrateAppMetadata();
   }, []);
 
-  const saveMode = () => {
+  const handleSaveGroup = () => {
     const sortedPackages = sortPackagesByAppName(selectedPackages, appNamesByPackage);
-    const newMode = {
+    const nextSavedGroup = {
       id: existing?.id || createGroupId(),
       name: name.trim() || 'Untitled Group',
       startTime,
       endTime,
-      // apps: selectedPackages,
       selectedPackages: sortedPackages,
     };
 
     if (onSave) {
-      onSave(newMode);
+      onSave(nextSavedGroup);
     }
 
     navigation.goBack();
@@ -189,7 +185,7 @@ const EditModeScreen = ({ route, navigation }) => {
         <Text style={styles.secondaryButtonText}>Choose Apps</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.saveButton} onPress={saveMode}>
+      <TouchableOpacity style={styles.saveButton} onPress={handleSaveGroup}>
         <Text style={styles.saveText}>Save</Text>
       </TouchableOpacity>
 
@@ -329,12 +325,7 @@ const styles = StyleSheet.create({
   exitButton: {
     position: 'absolute',
     top: 50,
-    right: 24
-  },
-  exitText: {
-    color: '#426B69',
-    fontFamily: 'Verdana',
-    fontSize: 16
+    right: 24,
   },
   modalOverlay: {
     flex: 1,

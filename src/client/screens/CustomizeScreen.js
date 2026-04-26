@@ -32,10 +32,10 @@ const getBlockedAppsSummary = (apps = [], appNamesByPackage = {}) => {
 };
 
 const CustomizeScreen = ({ navigation }) => {
-  const [detoxModes, setDetoxModes] = useState([]);
+  const [detoxGroups, setDetoxGroups] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
-  const [modeToDeleteId, setModeToDeleteId] = useState(null);
-  const [modeToDeleteName, setModeToDeleteName] = useState('');
+  const [groupToDeleteId, setGroupToDeleteId] = useState(null);
+  const [groupToDeleteName, setGroupToDeleteName] = useState('');
   const [isNavigating, setIsNavigating] = useState(false);
   const [appNamesByPackage, setAppNamesByPackage] = useState({});
   const [activeGroupId, setActiveGroupId] = useState(null);
@@ -79,7 +79,7 @@ const CustomizeScreen = ({ navigation }) => {
       );
       const nextActiveGroupId = hasMatchingActiveGroup ? storedActiveGroupId : null;
 
-      setDetoxModes(storedGroups);
+      setDetoxGroups(storedGroups);
 
       if (storedActiveGroupId && !hasMatchingActiveGroup) {
         clearActiveDetoxGroupId();
@@ -123,27 +123,24 @@ const CustomizeScreen = ({ navigation }) => {
     return unsubscribe;
   }, [navigation]);
 
-  const handleSave = (savedMode) => {
-    const existingMode = detoxModes.find((mode) => mode.id === savedMode.id);
-    const nextMode = {
-      ...existingMode,
-      ...savedMode,
-      // selectedPackages:
-      //   savedMode.selectedPackages ?? existingMode?.selectedPackages ?? savedMode.apps ?? existingMode?.apps ?? [],
-      selectedPackages: savedMode.selectedPackages ?? existingMode?.selectedPackages ?? [],
-      // apps: savedMode.apps ?? existingMode?.apps ?? savedMode.selectedPackages ?? existingMode?.selectedPackages ?? [],
+  const handleSave = (savedGroup) => {
+    const existingGroup = detoxGroups.find((group) => group.id === savedGroup.id);
+    const nextGroup = {
+      ...existingGroup,
+      ...savedGroup,
+      selectedPackages: savedGroup.selectedPackages ?? existingGroup?.selectedPackages ?? [],
     };
 
-    const nextModes = existingMode
-      ? detoxModes.map((mode) => (mode.id === savedMode.id ? nextMode : mode))
-      : [...detoxModes, nextMode];
+    const nextGroups = existingGroup
+      ? detoxGroups.map((group) => (group.id === savedGroup.id ? nextGroup : group))
+      : [...detoxGroups, nextGroup];
 
-    setDetoxModes(nextModes);
-    saveDetoxGroups(nextModes);
+    setDetoxGroups(nextGroups);
+    saveDetoxGroups(nextGroups);
 
-    if (savedMode.id === activeGroupId) {
+    if (savedGroup.id === activeGroupId) {
       syncSavedGroupRuntimeToNative({
-        groups: nextModes,
+        groups: nextGroups,
         activeGroupId,
       })
         .then(() => {
@@ -156,48 +153,48 @@ const CustomizeScreen = ({ navigation }) => {
     }
   };
 
-  const openEditMode = (mode) => {
+  const openEditGroup = (group) => {
     if (isNavigating) {
       return;
     }
 
     setIsNavigating(true);
     navigation.navigate('EditMode', {
-      screenMode: mode ? 'edit' : 'create',
-      groupData: mode,
-      onSave: handleSave
+      screenMode: group ? 'edit' : 'create',
+      groupData: group,
+      onSave: handleSave,
     });
   };
 
-  const openDeleteModal = (mode) => {
-    setModeToDeleteId(mode?.id || null);
-    setModeToDeleteName(mode?.name || '');
+  const openDeleteModal = (group) => {
+    setGroupToDeleteId(group?.id || null);
+    setGroupToDeleteName(group?.name || '');
     setModalVisible(true);
   };
 
   const closeDeleteModal = () => {
     setModalVisible(false);
-    setModeToDeleteId(null);
-    setModeToDeleteName('');
+    setGroupToDeleteId(null);
+    setGroupToDeleteName('');
   };
 
   const handleConfirmDelete = () => {
-    if (!modeToDeleteId) {
+    if (!groupToDeleteId) {
       closeDeleteModal();
       return;
     }
 
-    const shouldClearActiveGroupId = modeToDeleteId === activeGroupId;
-    const nextModes = detoxModes.filter((mode) => mode.id !== modeToDeleteId);
+    const shouldClearActiveGroupId = groupToDeleteId === activeGroupId;
+    const nextGroups = detoxGroups.filter((group) => group.id !== groupToDeleteId);
 
-    setDetoxModes(nextModes);
-    saveDetoxGroups(nextModes);
+    setDetoxGroups(nextGroups);
+    saveDetoxGroups(nextGroups);
 
     if (shouldClearActiveGroupId) {
       setActiveGroupId(null);
       clearActiveDetoxGroupId();
       syncSavedGroupRuntimeToNative({
-        groups: nextModes,
+        groups: nextGroups,
         activeGroupId: null,
       })
         .then(() => {
@@ -222,7 +219,7 @@ const CustomizeScreen = ({ navigation }) => {
 
     try {
       await syncSavedGroupRuntimeToNative({
-        groups: detoxModes,
+        groups: detoxGroups,
         activeGroupId: groupId,
         blockingEnabled: true,
       });
@@ -255,7 +252,7 @@ const CustomizeScreen = ({ navigation }) => {
 
     try {
       await syncSavedGroupRuntimeToNative({
-        groups: detoxModes,
+        groups: detoxGroups,
         activeGroupId: nextActiveGroupId,
         blockingEnabled: nextValue,
       });
@@ -281,59 +278,60 @@ const CustomizeScreen = ({ navigation }) => {
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Detox Groups</Text>
 
-        {detoxModes.map((mode) => {
-          const isActive = mode.id === activeGroupId;
+        {detoxGroups.map((group) => {
+          const isActive = group.id === activeGroupId;
 
           return (
-          <View key={mode.id} style={[styles.modeCard, isActive && styles.modeCardActive]}>
-            <TouchableOpacity
-              style={styles.modeContent}
-              onPress={() => handleActivateGroup(mode.id)}
-              activeOpacity={0.8}
-              disabled={isSyncingActiveGroup}
-            >
-              <View style={styles.modeHeaderRow}>
-                <Text style={styles.itemName}>{mode.name || 'New group'}</Text>
-                {isActive ? <Text style={styles.activeBadge}>Active</Text> : null}
-              </View>
+            <View key={group.id} style={[styles.modeCard, isActive && styles.modeCardActive]}>
+              <TouchableOpacity
+                style={styles.modeContent}
+                onPress={() => handleActivateGroup(group.id)}
+                activeOpacity={0.8}
+                disabled={isSyncingActiveGroup}
+              >
+                <View style={styles.modeHeaderRow}>
+                  <Text style={styles.itemName}>{group.name || 'New group'}</Text>
+                  {isActive ? <Text style={styles.activeBadge}>Active</Text> : null}
+                </View>
 
-              <View style={styles.detailRow}>
-                <Icon name="clock" size={16} color="#555555" />
-                <Text style={styles.itemTime}>
-                  {mode.startTime} - {mode.endTime}
+                <View style={styles.detailRow}>
+                  <Icon name="clock" size={16} color="#555555" />
+                  <Text style={styles.itemTime}>
+                    {group.startTime} - {group.endTime}
+                  </Text>
+                </View>
+
+                <Text style={styles.appSummary}>
+                  {getBlockedAppsSummary(
+                    group.selectedPackages,
+                    appNamesByPackage,
+                  )}
                 </Text>
+              </TouchableOpacity>
+
+              <View style={styles.actionColumn}>
+                <TouchableOpacity
+                  style={styles.iconButton}
+                  onPress={() => openEditGroup(group)}
+                >
+                  <Icon name="edit" size={22} color="#222E50" />
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={styles.iconButton}
+                  onPress={() => openDeleteModal(group)}
+                >
+                  <Icon name="trash-2" size={22} color="#222E50" />
+                </TouchableOpacity>
               </View>
-
-              <Text style={styles.appSummary}>
-                {getBlockedAppsSummary(
-                  mode.selectedPackages,
-                  appNamesByPackage,
-                )}
-              </Text>
-            </TouchableOpacity>
-
-            <View style={styles.actionColumn}>
-              <TouchableOpacity
-                style={styles.iconButton}
-                onPress={() => openEditMode(mode)}
-              >
-                <Icon name="edit" size={22} color="#222E50" />
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={styles.iconButton}
-                onPress={() => openDeleteModal(mode)}
-              >
-                <Icon name="trash-2" size={22} color="#222E50" />
-              </TouchableOpacity>
             </View>
-          </View>
-        )})}
+          );
+        })}
 
         <View style={styles.bottomActionRow}>
           <TouchableOpacity
             style={styles.addButton}
-            onPress={() => openEditMode(undefined)}
+            onPress={() => openEditGroup(undefined)}
             disabled={isNavigating}
           >
             <Text style={styles.addText}>Add New Group</Text>
@@ -366,7 +364,7 @@ const CustomizeScreen = ({ navigation }) => {
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
             <Text style={styles.modalTitle}>
-              {modeToDeleteName ? `Delete ${modeToDeleteName}?` : 'Delete this mode?'}
+              {groupToDeleteName ? `Delete ${groupToDeleteName}?` : 'Delete this mode?'}
             </Text>
             <Text style={styles.modalSubtitle}>This action cannot be undone.</Text>
 

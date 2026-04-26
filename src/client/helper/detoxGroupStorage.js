@@ -8,23 +8,24 @@ const normalizeSelectedPackages = (selectedPackages) => {
     return [];
   }
 
-  return Array.from(
-    new Set(
-      selectedPackages.reduce((packages, packageName) => {
-        if (typeof packageName !== 'string') {
-          return packages;
-        }
+  const normalizedPackages = [];
+  const seenPackages = new Set();
 
-        const normalizedPackageName = packageName.trim();
-        if (!normalizedPackageName) {
-          return packages;
-        }
+  for (const packageName of selectedPackages) {
+    if (typeof packageName !== 'string') {
+      continue;
+    }
 
-        packages.push(normalizedPackageName);
-        return packages;
-      }, []),
-    ),
-  );
+    const normalizedPackageName = packageName.trim();
+    if (!normalizedPackageName || seenPackages.has(normalizedPackageName)) {
+      continue;
+    }
+
+    seenPackages.add(normalizedPackageName);
+    normalizedPackages.push(normalizedPackageName);
+  }
+
+  return normalizedPackages;
 };
 
 const normalizeDetoxGroup = (group) => {

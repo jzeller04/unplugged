@@ -22,15 +22,13 @@ const BlockingAppSelectionScreen = ({ route, navigation }) => {
   const [selectedPackageNames, setSelectedPackageNames] = useState(() => new Set());
   const [status, setStatus] = useState('loading');
   const [errorMessage, setErrorMessage] = useState('');
-  const [isSaving, setIsSaving] = useState(false);
-  const [saveError, setSaveError] = useState('');
-  const [saveSuccessMessage, setSaveSuccessMessage] = useState('');
+  const [isConfirming, setIsConfirming] = useState(false);
+  const [confirmError, setConfirmError] = useState('');
 
-  const loadAppSelectionData = useCallback(async () => {
+  const loadSelectableApps = useCallback(async () => {
     setStatus('loading');
     setErrorMessage('');
-    setSaveError('');
-    setSaveSuccessMessage('');
+    setConfirmError('');
 
     try {
       const installedApps = await AppSelectionService.getApps();
@@ -66,24 +64,23 @@ const BlockingAppSelectionScreen = ({ route, navigation }) => {
       return;
     }
 
-    loadAppSelectionData();
-  }, [isChildPickerFlow, loadAppSelectionData]);
+    loadSelectableApps();
+  }, [isChildPickerFlow, loadSelectableApps]);
 
   const handleConfirmPress = async () => {
-    if (isSaving || status !== 'success') {
+    if (isConfirming || status !== 'success') {
       return;
     }
 
-    setIsSaving(true);
-    setSaveError('');
-    setSaveSuccessMessage('');
+    setIsConfirming(true);
+    setConfirmError('');
 
     try {
-      const cleanSelectedPackages = apps.reduce(
-        (packages, packageName) => {
+      const selectedVisiblePackages = apps.reduce(
+        (packages, app) => {
           const normalizedPackageName =
-            typeof packageName?.packageName === 'string'
-              ? packageName.packageName.trim()
+            typeof app?.packageName === 'string'
+              ? app.packageName.trim()
               : '';
 
           if (!normalizedPackageName || !selectedPackageNames.has(normalizedPackageName)) {
@@ -96,24 +93,18 @@ const BlockingAppSelectionScreen = ({ route, navigation }) => {
         [],
       );
 
-      if (isChildPickerFlow) {
-        onSelectionConfirm(cleanSelectedPackages);
-        navigation.goBack();
-        return;
-      }
-
-      setSaveError('Open this picker from Focus Mode or Edit Mode to save selections.');
+      onSelectionConfirm(selectedVisiblePackages);
+      navigation.goBack();
     } catch (error) {
-      console.error('[BlockingAppSelectionScreen] Failed to save blocked packages:', error);
-      setSaveError(error?.message || 'Failed to save blocked apps.');
+      console.error('[BlockingAppSelectionScreen] Failed to confirm app selection:', error);
+      setConfirmError(error?.message || 'Failed to confirm app selection.');
     } finally {
-      setIsSaving(false);
+      setIsConfirming(false);
     }
   };
 
   const togglePackageSelection = (packageName) => {
-    setSaveError('');
-    setSaveSuccessMessage('');
+    setConfirmError('');
 
     setSelectedPackageNames((currentPackages) => {
       const nextPackages = new Set(currentPackages);
@@ -138,8 +129,7 @@ const BlockingAppSelectionScreen = ({ route, navigation }) => {
         <View style={styles.unsupportedContent}>
           <Text style={styles.stateTitle}>Open from a setup flow</Text>
           <Text style={styles.stateBody}>
-            App selection now belongs to Focus Mode or Edit Mode so selections
-            save into the right blocker flow.
+            This picker must be opened from Focus Mode or Edit Mode to confirm selections.
           </Text>
           <TouchableOpacity style={styles.retryButton} onPress={handleExitPress}>
             <Text style={styles.retryButtonText}>Go back</Text>
@@ -190,7 +180,7 @@ const BlockingAppSelectionScreen = ({ route, navigation }) => {
       <Text style={styles.stateTitle}>{title}</Text>
       <Text style={styles.stateBody}>{body}</Text>
       {showRetry ? (
-        <TouchableOpacity style={styles.retryButton} onPress={loadAppSelectionData}>
+        <TouchableOpacity style={styles.retryButton} onPress={loadSelectableApps}>
           <Text style={styles.retryButtonText}>Try again</Text>
         </TouchableOpacity>
       ) : null}
@@ -201,7 +191,7 @@ const BlockingAppSelectionScreen = ({ route, navigation }) => {
     if (status === 'loading') {
       return renderStateContent(
         'Loading apps',
-        'Fetching installed apps and current blocked apps.',
+        'Fetching installed apps for selection.',
       );
     }
 
@@ -228,8 +218,8 @@ const BlockingAppSelectionScreen = ({ route, navigation }) => {
     );
   };
 
-  const isConfirmDisabled = isSaving || status !== 'success';
-  const confirmButtonLabel = isSaving ? 'Saving...' : 'Confirm';
+  const isConfirmDisabled = isConfirming || status !== 'success';
+  const confirmButtonLabel = isConfirming ? 'Confirming...' : 'Confirm';
 
   return (
     <View style={styles.container}>
@@ -248,10 +238,7 @@ const BlockingAppSelectionScreen = ({ route, navigation }) => {
       {renderBody()}
 
       <View pointerEvents="box-none" style={styles.confirmButtonOverlay}>
-        {saveError ? <Text style={styles.saveErrorText}>{saveError}</Text> : null}
-        {!saveError && saveSuccessMessage ? (
-          <Text style={styles.saveSuccessText}>{saveSuccessMessage}</Text>
-        ) : null}
+        {confirmError ? <Text style={styles.confirmErrorText}>{confirmError}</Text> : null}
         <Pressable
           style={({ pressed }) => [
             styles.confirmButton,
@@ -448,15 +435,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
   },
-  saveErrorText: {
+  confirmErrorText: {
     color: '#B22222',
-    fontFamily: 'Verdana',
-    fontSize: 13,
-    marginBottom: 8,
-    textAlign: 'center',
-  },
-  saveSuccessText: {
-    color: '#426B69',
     fontFamily: 'Verdana',
     fontSize: 13,
     marginBottom: 8,

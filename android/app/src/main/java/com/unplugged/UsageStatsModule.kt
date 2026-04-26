@@ -5,12 +5,17 @@ import android.app.usage.UsageEvents
 import android.content.Context
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
-import com.facebook.react.bridge.*
-import java.util.*
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.util.Base64
+import com.facebook.react.bridge.Arguments
+import com.facebook.react.bridge.Promise
+import com.facebook.react.bridge.ReactApplicationContext
+import com.facebook.react.bridge.ReactContextBaseJavaModule
+import com.facebook.react.bridge.ReactMethod
+import com.facebook.react.bridge.WritableMap
 import java.io.ByteArrayOutputStream
+import java.util.Calendar
 import java.util.Locale
 
 class UsageStatsModule(reactContext: ReactApplicationContext) :
@@ -24,7 +29,6 @@ class UsageStatsModule(reactContext: ReactApplicationContext) :
             reactApplicationContext.getSystemService(Context.USAGE_STATS_SERVICE) as
                 UsageStatsManager
 
-        // Set time range: From midnight today until now
         val calendar = Calendar.getInstance()
         val endTime = calendar.timeInMillis
         calendar.set(Calendar.HOUR_OF_DAY, 0)
@@ -47,7 +51,7 @@ class UsageStatsModule(reactContext: ReactApplicationContext) :
                 map.putDouble(
                     "totalTime",
                     usageStat.totalTimeInForeground.toDouble()
-                ) // in milliseconds
+                )
                 array.pushMap(map)
             }
         }
@@ -83,7 +87,6 @@ class UsageStatsModule(reactContext: ReactApplicationContext) :
                 val totalTime = usageStat.totalTimeInForeground
                 val openCount = usageStat.openCount
 
-                // Hide aggregate noise that would display as "0 opens / 0m".
                 if (totalTime > 0 && (totalTime >= MIN_DISPLAY_USAGE_MILLIS || openCount > 0)) {
                     val isUserLaunchable =
                         packageManager.getLaunchIntentForPackage(packageName) != null
@@ -117,20 +120,7 @@ class UsageStatsModule(reactContext: ReactApplicationContext) :
                             (appInfo.flags and
                                 ApplicationInfo.FLAG_SYSTEM) != 0
 
-                    // Extract and convert the App Icon to Base64
-                    val drawable = packageManager.getApplicationIcon(appInfo)
-                    val bitmap = Bitmap.createBitmap(
-                        if (drawable.intrinsicWidth > 0) drawable.intrinsicWidth else 1,
-                        if (drawable.intrinsicHeight > 0) drawable.intrinsicHeight else 1,
-                        Bitmap.Config.ARGB_8888
-                    )
-                    val canvas = Canvas(bitmap)
-                    drawable.setBounds(0, 0, canvas.width, canvas.height)
-                    drawable.draw(canvas)
-
-                    val stream = ByteArrayOutputStream()
-                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
-                    map.putString("appIcon", Base64.encodeToString(stream.toByteArray(), Base64.NO_WRAP))
+                        map.putString("appIcon", convertAppIconToBase64(packageManager, appInfo))
                     } catch (e: PackageManager.NameNotFoundException) {
                         continue
                     }
@@ -141,7 +131,6 @@ class UsageStatsModule(reactContext: ReactApplicationContext) :
                 }
             }
 
-            // Sort descending by highest total time in foreground
             statsList.sortByDescending { it.getDouble("totalTimeInForeground") }
 
             val array = Arguments.createArray()
@@ -154,6 +143,25 @@ class UsageStatsModule(reactContext: ReactApplicationContext) :
                 e
             )
         }
+    }
+
+    private fun convertAppIconToBase64(
+        packageManager: PackageManager,
+        appInfo: ApplicationInfo
+    ): String {
+        val drawable = packageManager.getApplicationIcon(appInfo)
+        val bitmap = Bitmap.createBitmap(
+            if (drawable.intrinsicWidth > 0) drawable.intrinsicWidth else 1,
+            if (drawable.intrinsicHeight > 0) drawable.intrinsicHeight else 1,
+            Bitmap.Config.ARGB_8888
+        )
+        val canvas = Canvas(bitmap)
+        drawable.setBounds(0, 0, canvas.width, canvas.height)
+        drawable.draw(canvas)
+
+        val stream = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
+        return Base64.encodeToString(stream.toByteArray(), Base64.NO_WRAP)
     }
 
     private fun isExcludedNoisePackage(packageName: String): Boolean {

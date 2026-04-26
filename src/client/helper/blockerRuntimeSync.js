@@ -9,23 +9,24 @@ const normalizeRuntimePackages = (packages) => {
     return [];
   }
 
-  return Array.from(
-    new Set(
-      packages.reduce((normalizedPackages, packageName) => {
-        const normalizedPackageName =
-          typeof packageName === 'string'
-            ? packageName.trim()
-            : '';
+  const normalizedPackages = [];
+  const seenPackages = new Set();
 
-        if (!normalizedPackageName) {
-          return normalizedPackages;
-        }
+  for (const packageName of packages) {
+    const normalizedPackageName =
+      typeof packageName === 'string'
+        ? packageName.trim()
+        : '';
 
-        normalizedPackages.push(normalizedPackageName);
-        return normalizedPackages;
-      }, []),
-    ),
-  );
+    if (!normalizedPackageName || seenPackages.has(normalizedPackageName)) {
+      continue;
+    }
+
+    seenPackages.add(normalizedPackageName);
+    normalizedPackages.push(normalizedPackageName);
+  }
+
+  return normalizedPackages;
 };
 
 let lastAppliedRuntimeState = null;
@@ -52,17 +53,19 @@ const runtimePackagesMatch = (firstPackages, secondPackages) => {
   return first.every((packageName) => secondPackageSet.has(packageName));
 };
 
-const mergeRuntimePackages = (...packageLists) =>
-  normalizeRuntimePackages(
-    packageLists.reduce((mergedPackages, packageList) => {
-      if (!Array.isArray(packageList)) {
-        return mergedPackages;
-      }
+const mergeRuntimePackages = (...packageLists) => {
+  const mergedPackages = [];
 
-      mergedPackages.push(...packageList);
-      return mergedPackages;
-    }, []),
-  );
+  for (const packageList of packageLists) {
+    if (!Array.isArray(packageList)) {
+      continue;
+    }
+
+    mergedPackages.push(...packageList);
+  }
+
+  return normalizeRuntimePackages(mergedPackages);
+};
 
 const findActiveGroupPackages = (groups, activeGroupId) => {
   const activeGroup = Array.isArray(groups)
