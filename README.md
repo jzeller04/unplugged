@@ -16,39 +16,6 @@ The app is built with React Native for the main experience and native Android Ko
 - Show a native blocking overlay when a blocked app is opened
 - View usage/stat information from the dashboard
 
-## Screenshots
-
-<table>
-  <tr>
-    <td align="center">
-      <img src="docs/screenshots/dashboard.png" width="130" /><br />
-      Dashboard
-    </td>
-    <td align="center">
-      <img src="docs/screenshots/detox.png" width="130" /><br />
-      Detox
-    </td>
-    <td align="center">
-      <img src="docs/screenshots/blocked-overlay.png" width="130" /><br />
-      Blocking Overlay
-    </td>
-  </tr>
-  <tr>
-    <td align="center">
-      <img src="docs/screenshots/focus-setup.png" width="130" /><br />
-      Focus Setup
-    </td>
-    <td align="center">
-      <img src="docs/screenshots/focus-timer-focus.png" width="130" /><br />
-      Focus Timer: Focus
-    </td>
-    <td align="center">
-      <img src="docs/screenshots/focus-timer-break.png" width="130" /><br />
-      Focus Timer: Break
-    </td>
-  </tr>
-</table>
-
 ## App Sections
 
 | Section | Purpose |
@@ -81,6 +48,39 @@ Users can create saved Detox groups for apps they want to block regularly. When 
 Focus Mode builds on top of that behavior. During a Focus session, the app can temporarily add extra apps to the active blocking set. When the Focus session ends, stops, or moves into a break, those temporary Focus apps are removed and the app returns to the saved Detox group behavior.
 
 This keeps saved blocker groups and temporary Focus sessions separate while still letting them work together through the same native Android blocking system.
+
+## Screenshots
+
+<table>
+  <tr>
+    <td align="center">
+      <img src="docs/screenshots/dashboard.png" width="130" /><br />
+      Dashboard
+    </td>
+    <td align="center">
+      <img src="docs/screenshots/detox.png" width="130" /><br />
+      Detox
+    </td>
+    <td align="center">
+      <img src="docs/screenshots/blocked-overlay.png" width="130" /><br />
+      Blocking Overlay
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="docs/screenshots/focus-setup.png" width="130" /><br />
+      Focus Setup
+    </td>
+    <td align="center">
+      <img src="docs/screenshots/focus-timer-focus.png" width="130" /><br />
+      Focus Timer: Focus
+    </td>
+    <td align="center">
+      <img src="docs/screenshots/focus-timer-break.png" width="130" /><br />
+      Focus Timer: Break
+    </td>
+  </tr>
+</table>
 
 ## Requirements
 
