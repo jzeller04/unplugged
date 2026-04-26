@@ -18,14 +18,36 @@ The app is built with React Native for the main experience and native Android Ko
 
 ## Screenshots
 
-
-![Dashboard](docs/screenshots/dashboard.png)
-![Detox](docs/screenshots/detox.png)
-![Focus Setup](docs/screenshots/focus-setup.png)
-![Focus Timer (Focus)](docs/screenshots/focus-timer-focus.png)
-![Focus Timer (Break)](docs/screenshots/focus-timer-break.png)
-![Blocking Overlay](docs/screenshots/blocked-overlay.png)
-
+<table>
+  <tr>
+    <td align="center">
+      <img src="docs/screenshots/dashboard.png" width="180" /><br />
+      Dashboard
+    </td>
+    <td align="center">
+      <img src="docs/screenshots/detox.png" width="180" /><br />
+      Detox
+    </td>
+    <td align="center">
+      <img src="docs/screenshots/blocked-overlay.png" width="180" /><br />
+      Blocking Overlay
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="docs/screenshots/focus-setup.png" width="180" /><br />
+      Focus Setup
+    </td>
+    <td align="center">
+      <img src="docs/screenshots/focus-timer-focus.png" width="180" /><br />
+      Focus Timer: Focus
+    </td>
+    <td align="center">
+      <img src="docs/screenshots/focus-timer-break.png" width="180" /><br />
+      Focus Timer: Break
+    </td>
+  </tr>
+</table>
 
 ## App Sections
 
