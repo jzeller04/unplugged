@@ -21,29 +21,29 @@ The app is built with React Native for the main experience and native Android Ko
 <table>
   <tr>
     <td align="center">
-      <img src="docs/screenshots/dashboard.png" width="180" /><br />
+      <img src="docs/screenshots/dashboard.png" width="130" /><br />
       Dashboard
     </td>
     <td align="center">
-      <img src="docs/screenshots/detox.png" width="180" /><br />
+      <img src="docs/screenshots/detox.png" width="130" /><br />
       Detox
     </td>
     <td align="center">
-      <img src="docs/screenshots/blocked-overlay.png" width="180" /><br />
+      <img src="docs/screenshots/blocked-overlay.png" width="130" /><br />
       Blocking Overlay
     </td>
   </tr>
   <tr>
     <td align="center">
-      <img src="docs/screenshots/focus-setup.png" width="180" /><br />
+      <img src="docs/screenshots/focus-setup.png" width="130" /><br />
       Focus Setup
     </td>
     <td align="center">
-      <img src="docs/screenshots/focus-timer-focus.png" width="180" /><br />
+      <img src="docs/screenshots/focus-timer-focus.png" width="130" /><br />
       Focus Timer: Focus
     </td>
     <td align="center">
-      <img src="docs/screenshots/focus-timer-break.png" width="180" /><br />
+      <img src="docs/screenshots/focus-timer-break.png" width="130" /><br />
       Focus Timer: Break
     </td>
   </tr>
