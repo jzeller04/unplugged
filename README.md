@@ -126,7 +126,9 @@ Some features require Android permissions or settings to be enabled manually:
 - Display over other apps / overlay permission
 - Usage access permission for usage statistics
 
-The app may still open without these permissions, but app blocking and usage-stat features require the correct Android settings.
+To enable these easily, open the app and navigate to the **Settings** page. The Settings page includes buttons that take you directly to the relevant Android settings screens.
+
+The app may still open without these permissions, but app blocking and usage-stat features require the correct Android settings to be enabled.
 
 ## Project Structure
 
