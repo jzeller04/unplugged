@@ -45,7 +45,10 @@ class UsageStatsModule(reactContext: ReactApplicationContext) :
 
         val array = Arguments.createArray()
         for (usageStat in stats) {
-            if (usageStat.totalTimeInForeground > 0) {
+            if (
+                usageStat.totalTimeInForeground > 0 &&
+                !isExcludedNoisePackage(usageStat.packageName)
+            ) {
                 val map = Arguments.createMap()
                 map.putString("packageName", usageStat.packageName)
                 map.putDouble(
@@ -184,6 +187,7 @@ class UsageStatsModule(reactContext: ReactApplicationContext) :
         val events = usageStatsManager.queryEvents(startTime, endTime)
         val event = UsageEvents.Event()
         var currentForegroundPackageName: String? = null
+        var lastForegroundPackageName: String? = null
         var currentForegroundStartTime = startTime
 
         while (events.hasNextEvent()) {
@@ -212,14 +216,19 @@ class UsageStatsModule(reactContext: ReactApplicationContext) :
                     )
                 }
 
-                if (currentForegroundPackageName != packageName) {
+                if (lastForegroundPackageName != packageName) {
                     val stats = usageByPackageName.getOrPut(packageName) {
                         AppUsageEventStats()
                     }
                     stats.openCount += 1
+                }
+
+                if (currentForegroundPackageName != packageName) {
                     currentForegroundPackageName = packageName
                     currentForegroundStartTime = eventTime
                 }
+
+                lastForegroundPackageName = packageName
 
                 val stats = usageByPackageName.getOrPut(packageName) {
                     AppUsageEventStats()
@@ -273,6 +282,7 @@ class UsageStatsModule(reactContext: ReactApplicationContext) :
         private const val MIN_DISPLAY_USAGE_MILLIS = 60_000L
 
         private val EXCLUDED_NOISE_PACKAGES = setOf(
+            "com.unplugged",
             "com.android.systemui",
             "com.google.android.permissioncontroller",
             "com.android.permissioncontroller",
